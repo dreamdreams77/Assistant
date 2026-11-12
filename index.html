@@ -383,6 +383,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
   <div class="card" id="searchCard" style="display:none"><div class="head"><h3>Results</h3><span class="count" id="searchCount"></span></div><div class="list" id="searchList"></div></div>
   <div class="cols" id="todayCols">
     <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>From Claude</h3></div><span class="pill cl">Scheduled tasks</span></div><div class="list" id="briefList"></div></div>
+    <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>Claude tasks</h3></div><span class="count" id="cTask"></span></div><div class="list" id="taskList"></div></div>
     <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-cal"/></svg></span><h3 id="schedTitle">Today's schedule</h3></div><span class="count" id="cEv"></span></div><div class="list" id="todayEvents"></div></div>
     <div class="card" id="remCard"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-bell"/></svg></span><h3>Reminders</h3></div><span class="count" id="cRem"></span></div><div class="list" id="todayRems"></div></div>
     <div class="card" id="todoCard"><div class="head"><div class="ttl"><span class="ic todo"><svg><use href="#i-check"/></svg></span><h3>To-dos</h3></div><span class="count" id="cTodo"></span></div><div class="bar"><i id="todoBar"></i></div><div class="list" id="todayTodos"></div></div>
@@ -549,7 +550,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 
 <script>
 /*PURE-START*/
-const LISTS = ['events','reminders','todos','alarms','journal','voice','contacts','outbox','briefings'];
+const LISTS = ['events','reminders','todos','alarms','journal','voice','contacts','outbox','briefings','tasks'];
 const DEFAULT_NOTE = 'I need help. Please contact me or call 911.';
 function normalize(d) {
   d = d && typeof d === 'object' ? d : {};
@@ -1053,6 +1054,11 @@ function renderToday() {
   $('#briefList').innerHTML = br.length
     ? br.map(b => `<div class="row"><div class="main"><div class="t">${esc(b.title || 'Briefing')}</div><div class="s">${b.created ? fmtDT(b.created) : ''}</div><div class="body">${esc(b.body)}</div></div><div class="ops"><button class="btn line sm" data-del="briefings:${esc(b.id)}">Dismiss</button></div></div>`).join('')
     : empty('Briefings written by your scheduled Claude tasks appear here.');
+  const tk = [...data.tasks].sort((a, b) => (a.enabled === false) - (b.enabled === false) || (a.next || Infinity) - (b.next || Infinity));
+  $('#cTask').textContent = tk.length || '';
+  $('#taskList').innerHTML = tk.length
+    ? tk.map(k => `<div class="row"><div class="main"><div class="t">${esc(k.name || 'Task')}</div><div class="s">${esc(k.schedule || '')}${k.enabled === false ? ' · Paused' : k.next ? ' · Next ' + fmtDT(k.next) : ''}</div>${k.about ? `<div class="body">${esc(k.about)}</div>` : ''}</div></div>`).join('')
+    : empty('Your scheduled Claude tasks are listed here.');
   const coming = evs.length ? [] : upcoming(tmr, 90, 4);
   $('#schedTitle').textContent = coming.length ? 'Coming up' : "Today's schedule";
   $('#todayEvents').innerHTML = evs.length ? evs.map(e => evRow(e)).join('') : coming.length ? coming.map(o => evRow(o.e, o.date)).join('') : empty('Nothing scheduled. Tap + to add something.');

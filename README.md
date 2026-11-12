@@ -35,6 +35,7 @@ A scheduled Claude task opens the private data repository, edits `assistant-data
 Things a task can do:
 
 - **Send queued email.** Emails you queue in the app sit in `outbox` with `status: "queued"`. A task sends each through Gmail and sets `status: "sent"` and `sentAt`.
+- **List itself.** Items in `tasks` show on the Today screen under "Claude tasks", with their schedule and next run (`next`).
 - **Write briefings.** Items a task adds to `briefings` show on the Today screen under "From Claude".
 - **Add events, reminders and alarms**, for example copied from Google Calendar.
 - **Email you about due reminders**, since the app itself only alerts while it is open.
@@ -53,6 +54,7 @@ Things a task can do:
   "contacts":  [{ "id": "", "u": 0, "name": "", "phone": "", "email": "", "ice": false }],
   "outbox":    [{ "id": "", "u": 0, "to": "", "subject": "", "body": "", "status": "queued | sent | failed", "created": 0, "sentAt": 0, "error": "" }],
   "briefings": [{ "id": "", "u": 0, "title": "", "body": "", "created": 0 }],
+  "tasks":     [{ "id": "", "u": 0, "name": "", "schedule": "Mondays 9:00 AM", "next": 0, "about": "", "enabled": true }],
   "deleted":   { "item-id": 0 },
   "prefs":     { "emergencyNote": "", "medical": { "name": "", "blood": "", "allergies": "", "meds": "", "conditions": "", "doctor": "", "share": false }, "u": 0 }
 }

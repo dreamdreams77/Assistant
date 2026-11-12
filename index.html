@@ -528,7 +528,7 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
       <div class="actions"><button class="btn" id="askSend">Send to Claude</button></div>
       <div class="list" id="askList"></div>
       <p class="muted">Answered here within the hour, 7 AM to 10 PM. Claude researches and drafts, but never sends email, buys anything or contacts anyone for you.</p></div>
-    <details class="card fold" data-full><summary><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><div><h3>Claude tasks</h3><div class="s" id="taskSub"></div></div></div><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="list" id="taskList"></div></details>
+    <details class="card fold"><summary><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><div><h3>Claude tasks</h3><div class="s" id="taskSub"></div></div></div><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="list" id="taskList"></div></details>
   </div>
 </section>
 
@@ -686,6 +686,7 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
         <div class="lbl">Colour<div class="swatches" id="swatches"></div></div>
         <label>Light or dark<select id="theme"><option value="auto">Match my device</option><option value="light">Light</option><option value="dark">Dark</option><option value="sun">Follow the sun: light by day, dark at night</option></select></label>
         <label class="checkline"><input type="checkbox" id="skyFollow">Tint the whole app with the sky</label>
+        <label class="checkline"><input type="checkbox" id="healthOn">Show health features (medications, blood pressure, refills, sick day log, Medical ID)</label>
         <div class="lbl">Sunrise and sunset<p class="muted" id="locInfo" style="font-weight:400"></p><div class="actions"><button class="btn line sm" id="locBtn"></button></div></div>
       </div>
       <div class="card">
@@ -857,7 +858,6 @@ function moonPhase(ms) { const p = ((ms - Date.UTC(2000, 0, 6, 18, 14)) / 864000
 /*PURE-END*/
 // 'full' shows everything. 'work' hides the health features and the Claude tasks list (used for shared copies).
 const EDITION = 'full';
-if (EDITION === 'work') document.documentElement.classList.add('ed-work');
 // Wallet button: opens Google Wallet on Android (falls back to the Wallet website), or an "Open Wallet" shortcut on iPhone.
 (() => {
   const a = document.getElementById('walletBtn'), ua = navigator.userAgent;
@@ -891,6 +891,9 @@ const store = {
 };
 let data = normalize(store.get('pa-assistant-v1', null));
 // Things that belong to this device only: which reminders already fired, alarm ring state, the unsent draft, theme.
+// Health features are on by default in the full edition and off in the work edition; Settings can change it per device.
+const healthOn = () => typeof local.health === 'boolean' ? local.health : EDITION !== 'work';
+const applyHealth = () => { document.documentElement.classList.toggle('ed-work', !healthOn()); const c = document.getElementById('healthOn'); if (c) c.checked = healthOn(); };
 let local = Object.assign({ notified: {}, ring: {}, draft: { to: '', subject: '', body: '' }, theme: 'auto', color: 'teal', seg: 'todos', jseg: 'entries', sky: true }, store.get('pa-local', {}));
 let cfg = store.get('pa-sync', null);
 const saveLocal = () => store.set('pa-local', local);
@@ -1100,7 +1103,7 @@ function paintSky(now) {
 const VIEWS = ['today', 'calendar', 'plan', 'work', 'journal', 'health', 'mail', 'emergency', 'sync'];
 function show(v, fromHash) {
   if (v === 'alerts') v = 'plan';
-  if (!VIEWS.includes(v) || (EDITION === 'work' && v === 'health')) v = 'today';
+  if (!VIEWS.includes(v) || (!healthOn() && v === 'health')) v = 'today';
   const cur = VIEWS.findIndex(x => $('#v-' + x).classList.contains('on')), nxt = VIEWS.indexOf(v);
   if (cur !== nxt) { $('main').dataset.dir = nxt > cur ? 'r' : 'l'; if (!fromHash) buzz(6); }
   $('#fab').classList.toggle('hide', ['mail', 'emergency', 'sync'].includes(v)); closeDial();
@@ -1315,7 +1318,7 @@ function renderToday() {
   $('#taskSub').textContent = tk.length ? `${tkOn} running on a schedule${tk.length > tkOn ? `, ${tk.length - tkOn} paused` : ''}` : 'None set up yet';
   $('#taskList').innerHTML = tk.length
     ? tk.map(k => `<div class="row"><div class="main"><div class="t">${esc(k.name || 'Task')}</div><div class="s">${esc(k.schedule || '')}${k.enabled === false ? ' · Paused' : k.next ? ' · Next ' + fmtDT(k.next) : ''}</div>${k.about ? `<div class="body">${esc(k.about)}</div>` : ''}</div></div>`).join('')
-    : empty('Your scheduled Claude tasks are listed here.');
+    : empty('Your scheduled Claude tasks are listed here once they are set up. CLAUDE-SCHEDULES.md explains how.');
   const coming = evs.length ? [] : upcoming(tmr, 90, 4);
   $('#schedTitle').textContent = coming.length ? 'Coming up' : "Today's schedule";
   $('#todayEvents').innerHTML = evs.length ? evs.map(e => evRow(e)).join('') : coming.length ? coming.map(o => evRow(o.e, o.date)).join('') : empty('Nothing scheduled. Tap + to add something.');
@@ -1768,6 +1771,7 @@ document.body.addEventListener('change', e => {
   }
   if (el.id === 'theme') { local.theme = el.value; saveLocal(); return applyTheme(); }
   if (el.id === 'skyFollow') { local.sky = el.checked; saveLocal(); return applyTheme(); }
+  if (el.id === 'healthOn') { local.health = el.checked; saveLocal(); applyHealth(); renderAll(); return toast(el.checked ? 'Health features are on. Find them in the Health tab.' : 'Health features are hidden on this device.'); }
   if (el.id === 'sosNote') return setPrefs({ emergencyNote: el.value });
   if (el.id === 'bkFile' && el.files[0]) {
     el.files[0].text().then(txt => {
@@ -1879,6 +1883,7 @@ function voiceRow(v) {
 }
 
 /* ---------- start ---------- */
+applyHealth();
 lockApp();
 $$('.em-num').forEach(x => { x.textContent = EMERG.num; });
 $('#callEm').href = 'tel:' + EMERG.num; $('#callEm').textContent = 'Call ' + EMERG.num;

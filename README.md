@@ -110,7 +110,7 @@ Health > Sick day log records throwing up, extra or double doses, feeling unwell
 
 ## Editions
 
-`index.html` has `const EDITION = 'full';`. Setting it to `'work'` hides the Health tab, medications, the Medical ID and the Claude tasks list, and puts a Work card first on Today. Shared copies for others use the work edition.
+`index.html` has `const EDITION = 'full';`. Setting it to `'work'` hides the health features (Health tab, medications, blood pressure, refills, sick day log, Medical ID) by default and always shows a Work card on Today. **Settings > Show health features** turns them on or off on each device, whatever the edition. Shared copies for others use the work edition.
 
 ## Rides
 

@@ -441,7 +441,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
   <div><div class="seg" role="tablist">
     <button data-seg="todos">To-dos</button><button data-seg="reminders">Reminders</button><button data-seg="alarms">Alarms</button>
   </div></div>
-  <div class="note" id="planNote">Reminders and alarms from this app go off only while it is open. A scheduled Claude task can email you about due reminders when it is closed.</div>
+  <div class="note" id="planNote">Reminders, events and alarms are copied to your Google Calendar every hour from 6 AM to 10 PM, so your phone alerts you even when this app is closed. Something added less than an hour ahead may only alert while the app is open.</div>
   <div class="card"><div class="list" id="planList"></div>
     <div class="actions" id="planFoot"><button class="btn line sm" id="todoClear">Clear completed</button><button class="btn line sm" id="notifyBtn">Allow notifications</button></div></div>
 </section>
@@ -1047,7 +1047,7 @@ function todoRow(t) {
     editBtn('todo', t.id, `<div class="t ${t.done ? 'done' : ''}">${esc(t.text)}</div>`) + (t.star && !t.done ? '<span class="pill wait">Important</span>' : '') + '</div>';
 }
 function evRow(e, date) {
-  const sub = [date ? fmtDay(date) : '', e.repeat ? REPEAT[e.repeat] : '', e.notes].filter(Boolean).join(' · ');
+  const sub = [date ? fmtDay(date) : '', e.repeat ? REPEAT[e.repeat] : '', String(e.id).startsWith('gcal-') ? 'Google Calendar' : e.notes].filter(Boolean).join(' · ');
   return `<div class="row"><div class="time">${fmtTime(e.time)}</div>` + editBtn('event', e.id, `<div class="t">${esc(e.title)}</div>${sub ? `<div class="s">${esc(sub)}</div>` : ''}`) + '</div>';
 }
 const eventsOn = s => data.events.filter(e => occursOn(e, s)).sort(byTime);

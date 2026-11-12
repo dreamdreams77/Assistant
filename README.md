@@ -40,6 +40,12 @@ Things a task can do:
 - **Add events, reminders and alarms**, for example copied from Google Calendar.
 - **Email you about due reminders**, since the app itself only alerts while it is open.
 
+### Google Calendar sync
+
+A scheduled Claude task runs every hour from 6 AM to 10 PM Pacific. It copies open reminders, events and enabled alarms into Google Calendar with alerts, so the phone notifies you while the app is closed. Each copied Google event carries `assistant-id:<id>` in its description. It also copies the next 30 days of other Google Calendar events into the app as events whose ids start with `gcal-`. Change those in Google Calendar; edits made to them in the app are replaced on the next sync.
+
+A second task writes a morning briefing to `briefings` each day.
+
 ### Data format
 
 ```json

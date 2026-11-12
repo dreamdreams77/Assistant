@@ -55,6 +55,7 @@ Things a task can do:
   "outbox":    [{ "id": "", "u": 0, "to": "", "subject": "", "body": "", "status": "queued | sent | failed", "created": 0, "sentAt": 0, "error": "" }],
   "briefings": [{ "id": "", "u": 0, "title": "", "body": "", "created": 0 }],
   "tasks":     [{ "id": "", "u": 0, "name": "", "schedule": "Mondays 9:00 AM", "next": 0, "about": "", "enabled": true }],
+  "bp":        [{ "id": "", "u": 0, "at": 0, "sys": 120, "dia": 80, "pulse": 70, "note": "" }],
   "deleted":   { "item-id": 0 },
   "prefs":     { "emergencyNote": "", "medical": { "name": "", "blood": "", "allergies": "", "meds": "", "conditions": "", "doctor": "", "share": false }, "u": 0 }
 }
@@ -62,7 +63,7 @@ Things a task can do:
 
 Rules for anything that writes this file:
 
-- All times (`u`, `due`, `created`, `sentAt`) are milliseconds since 1970 UTC.
+- All times (`u`, `due`, `created`, `sentAt`, `at`) are milliseconds since 1970 UTC.
 - Give every new item a unique `id`.
 - An event with `repeat` set shows on its `date` and on every matching day after it. Store it once; do not add one item per occurrence.
 - Alarm `days` uses 0 for Sunday through 6 for Saturday. An empty list means every day.
@@ -78,6 +79,10 @@ Recordings are saved on the device and copied to the data repository as `voice/<
 ## The sky panel
 
 The panel on Today follows real sunrise and sunset: its colour, the sun or moon on the arc, the moon's phase and the stars. By default the times are estimated from the device's time zone. **Settings > Appearance > Use my location** makes them exact; the location is rounded and kept on that device only, never synced. The same card can tint the whole app with the sky and switch light and dark with the sun.
+
+## Health
+
+The Health tab logs blood pressure readings typed in from a monitor (the Omron 3 Series has no Bluetooth), shows the latest reading with its American Heart Association range, a 7-day average and a 30-day chart, and shows the allergies, medications and doctor from your Medical ID. Readings are stored in `bp`. A `pulse` of `""` means none was entered.
 
 ## Wallet button
 

@@ -24,6 +24,7 @@
   --r:16px;
   --top:#0b4f5e; --hero-a:#083f4c; --hero-b:#14889a; --tint:#dcedf0;
   --rem:#a86200; --rem-soft:#fdefd3; --todo:#4650c4; --todo-soft:#e7e9fb; --jr:#b23562; --jr-soft:#fbe5ed; --cl:#6741b5; --cl-soft:#ede6fa;
+  --bp-sys:#b23562; --bp-dia:#4650c4;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -34,6 +35,7 @@
     --shadow:0 1px 2px rgba(0,0,0,.3);
     --top:#0b2a33; --hero-a:#0b2a33; --hero-b:#14606e; --tint:#0f2329;
     --rem:#f0b450; --rem-soft:#33290f; --todo:#a3abff; --todo-soft:#1f2347; --jr:#f08db0; --jr-soft:#3a1a27; --cl:#bda2f5; --cl-soft:#2a1f45;
+    --bp-sys:#d0628c; --bp-dia:#7880ea;
   }
 }
 :root[data-theme="dark"]{
@@ -44,6 +46,7 @@
   --shadow:0 1px 2px rgba(0,0,0,.3);
     --top:#0b2a33; --hero-a:#0b2a33; --hero-b:#14606e; --tint:#0f2329;
     --rem:#f0b450; --rem-soft:#33290f; --todo:#a3abff; --todo-soft:#1f2347; --jr:#f08db0; --jr-soft:#3a1a27; --cl:#bda2f5; --cl-soft:#2a1f45;
+    --bp-sys:#d0628c; --bp-dia:#7880ea;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -313,6 +316,24 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 .dial-list .ic{width:46px;height:46px;border-radius:15px;box-shadow:0 4px 14px rgba(0,0,0,.25)}.dial-list .ic svg{width:22px;height:22px}
 .dial.on .dial-list button{transform:none;opacity:1}
 .dial.on .dial-list button:nth-last-child(2){transition-delay:.03s}.dial.on .dial-list button:nth-last-child(3){transition-delay:.06s}.dial.on .dial-list button:nth-last-child(4){transition-delay:.09s}.dial.on .dial-list button:nth-last-child(5){transition-delay:.12s}.dial.on .dial-list button:nth-last-child(6){transition-delay:.15s}
+.dial.on .dial-list button:nth-last-child(7){transition-delay:.18s}
+.tabs svg{padding:3px 12px}
+.bpnow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.bpnow b{font-family:var(--display);font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.bpnow small{color:var(--muted);font-size:14px}
+.bpmeta{color:var(--muted);font-size:13px;margin-top:4px}
+.bpchart svg{display:block;width:100%;height:auto;overflow:visible;touch-action:pan-y}
+.bpchart .grid{stroke:var(--line);stroke-width:1}
+.bpchart .ax{fill:var(--muted);font-size:10px;font-family:var(--body)}
+.bpchart .sys{stroke:var(--bp-sys)}.bpchart .dia{stroke:var(--bp-dia)}
+.bpchart polyline{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.bpchart circle{stroke:var(--surface);stroke-width:2}
+.bpchart circle.sys{fill:var(--bp-sys)}.bpchart circle.dia{fill:var(--bp-dia)}
+.bpchart .cross{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+.bplegend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:6px}
+.bplegend i{display:inline-block;width:14px;height:2px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.bpread{font-size:13px;color:var(--ink);min-height:19px;margin-top:4px;font-variant-numeric:tabular-nums}
+.pill.ok{background:var(--accent-soft);color:var(--ok)}
 #toasts{bottom:calc(148px + env(safe-area-inset-bottom))}
 @media (min-width:900px){.fab{right:30px;bottom:30px}.dial-list{right:36px;bottom:104px}#toasts{bottom:30px}main{padding-bottom:110px}}
 
@@ -358,6 +379,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
 <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M5 4L3 6M19 4l2 2"/></symbol>
 <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM9 4v16"/></symbol>
+<symbol id="i-pulse" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M5.5 12h3l1.5-2.5 2 5 1.5-2.5h5"/></symbol>
 <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3M4 7.5V17a2 2 0 0 0 2 2h14V8H6.5A2.5 2.5 0 0 1 4 7.5z"/><circle cx="16" cy="13.5" r="1.2"/></symbol>
 <symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"/></symbol>
 </defs></svg>
@@ -434,6 +456,20 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
   <div class="stack" id="voicePane" style="display:none">
     <div class="card recbox"><button class="rec" id="recBtn" aria-label="Record or stop"><span></span></button><div><div class="t" id="recState" style="font-weight:600"></div><div class="muted" id="recTime"></div></div></div>
     <div class="card"><div class="list" id="voiceList"></div></div>
+  </div>
+</section>
+
+<section class="view" id="v-health">
+  <div class="vhead"><div><h2>Health</h2><p id="bpSub"></p></div><button class="btn" data-new="bp">+ Log reading</button></div>
+  <div class="cols">
+    <div class="stack">
+      <div class="card"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-pulse"/></svg></span><h3>Blood pressure</h3></div><span class="count" id="cBp"></span></div><div id="bpNow"></div><div class="bpchart" id="bpChart"></div></div>
+      <div class="card"><div class="head"><h3>Readings</h3></div><div class="list" id="bpList"></div></div>
+    </div>
+    <div class="stack">
+      <div class="card"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-heart"/></svg></span><h3>Allergies and medications</h3></div><button class="btn line sm" id="healthMedEdit">Edit</button></div><div id="healthMed"></div><p class="muted">This is your Medical ID. Changes here also show on the SOS screen.</p></div>
+      <p class="muted">Ranges follow the American Heart Association. This app does not diagnose anything. Talk to your doctor about your readings, and call 911 for a reading over 180/120 with chest pain, shortness of breath, weakness or trouble speaking.</p>
+    </div>
   </div>
 </section>
 
@@ -514,7 +550,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
       </div>
       <div class="card">
         <h3>Backup</h3>
-        <p class="muted">A backup holds everything: events, reminders, to-dos, alarms, journal, contacts and your medical ID. Voice recordings are kept separately and are not in the backup file.</p>
+        <p class="muted">A backup holds everything: events, reminders, to-dos, alarms, journal, contacts, blood pressure readings and your medical ID. Voice recordings are kept separately and are not in the backup file.</p>
         <div class="actions"><button class="btn line" id="bkDown">Download backup</button><button class="btn line" id="bkCopy">Copy backup</button></div>
         <label>Restore from a backup file<input type="file" id="bkFile" accept="application/json,.json"></label>
       </div>
@@ -529,11 +565,13 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
   <button data-go="calendar"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</button>
   <button data-go="plan"><svg viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>Plan</button>
   <button data-go="journal"><svg viewBox="0 0 24 24"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM9 4v16"/></svg>Journal</button>
+  <button data-go="health"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M5.5 12h3l1.5-2.5 2 5 1.5-2.5h5"/></svg>Health</button>
   <button data-go="mail"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email</button>
 </nav>
 </div>
 
 <div class="dial" id="dial"><div class="dial-list">
+  <button data-new="bp"><span>Blood pressure</span><i class="ic red"><svg><use href="#i-pulse"/></svg></i></button>
   <button data-new="alarm"><span>Alarm</span><i class="ic al"><svg><use href="#i-clock"/></svg></i></button>
   <button data-new="voice"><span>Voice note</span><i class="ic vo"><svg><use href="#i-mic"/></svg></i></button>
   <button data-new="journal"><span>Journal entry</span><i class="ic jr"><svg><use href="#i-book"/></svg></i></button>
@@ -555,7 +593,15 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 
 <script>
 /*PURE-START*/
-const LISTS = ['events','reminders','todos','alarms','journal','voice','contacts','outbox','briefings','tasks'];
+const LISTS = ['events','reminders','todos','alarms','journal','voice','contacts','outbox','briefings','tasks','bp'];
+// Blood pressure category, American Heart Association 2017 ranges.
+function bpCategory(sys, dia) {
+  if (sys > 180 || dia > 120) return ['Very high', 'bad'];
+  if (sys >= 140 || dia >= 90) return ['High, stage 2', 'bad'];
+  if (sys >= 130 || dia >= 80) return ['High, stage 1', 'wait'];
+  if (sys >= 120) return ['Elevated', 'wait'];
+  return ['Normal', 'ok'];
+}
 const DEFAULT_NOTE = 'I need help. Please contact me or call 911.';
 function normalize(d) {
   d = d && typeof d === 'object' ? d : {};
@@ -883,7 +929,7 @@ function paintSky(now) {
 // Stars: three layers of dots that fade in with the night and twinkle at different speeds.
 (() => { let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   $$('#stars i').forEach(el => { el.style.boxShadow = Array.from({ length: 26 }, () => `${Math.round(rnd() * 900)}px ${Math.round(rnd() * 300)}px 0 ${(rnd() * .7).toFixed(1)}px rgba(255,255,255,${(.55 + rnd() * .45).toFixed(2)})`).join(','); }); })();
-const VIEWS = ['today', 'calendar', 'plan', 'journal', 'mail', 'emergency', 'sync'];
+const VIEWS = ['today', 'calendar', 'plan', 'journal', 'health', 'mail', 'emergency', 'sync'];
 function show(v, fromHash) {
   if (v === 'alerts') v = 'plan';
   if (!VIEWS.includes(v)) v = 'today';
@@ -916,6 +962,12 @@ const KINDS = {
     { k: 'date', l: 'Date', t: 'date', req: 1 }, { k: 'mood', l: 'Mood', t: 'select', o: ['Great', 'Good', 'Okay', 'Low', 'Rough'].map(m => [m, m]) }, { k: 'text', l: 'Entry', t: 'textarea', req: 1, ph: 'What happened today?', tall: 1 }] },
   contact: { name: 'contact', list: 'contacts', fields: [
     { k: 'name', l: 'Name', req: 1 }, { k: 'phone', l: 'Phone', t: 'tel' }, { k: 'email', l: 'Email', t: 'email' }, { k: 'ice', l: 'Emergency contact', t: 'check' }] },
+  bp: { name: 'blood pressure reading', list: 'bp', defaults: () => ({ at: Date.now() }),
+    check: v => v.sys < 60 || v.sys > 260 || v.dia < 30 || v.dia > 160 ? 'Check the numbers: systolic is the top number, diastolic the bottom.' : v.sys <= v.dia ? 'The top number (systolic) should be higher than the bottom number.' : v.pulse !== '' && (v.pulse < 25 || v.pulse > 250) ? 'Check the pulse.' : '',
+    fields: [
+    { k: 'sys', l: 'Systolic (top number)', t: 'number', req: 1, ph: '120', to: v => +v }, { k: 'dia', l: 'Diastolic (bottom number)', t: 'number', req: 1, ph: '80', to: v => +v },
+    { k: 'pulse', l: 'Pulse (optional)', t: 'number', ph: '70', to: v => v === '' ? '' : +v }, { k: 'at', l: 'Taken', t: 'datetime-local', req: 1, from: v => v ? dtLocal(v) : '', to: v => new Date(v).getTime() },
+    { k: 'note', l: 'Note (optional)', ph: 'Left arm, after coffee' }] },
   voice: { name: 'voice note', list: 'voice', onRemove: id => { idbDel(id); deleteRemoteVoice(id); if (playing === id) stopPlay(); }, fields: [
     { k: 'title', l: 'Title', req: 1 }, { k: 'note', l: 'Notes', t: 'textarea' }] }
 };
@@ -929,7 +981,7 @@ function fieldHtml(f) {
   if (f.t === 'select') return `<label>${f.l}<select id="${id}">${f.o.map(([val, lab]) => `<option value="${esc(val)}"${val === v ? ' selected' : ''}>${esc(lab)}</option>`).join('')}</select></label>`;
   if (f.t === 'check') return `<label class="checkline"><input type="checkbox" id="${id}"${v ? ' checked' : ''}>${f.l}</label>`;
   if (f.t === 'days') return `<div class="lbl">${f.l}<div class="days">${DAYS.map((d, i) => `<label><input type="checkbox" data-wd="${i}"${(v || []).includes(i) ? ' checked' : ''}><span>${d[0]}</span></label>`).join('')}</div></div>`;
-  return `<label>${f.l}<input id="${id}" type="${f.t || 'text'}" value="${esc(v)}"${ph}></label>`;
+  return `<label>${f.l}<input id="${id}" type="${f.t || 'text'}" value="${esc(v)}"${ph}${f.t === 'number' ? ' inputmode="numeric"' : ''}></label>`;
 }
 function openForm(spec) {
   sheet = spec;
@@ -959,7 +1011,7 @@ function openItem(kind, id) {
   if (id && !it) return;
   const src = it || (def.defaults ? def.defaults() : {}); buzz(6);
   openForm({
-    title: (it ? 'Edit ' : 'New ') + def.name, editing: !!it,
+    title: (it ? 'Edit ' : 'New ') + def.name, editing: !!it, check: def.check,
     fields: def.fields.map(f => Object.assign({}, f, { v: f.from ? f.from(src[f.k]) : (src[f.k] ?? (f.t === 'days' ? [] : f.t === 'check' ? false : '')) })),
     save(v) {
       if (kind === 'event') { selDate = v.date; cursor = new Date(v.date + 'T00:00'); cursor.setDate(1); }
@@ -974,7 +1026,7 @@ function openMedical() {
   const m = data.prefs.medical || {};
   openForm({ title: 'Medical ID', editing: true, fields: MEDICAL.map(f => Object.assign({}, f, { v: m[f.k] ?? (f.t === 'check' ? false : '') })), save(v) { setPrefs({ medical: v }); toast('Medical ID saved'); } });
 }
-$('#sheetForm').addEventListener('submit', e => { e.preventDefault(); if (!sheet) return; const v = readForm(); if (!v) return; const s = sheet; closeForm(); s.save(v); });
+$('#sheetForm').addEventListener('submit', e => { e.preventDefault(); if (!sheet) return; const v = readForm(); if (!v) return; const bad = sheet.check && sheet.check(v); if (bad) return toast(bad); const s = sheet; closeForm(); s.save(v); });
 $('#sheet').addEventListener('pointerdown', e => { if (e.target.id === 'sheet') closeForm(); });
 document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (sheet) closeForm(); else closeDial(); });
 // Pull the sheet down by its handle to close it.
@@ -1015,7 +1067,7 @@ function relText(date, time, now) {
 const openTodos = () => data.todos.filter(t => !t.done).sort((a, b) => (!!b.star - !!a.star) || (a.u - b.u));
 
 function renderAll() {
-  renderToday(); renderCalendar(); renderPlan(); renderJournal(); renderVoice(); renderMail(); renderEmergency(); renderSync();
+  renderToday(); renderCalendar(); renderPlan(); renderJournal(); renderVoice(); renderMail(); renderHealth(); renderEmergency(); renderSync();
   if (document.activeElement !== $('#sosNote')) $('#sosNote').value = data.prefs.emergencyNote || DEFAULT_NOTE;
 }
 
@@ -1184,6 +1236,49 @@ function stopRing(min) {
   ringing = null; clearInterval(beepTimer); $('#ring').classList.remove('on');
 }
 
+/* ---------- health ---------- */
+const bpVal = r => `${r.sys}/${r.dia}`;
+function renderHealth() {
+  const rs = [...data.bp].sort((a, b) => b.at - a.at), last = rs[0];
+  const week = rs.filter(r => r.at > Date.now() - 7 * 864e5), avg = k => Math.round(week.reduce((n, r) => n + r[k], 0) / week.length);
+  $('#bpSub').textContent = last ? 'Last reading ' + fmtDT(last.at) : 'Log readings from your monitor';
+  $('#cBp').textContent = rs.length || '';
+  if (!last) { $('#bpNow').innerHTML = empty('Take a reading with your monitor, then tap + Log reading to save it here.'); $('#bpChart').innerHTML = ''; }
+  else {
+    const [cat, tone] = bpCategory(last.sys, last.dia);
+    $('#bpNow').innerHTML = `<div class="bpnow"><b>${bpVal(last)}</b><small>mmHg${last.pulse ? ` · pulse ${last.pulse}` : ''}</small><span class="pill ${tone}">${cat}</span></div>` +
+      `<div class="bpmeta">${week.length > 1 ? `7-day average ${avg('sys')}/${avg('dia')} from ${week.length} readings` : 'Log a few more readings to see your 7-day average.'}</div>`;
+    bpChart(rs.filter(r => r.at > Date.now() - 30 * 864e5).reverse());
+  }
+  $('#bpList').innerHTML = rs.length ? rs.slice(0, 30).map(r => { const [cat, tone] = bpCategory(r.sys, r.dia);
+    return `<div class="row">${editBtn('bp', r.id, `<div class="t">${bpVal(r)}${r.pulse ? ` <small class="muted">pulse ${r.pulse}</small>` : ''}</div><div class="s">${esc([fmtDT(r.at), r.note].filter(Boolean).join(' · '))}</div>`)}<span class="pill ${tone}">${cat}</span></div>`; }).join('') : empty('Your readings appear here. Tap one to edit or delete it.');
+  const lines = medLines().filter(([l]) => ['Allergies', 'Medications', 'Conditions', 'Doctor and phone'].includes(l));
+  $('#healthMed').innerHTML = lines.length ? `<dl class="kv">${lines.map(([l, v]) => `<dt>${esc(l)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>` : empty('Add your allergies, medications and doctor.');
+}
+// Systolic and diastolic over the last 30 days, one shared mmHg axis. Tap or drag to read a point.
+function bpChart(rs) {
+  if (rs.length < 2) { $('#bpChart').innerHTML = ''; return; }
+  const W = 320, H = 150, L = 28, R = 40, T = 8, B = 20, t0 = rs[0].at, t1 = rs[rs.length - 1].at;
+  const lo = Math.min(60, ...rs.map(r => r.dia)) - 5, hi = Math.max(160, ...rs.map(r => r.sys)) + 5;
+  const x = t => L + 10 + (t1 === t0 ? (W - L - R - 10) / 2 : (t - t0) / (t1 - t0) * (W - L - R - 10)), y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  const pts = k => rs.map(r => `${x(r.at).toFixed(1)},${y(r[k]).toFixed(1)}`).join(' ');
+  const day = t => new Date(t).toLocaleDateString([], { month: 'short', day: 'numeric' }), lastR = rs[rs.length - 1];
+  $('#bpChart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Blood pressure, last 30 days">` +
+    [80, 120, 140].map(v => `<line class="grid" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 4}" y="${y(v) + 3}" text-anchor="end">${v}</text>`).join('') +
+    `<text class="ax" x="${L + 10}" y="${H - 4}">${day(t0)}</text><text class="ax" x="${W - R}" y="${H - 4}" text-anchor="end">${day(t1)}</text>` +
+    `<line class="cross" id="bpCross" y1="${T}" y2="${H - B}" style="display:none"/>` +
+    `<polyline class="sys" points="${pts('sys')}"/><polyline class="dia" points="${pts('dia')}"/>` +
+    rs.map(r => `<circle class="sys" r="4" cx="${x(r.at)}" cy="${y(r.sys)}"/><circle class="dia" r="4" cx="${x(r.at)}" cy="${y(r.dia)}"/>`).join('') +
+    `<text class="ax" x="${W - R + 8}" y="${y(lastR.sys) + 3}">Sys</text><text class="ax" x="${W - R + 8}" y="${y(lastR.dia) + 3}">Dia</text></svg>` +
+    `<div class="bplegend"><span><i style="background:var(--bp-sys)"></i>Systolic</span><span><i style="background:var(--bp-dia)"></i>Diastolic</span></div><div class="bpread" id="bpRead">Tap the chart to read a point.</div>`;
+  const svg = $('#bpChart svg'), cross = $('#bpCross');
+  const pick = e => { const b = svg.getBoundingClientRect(), px = (e.clientX - b.left) / b.width * W;
+    const r = rs.reduce((a, c) => Math.abs(x(c.at) - px) < Math.abs(x(a.at) - px) ? c : a);
+    cross.setAttribute('x1', x(r.at)); cross.setAttribute('x2', x(r.at)); cross.style.display = '';
+    $('#bpRead').textContent = `${fmtDT(r.at)}: ${bpVal(r)} mmHg${r.pulse ? ', pulse ' + r.pulse : ''} (${bpCategory(r.sys, r.dia)[0]})`; };
+  svg.addEventListener('pointerdown', pick); svg.addEventListener('pointermove', e => { if (e.buttons || e.pointerType === 'mouse') pick(e); });
+}
+
 /* ---------- emergency ---------- */
 let gps = '';
 const tel = p => String(p).replace(/[^\d+]/g, '');
@@ -1243,7 +1338,7 @@ document.body.addEventListener('click', async e => {
     case 'calNow': cursor = new Date(); cursor.setDate(1); selDate = ymd(); return renderCalendar();
     case 'planNew': return openItem({ todos: 'todo', reminders: 'reminder', alarms: 'alarm' }[local.seg]);
     case 'todoClear': { const now = Date.now(); data.todos.filter(t => t.done).forEach(t => { data.deleted[t.id] = now; }); data.todos = data.todos.filter(t => !t.done); return save(); }
-    case 'medEdit': return openMedical();
+    case 'medEdit': case 'healthMedEdit': return openMedical();
     case 'locBtn':
       if (local.loc) { delete local.loc; saveLocal(); applyTheme(); return renderToday(); }
       try { navigator.geolocation.getCurrentPosition(p => { local.loc = { lat: +p.coords.latitude.toFixed(1), lon: +p.coords.longitude.toFixed(1) }; saveLocal(); applyTheme(); renderToday(); toast('Sunrise and sunset now match where you are.'); },

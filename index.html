@@ -1153,7 +1153,7 @@ function renderMail() {
     return `<div class="row"><div class="main"><div class="t">${esc(o.subject || '(no subject)')}</div><div class="s">To ${esc(o.to)}${o.error ? ' · ' + esc(o.error) : ''}</div><div style="margin-top:5px">${pill}</div></div><div class="ops"><button class="btn line sm" data-del="outbox:${esc(o.id)}">${o.status === 'queued' ? 'Cancel' : 'Remove'}</button></div></div>`;
   }).join('') : empty('Emails you queue appear here with their status.');
   const cs = [...data.contacts].sort((a, b) => a.name.localeCompare(b.name));
-  $('#cList').innerHTML = cs.length ? cs.map(c => `<div class="row">${editBtn('contact', c.id, `<div class="t">${esc(c.name)} ${c.ice ? '<span class="pill bad">Emergency</span>' : ''}</div><div class="s">${esc([c.phone, c.email].filter(Boolean).join(' · ') || 'No details')}</div>`)}<div class="ops">${c.email ? `<button class="btn line sm" data-mailto="${esc(c.id)}">Email</button>` : ''}</div></div>`).join('') : empty('Add the people you write to. Mark some as emergency contacts.');
+  $('#cList').innerHTML = cs.length ? cs.map(c => `<div class="row">${editBtn('contact', c.id, `<div class="t">${esc(c.name)} ${c.ice ? '<span class="pill bad">Emergency</span>' : ''}</div>${c.phone || c.email ? `<div class="s">${esc([c.phone, c.email].filter(Boolean).join(' · '))}</div>` : ''}`)}<div class="ops">${c.email ? `<button class="btn line sm" data-mailto="${esc(c.id)}">Email</button>` : ''}</div></div>`).join('') : empty('Add the people you write to. Mark some as emergency contacts.');
 }
 function draftChanged() {
   local.draft = { to: $('#mTo').value.trim(), subject: $('#mSubj').value, body: $('#mBody').value }; saveLocal();

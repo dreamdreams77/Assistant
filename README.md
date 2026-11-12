@@ -79,6 +79,10 @@ Recordings are saved on the device and copied to the data repository as `voice/<
 
 The panel on Today follows real sunrise and sunset: its colour, the sun or moon on the arc, the moon's phase and the stars. By default the times are estimated from the device's time zone. **Settings > Appearance > Use my location** makes them exact; the location is rounded and kept on that device only, never synced. The same card can tint the whole app with the sky and switch light and dark with the sun.
 
+## Wallet button
+
+The wallet icon in the top bar opens Google Wallet on Android, and the Wallet website if the app is not installed. On iPhone it runs a shortcut named **Open Wallet**: in the Shortcuts app make one with the single action **Open App > Wallet**.
+
 ## Limits
 
 - Reminders and alarms in the app alert only while the app is open. Phones do not let a web app wake itself.

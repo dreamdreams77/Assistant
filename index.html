@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Personal Assistant</title>
+<meta name="theme-color" content="#0e6577">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Assistant">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a calm work surface. Phone gets a bottom tab bar, wide screens a left rail. One accent, red reserved for emergency. */
+:root{
+  --paper:#f3f5f7; --surface:#ffffff; --ink:#16212b; --muted:#5d6b78; --line:#dce2e8;
+  --accent:#0e6577; --accent-soft:#e1eff1; --on-accent:#ffffff;
+  --danger:#b3261e; --danger-soft:#fbe9e7; --warn:#7a5200; --warn-soft:#fcf2d9; --ok:#1d7a4f;
+  --display:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#0f161c; --surface:#172029; --ink:#e7edf2; --muted:#93a2af; --line:#2a3742;
+    --accent:#5cc0d1; --accent-soft:#15333a; --on-accent:#06222a;
+    --danger:#e5534a; --danger-soft:#3a1c1a; --warn:#f0c060; --warn-soft:#33290f; --ok:#6fd3a0;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#0f161c; --surface:#172029; --ink:#e7edf2; --muted:#93a2af; --line:#2a3742;
+  --accent:#5cc0d1; --accent-soft:#15333a; --on-accent:#06222a;
+  --danger:#e5534a; --danger-soft:#3a1c1a; --warn:#f0c060; --warn-soft:#33290f; --ok:#6fd3a0;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;display:flex;flex-direction:column}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;align-items:center;gap:10px;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top));background:var(--surface);border-bottom:1px solid var(--line)}
+.top h1{font-size:17px;flex:1;letter-spacing:-.01em}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 10px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.chip.ok i{background:var(--ok)} .chip.err i{background:var(--danger)} .chip.busy i{background:var(--warn)}
+.sos{border:0;background:var(--danger);color:#fff;font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.06em;border-radius:999px;padding:7px 14px;cursor:pointer}
+
+.shell{flex:1;display:flex;flex-direction:column;min-height:0}
+main{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.wrap{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.tabs{display:flex;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{flex:1;border:0;background:none;padding:8px 2px 7px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer}
+.tabs svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tabs button.on{color:var(--accent)}
+@media (min-width:900px){
+  .shell{flex-direction:row-reverse}
+  .tabs{flex-direction:column;width:190px;border-top:0;border-right:1px solid var(--line);padding:12px 10px;gap:4px}
+  .tabs button{flex:none;flex-direction:row;gap:10px;font-size:14px;padding:10px 12px;border-radius:8px;justify-content:flex-start}
+  .tabs button.on{background:var(--accent-soft)}
+  main{padding:24px}
+}
+
+.view{display:none;flex-direction:column;gap:14px}
+.view.on{display:flex}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h2{font-size:15px}
+.card .head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hello h2{font-size:22px;letter-spacing:-.02em}
+.hello p{margin:2px 0 0;color:var(--muted)}
+.muted{color:var(--muted);font-size:13px}
+.note{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:9px 12px;font-size:13px}
+.note.red{background:var(--danger-soft);color:var(--danger)}
+
+label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font-weight:400;font-size:15px}
+textarea{min-height:96px;resize:vertical}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;background:var(--accent);color:var(--on-accent);padding:9px 14px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none}
+.btn.line{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn.red{background:var(--danger);color:#fff}
+.btn.sm{padding:5px 9px;font-size:12px}
+
+.list{display:flex;flex-direction:column}
+.row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0;padding-top:0}
+.row .main{flex:1;min-width:0}
+.row .t{font-weight:500;overflow-wrap:anywhere}
+.row .s{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.row .time{font-variant-numeric:tabular-nums;font-weight:600;min-width:70px;font-size:13px;padding-top:1px}
+.row input[type=checkbox]{width:18px;height:18px;margin-top:2px;flex:none;accent-color:var(--accent)}
+.row .ops{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.done{text-decoration:line-through;opacity:.55}
+.late{color:var(--danger)}
+.dim{opacity:.5}
+.pill{display:inline-block;font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.pill.wait{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--danger-soft);color:var(--danger)}
+.body{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:4px}
+
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .dow{font-size:11px;font-weight:600;color:var(--muted);text-align:center;padding:2px 0}
+.day{min-height:58px;border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:4px;cursor:pointer;font-size:12px;text-align:left;display:flex;flex-direction:column;gap:2px;overflow:hidden;color:var(--ink)}
+.day .n{font-variant-numeric:tabular-nums;font-weight:500;align-self:flex-start;min-width:22px;text-align:center;border-radius:999px;padding:0 4px}
+.day.out{opacity:.4}
+.day.now .n{background:var(--accent);color:var(--on-accent)}
+.day.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.day .ev{background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:600px){.day{min-height:46px}.day .ev{font-size:0;height:5px;padding:0}.day .more{display:none}}
+
+#hold{position:relative;overflow:hidden;width:100%;border:0;border-radius:var(--r);background:var(--danger);color:#fff;font-family:var(--display);font-weight:700;font-size:18px;padding:26px 12px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none}
+#hold span{position:relative}
+#holdFill{position:absolute;inset:0 auto 0 0;width:0;background:rgba(0,0,0,.28)}
+#ring{position:fixed;inset:0;z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(9,14,19,.95);color:#fff;text-align:center;padding:24px}
+#ring.on{display:flex}
+#ring .big{font-family:var(--display);font-size:54px;font-weight:700;font-variant-numeric:tabular-nums}
+#toasts{position:fixed;left:16px;right:16px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:20;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.toast{background:var(--ink);color:var(--paper);padding:10px 14px;border-radius:10px;font-size:14px;max-width:420px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+@media (prefers-reduced-motion:no-preference){.view.on{animation:in .18s ease-out}@keyframes in{from{transform:translateY(4px)}to{transform:none}}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Personal Assistant</h1>
+  <button class="chip" id="syncChip" data-go="sync" title="Sync settings"><i></i><span id="syncLabel">On this device</span></button>
+  <button class="sos" data-go="emergency">SOS</button>
+</header>
+
+<div class="shell">
+<main><div class="wrap">
+
+<section class="view on" id="v-today">
+  <div class="hello"><h2 id="helloDate"></h2><p id="helloLine"></p></div>
+  <div class="cols">
+    <div class="card" id="briefCard"><div class="head"><h2>From Claude</h2><span class="pill">Scheduled tasks</span></div><div class="list" id="briefList"></div></div>
+    <div class="card"><h2>Today's events</h2><div class="list" id="todayEvents"></div></div>
+    <div class="card"><h2>Open reminders</h2><div class="list" id="todayRems"></div></div>
+    <div class="card"><h2>Alarms</h2><div class="list" id="todayAlarms"></div></div>
+  </div>
+</section>
+
+<section class="view" id="v-calendar">
+  <div class="cols">
+    <div class="card">
+      <div class="head">
+        <button class="btn line sm" id="calPrev" aria-label="Previous month">&lsaquo;</button>
+        <h2 id="calTitle"></h2>
+        <button class="btn line sm" id="calNext" aria-label="Next month">&rsaquo;</button>
+      </div>
+      <div class="cal" id="calGrid"></div>
+      <div class="actions"><button class="btn line sm" id="calNow">Go to today</button></div>
+    </div>
+    <div class="card">
+      <h2 id="dayTitle"></h2>
+      <div class="list" id="dayList"></div>
+      <h2>Add an event</h2>
+      <label>Title<input id="evTitle" placeholder="Dentist appointment"></label>
+      <div class="fields">
+        <label>Date<input type="date" id="evDate"></label>
+        <label>Time (optional)<input type="time" id="evTime"></label>
+      </div>
+      <label>Notes<input id="evNotes"></label>
+      <div class="actions"><button class="btn" id="evAdd">Add event</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-alerts">
+  <div class="note">Reminders and alarms from this app go off only while it is open. A scheduled Claude task can email you about due reminders when the app is closed.</div>
+  <div class="cols">
+    <div class="card">
+      <h2>Reminders</h2>
+      <div class="fields">
+        <label>What<input id="remText" placeholder="Call the pharmacy"></label>
+        <label>When<input type="datetime-local" id="remWhen"></label>
+      </div>
+      <div class="actions"><button class="btn" id="remAdd">Add reminder</button><button class="btn line" id="notifyBtn">Allow notifications</button></div>
+      <div class="list" id="remList"></div>
+    </div>
+    <div class="card">
+      <h2>Alarms</h2>
+      <div class="fields">
+        <label>Time<input type="time" id="alTime"></label>
+        <label>Label<input id="alLabel" placeholder="Take medication"></label>
+      </div>
+      <div class="actions"><button class="btn" id="alAdd">Add daily alarm</button></div>
+      <div class="list" id="alList"></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-journal">
+  <div class="cols">
+    <div class="card">
+      <h2>New entry</h2>
+      <div class="fields">
+        <label>Date<input type="date" id="jrDate"></label>
+        <label>Mood<select id="jrMood"><option>Great</option><option>Good</option><option selected>Okay</option><option>Low</option><option>Rough</option></select></label>
+      </div>
+      <label>Entry<textarea id="jrText" style="min-height:170px" placeholder="What happened today?"></textarea></label>
+      <div class="actions"><button class="btn" id="jrSave">Save entry</button></div>
+    </div>
+    <div class="card">
+      <h2>Entries</h2>
+      <input id="jrSearch" placeholder="Search by word or date" aria-label="Search entries">
+      <div class="list" id="jrList"></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-mail">
+  <div class="cols">
+    <div class="card">
+      <h2>Write an email</h2>
+      <label>To<input id="mTo" type="email" placeholder="name@example.com"></label>
+      <label>Subject<input id="mSubj"></label>
+      <label>Message<textarea id="mBody" style="min-height:150px"></textarea></label>
+      <div class="actions">
+        <button class="btn" id="mQueue">Queue for Claude to send</button>
+        <a class="btn line" id="mLink" href="mailto:">Open in email app</a>
+        <button class="btn line" data-copy="mBody">Copy</button>
+      </div>
+      <p class="muted" style="margin:0">Queued emails go out from your Gmail when your scheduled Claude task next runs. This app never sends mail itself.</p>
+    </div>
+    <div class="card"><h2>Outbox</h2><div class="list" id="outList"></div></div>
+    <div class="card">
+      <h2>Contacts</h2>
+      <div class="fields">
+        <label>Name<input id="cName"></label>
+        <label>Phone<input id="cPhone" type="tel"></label>
+      </div>
+      <label>Email<input id="cEmail" type="email"></label>
+      <div class="actions"><button class="btn" id="cAdd">Add contact</button></div>
+      <div class="list" id="cList"></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-emergency">
+  <div class="card" style="max-width:620px">
+    <h2>Emergency</h2>
+    <div class="note red">This app cannot place a call or send a message by itself. Holding the button opens call and text shortcuts. If someone is in immediate danger, call 911 directly.</div>
+    <button id="hold"><div id="holdFill"></div><span>Press and hold for 2 seconds</span></button>
+    <label>Message to send<textarea id="sosNote"></textarea></label>
+    <label>Where you are (optional)<input id="sosWhere" placeholder="Street address or landmark"></label>
+    <div id="sosPanel" style="display:none;flex-direction:column;gap:10px">
+      <div class="actions"><a class="btn red" href="tel:911">Call 911</a><a class="btn line" href="tel:988">Call 988 crisis line</a></div>
+      <label>Message with time and location<textarea id="sosMsg"></textarea></label>
+      <div class="actions"><button class="btn line" data-copy="sosMsg">Copy message</button><button class="btn line" id="sosClose">Close</button></div>
+      <div class="list" id="sosContacts"></div>
+      <p class="muted" style="margin:0">Call, Text and Email open your phone's own apps. You press send there.</p>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-sync">
+  <div class="card" style="max-width:620px">
+    <h2>Sync and Claude schedules</h2>
+    <p class="muted" id="syncInfo" style="margin:0"></p>
+    <div id="ghForm" style="display:flex;flex-direction:column;gap:10px">
+      <p class="muted" style="margin:0">Connect a <b>private</b> GitHub repository to hold your data. Your phone, your other devices and your scheduled Claude tasks then all read and write the same file.</p>
+      <div class="fields">
+        <label>GitHub username<input id="ghOwner" autocomplete="off" autocapitalize="none"></label>
+        <label>Private data repository<input id="ghRepo" autocomplete="off" autocapitalize="none" placeholder="assistant-data"></label>
+      </div>
+      <div class="fields">
+        <label>Branch<input id="ghBranch" value="main" autocapitalize="none"></label>
+        <label>File<input id="ghPath" value="assistant-data.json" autocapitalize="none"></label>
+      </div>
+      <label>Access token (fine-grained, Contents read and write on that repository only)<input id="ghToken" type="password" autocomplete="off"></label>
+      <div class="actions"><button class="btn" id="ghSave">Save and sync</button><button class="btn line" id="ghNow">Sync now</button><button class="btn line" id="ghOff">Disconnect</button></div>
+      <p class="muted" style="margin:0">The token is stored only in this browser on this device.</p>
+    </div>
+  </div>
+</section>
+
+</div></main>
+
+<nav class="tabs" aria-label="Sections">
+  <button data-go="today" class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Today</button>
+  <button data-go="calendar"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</button>
+  <button data-go="alerts"><svg viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 1 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0"/></svg>Alerts</button>
+  <button data-go="journal"><svg viewBox="0 0 24 24"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM9 4v16"/></svg>Journal</button>
+  <button data-go="mail"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email</button>
+</nav>
+</div>
+
+<div id="ring"><div class="big" id="ringTime"></div><div id="ringLabel" style="font-size:18px"></div>
+  <div class="actions" style="justify-content:center;margin-top:14px"><button class="btn" id="ringSnooze">Snooze 5 minutes</button><button class="btn red" id="ringStop">Dismiss</button></div></div>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+/*PURE-START*/
+const LISTS = ['events','reminders','alarms','journal','contacts','outbox','briefings'];
+const DEFAULT_NOTE = 'I need help. Please contact me or call 911.';
+function normalize(d) {
+  d = d && typeof d === 'object' ? d : {};
+  const out = { version: 2 };
+  for (const k of LISTS) out[k] = Array.isArray(d[k]) ? d[k].filter(x => x && x.id) : [];
+  out.deleted = d.deleted && typeof d.deleted === 'object' ? d.deleted : {};
+  out.prefs = d.prefs && typeof d.prefs === 'object' ? d.prefs : { emergencyNote: d.emergencyNote || DEFAULT_NOTE, u: 0 };
+  return out;
+}
+// Item-level merge: newest copy of each item wins, deletions are remembered, the first argument wins ties.
+function merge(a, b) {
+  const out = { version: 2, deleted: Object.assign({}, b.deleted, a.deleted) };
+  for (const k of LISTS) {
+    const m = new Map();
+    for (const it of [...a[k], ...b[k]]) {
+      if (out.deleted[it.id]) continue;
+      const cur = m.get(it.id);
+      if (!cur || (it.u || 0) > (cur.u || 0)) m.set(it.id, it);
+    }
+    out[k] = [...m.values()];
+  }
+  out.prefs = (b.prefs.u || 0) > (a.prefs.u || 0) ? b.prefs : a.prefs;
+  return out;
+}
+function sortKeys(v) {
+  if (Array.isArray(v)) return v.map(sortKeys);
+  if (v && typeof v === 'object') { const o = {}; for (const k of Object.keys(v).sort()) o[k] = sortKeys(v[k]); return o; }
+  return v;
+}
+function stable(d) {
+  const c = sortKeys(d);
+  for (const k of LISTS) c[k].sort((x, y) => String(x.id) < String(y.id) ? -1 : 1);
+  return JSON.stringify(c);
+}
+function b64enc(s) {
+  const b = new TextEncoder().encode(s); let o = '';
+  for (let i = 0; i < b.length; i += 8192) o += String.fromCharCode.apply(null, b.subarray(i, i + 8192));
+  return btoa(o);
+}
+function b64dec(s) {
+  const bin = atob(s.replace(/\s/g, '')); const b = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(b);
+}
+/*PURE-END*/
+
+const $ = s => document.querySelector(s);
+const pad = n => String(n).padStart(2, '0');
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ymd = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fmtTime = t => { if (!t) return 'All day'; const [h, m] = t.split(':').map(Number); return `${((h + 11) % 12) + 1}:${pad(m)} ${h >= 12 ? 'PM' : 'AM'}`; };
+const fmtDT = ms => new Date(ms).toLocaleString([], {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
+const byTime = (a, b) => (a.time || '').localeCompare(b.time || '');
+const empty = msg => `<div class="muted">${msg}</div>`;
+
+/* ---------- storage ---------- */
+const store = {
+  get(k, fb) { try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : fb; } catch (e) { return fb; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+let data = normalize(store.get('pa-assistant-v1', null));
+// Things that belong to this device only: which reminders already fired, alarm ring state, the unsent draft.
+let local = Object.assign({ notified: {}, ring: {}, draft: { to: '', subject: '', body: '' } }, store.get('pa-local', {}));
+let cfg = store.get('pa-sync', null);
+const saveLocal = () => store.set('pa-local', local);
+
+function save() { store.set('pa-assistant-v1', data); renderAll(); scheduleSync(1500); }
+function add(list, item) { item.id = uid(); item.u = Date.now(); data[list].push(item); save(); return item; }
+function change(list, id, fn) { const it = data[list].find(x => x.id === id); if (it) { fn(it); it.u = Date.now(); save(); } }
+function remove(list, id) { data[list] = data[list].filter(x => x.id !== id); data.deleted[id] = Date.now(); save(); }
+
+/* ---------- sync: Claude artifact storage, or a private GitHub repository ---------- */
+let db = null, ghSha = null, busy = false, again = false, syncTimer = null;
+const DOC = 'assistant/data';
+function setStatus(kind, text) {
+  $('#syncChip').className = 'chip ' + kind;
+  $('#syncLabel').textContent = text;
+  renderSync();
+}
+function ghHeaders() { return { 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + cfg.token, 'X-GitHub-Api-Version': '2022-11-28' }; }
+function ghUrl() { return `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${cfg.path.split('/').map(encodeURIComponent).join('/')}`; }
+async function ghFail(r) {
+  if (r.status === 401) return new Error('GitHub rejected the token. Create a new one and save it again.');
+  if (r.status === 403) return new Error('The token cannot write to this repository. It needs Contents read and write.');
+  if (r.status === 404) return new Error('Repository not found. Check the username, repository name and token access.');
+  return new Error('GitHub answered ' + r.status + '.');
+}
+const backends = {
+  github: {
+    async get() {
+      const r = await fetch(ghUrl() + '?ref=' + encodeURIComponent(cfg.branch), { headers: ghHeaders(), cache: 'no-store' });
+      if (r.status === 404) {
+        // Missing file is fine on first run; a missing repository is not.
+        const repo = await fetch(`https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`, { headers: ghHeaders(), cache: 'no-store' });
+        if (!repo.ok) throw await ghFail(repo);
+        ghSha = null; return null;
+      }
+      if (!r.ok) throw await ghFail(r);
+      const j = await r.json(); ghSha = j.sha;
+      return JSON.parse(b64dec(j.content));
+    },
+    async put(d) {
+      const body = { message: 'Update assistant data from the app', content: b64enc(JSON.stringify(d, null, 2)), branch: cfg.branch };
+      if (ghSha) body.sha = ghSha;
+      const r = await fetch(ghUrl(), { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
+      if (r.status === 409 || r.status === 422) { const e = new Error('The file changed while saving.'); e.conflict = true; throw e; }
+      if (!r.ok) throw await ghFail(r);
+      ghSha = (await r.json()).content.sha;
+    }
+  },
+  artifact: {
+    async get() { const s = await db.doc(DOC).get(); return s.exists ? s.data() : null; },
+    async put(d) { await db.doc(DOC).set(JSON.parse(JSON.stringify(d))); }
+  }
+};
+const backend = () => db ? backends.artifact : (cfg && cfg.token ? backends.github : null);
+
+async function sync() {
+  const be = backend();
+  if (!be) return setStatus('', 'On this device');
+  if (busy) { again = true; return; }
+  busy = true; setStatus('busy', 'Syncing');
+  try {
+    for (let i = 0; i < 3; i++) {
+      const raw = await be.get();
+      const remote = normalize(raw);
+      const before = stable(data);
+      const merged = merge(data, remote);
+      const mergedKey = stable(merged);
+      if (mergedKey !== before) { data = merged; store.set('pa-assistant-v1', data); renderAll(); }
+      if (!raw || mergedKey !== stable(remote)) {
+        try { await be.put(merged); } catch (e) { if (e.conflict && i < 2) continue; throw e; }
+      }
+      break;
+    }
+    setStatus('ok', 'Synced ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }));
+  } catch (e) {
+    setStatus('err', 'Sync problem');
+    $('#syncInfo').textContent = e.message || 'Could not reach the sync storage.';
+  }
+  busy = false;
+  if (again) { again = false; scheduleSync(500); }
+}
+function scheduleSync(ms) { clearTimeout(syncTimer); syncTimer = setTimeout(sync, ms); }
+
+async function initArtifactDb() {
+  if (!(window.claude && typeof window.claude.use === 'function')) return;
+  let d = null;
+  try { d = await window.claude.use('db'); } catch (e) {}
+  if (!d) return;
+  db = d; renderSync(); sync();
+  db.doc(DOC).onSnapshot(s => { if (!s.metadata.hasPendingWrites && !busy) scheduleSync(300); }, () => setStatus('err', 'Sync problem'));
+}
+function renderSync() {
+  $('#ghForm').style.display = db ? 'none' : 'flex';
+  if ($('#syncChip').classList.contains('err')) return;
+  $('#syncInfo').textContent = db
+    ? 'This copy saves to Claude artifact storage. Scheduled Claude tasks can read and write it there.'
+    : (cfg && cfg.token ? `Connected to ${cfg.owner}/${cfg.repo}, file ${cfg.path}.` : 'Your data is saved on this device only. Nothing is shared until you connect a repository below.');
+}
+
+/* ---------- small UI helpers ---------- */
+function toast(msg) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = msg; $('#toasts').appendChild(d); setTimeout(() => d.remove(), 6000); }
+async function notify(msg) {
+  toast(msg);
+  try {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
+    if (reg) reg.showNotification('Personal Assistant', { body: msg, icon: 'icons/icon-192.png' });
+    else new Notification('Personal Assistant', { body: msg });
+  } catch (e) {}
+}
+const VIEWS = ['today', 'calendar', 'alerts', 'journal', 'mail', 'emergency', 'sync'];
+function show(v, fromHash) {
+  if (!VIEWS.includes(v)) v = 'today';
+  document.querySelectorAll('.view').forEach(el => el.classList.toggle('on', el.id === 'v-' + v));
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.go === v));
+  if (!fromHash) { try { history.replaceState(null, '', '#' + v); } catch (e) {} }
+  $('main').scrollTop = 0;
+}
+
+/* ---------- render ---------- */
+function renderAll() { renderToday(); renderCalendar(); renderAlerts(); renderJournal(); renderMail(); renderSosContacts(); renderSync();
+  if (document.activeElement !== $('#sosNote')) $('#sosNote').value = data.prefs.emergencyNote || DEFAULT_NOTE; }
+
+function renderToday() {
+  const now = new Date(), t = ymd(now), ms = now.getTime();
+  $('#helloDate').textContent = now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+  const evs = data.events.filter(e => e.date === t).sort(byTime);
+  const open = data.reminders.filter(r => !r.done).sort((a, b) => a.due - b.due);
+  const late = open.filter(r => r.due < ms).length;
+  const queued = data.outbox.filter(o => o.status === 'queued').length;
+  $('#helloLine').textContent = `${evs.length} event${evs.length === 1 ? '' : 's'} today, ${open.length} open reminder${open.length === 1 ? '' : 's'}` +
+    (late ? `, ${late} overdue` : '') + (queued ? `, ${queued} email${queued === 1 ? '' : 's'} waiting to send` : '') + '.';
+  const br = [...data.briefings].sort((a, b) => (b.created || 0) - (a.created || 0)).slice(0, 5);
+  $('#briefList').innerHTML = br.length
+    ? br.map(b => `<div class="row"><div class="main"><div class="t">${esc(b.title || 'Briefing')}</div><div class="s">${b.created ? fmtDT(b.created) : ''}</div><div class="body">${esc(b.body)}</div></div><div class="ops"><button class="btn line sm" data-del="briefings:${esc(b.id)}">Dismiss</button></div></div>`).join('')
+    : empty('Briefings written by your scheduled Claude tasks appear here.');
+  $('#todayEvents').innerHTML = evs.length ? evs.map(e => `<div class="row"><div class="time">${fmtTime(e.time)}</div><div class="main"><div class="t">${esc(e.title)}</div>${e.notes ? `<div class="s">${esc(e.notes)}</div>` : ''}</div></div>`).join('') : empty('Nothing scheduled today.');
+  $('#todayRems').innerHTML = open.length ? open.slice(0, 6).map(r => `<div class="row"><input type="checkbox" data-done="${esc(r.id)}" aria-label="Mark done"><div class="main"><div class="t ${r.due < ms ? 'late' : ''}">${esc(r.text)}</div><div class="s">${fmtDT(r.due)}</div></div></div>`).join('') : empty('No open reminders.');
+  const al = data.alarms.filter(a => a.enabled).sort(byTime);
+  $('#todayAlarms').innerHTML = al.length ? al.map(a => `<div class="row"><div class="time">${fmtTime(a.time)}</div><div class="main"><div class="t">${esc(a.label || 'Alarm')}</div></div></div>`).join('') : empty('No alarms are on.');
+}
+
+let cursor = new Date(); cursor.setDate(1);
+let selDate = ymd();
+function renderCalendar() {
+  const y = cursor.getFullYear(), m = cursor.getMonth(), today = ymd();
+  $('#calTitle').textContent = cursor.toLocaleDateString([], { month: 'long', year: 'numeric' });
+  const first = new Date(y, m, 1 - new Date(y, m, 1).getDay());
+  let h = ['S','M','T','W','T','F','S'].map(d => `<div class="dow">${d}</div>`).join('');
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(first.getFullYear(), first.getMonth(), first.getDate() + i), s = ymd(d);
+    const evs = data.events.filter(e => e.date === s).sort(byTime);
+    h += `<button class="day ${d.getMonth() !== m ? 'out' : ''} ${s === today ? 'now' : ''} ${s === selDate ? 'sel' : ''}" data-day="${s}"><span class="n">${d.getDate()}</span>` +
+      evs.slice(0, 2).map(e => `<span class="ev">${esc(e.title)}</span>`).join('') + (evs.length > 2 ? `<span class="muted more">+${evs.length - 2}</span>` : '') + '</button>';
+  }
+  $('#calGrid').innerHTML = h;
+  $('#dayTitle').textContent = new Date(selDate + 'T00:00').toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+  const evs = data.events.filter(e => e.date === selDate).sort(byTime);
+  $('#dayList').innerHTML = evs.length ? evs.map(e => `<div class="row"><div class="time">${fmtTime(e.time)}</div><div class="main"><div class="t">${esc(e.title)}</div>${e.notes ? `<div class="s">${esc(e.notes)}</div>` : ''}</div><div class="ops"><button class="btn line sm" data-del="events:${esc(e.id)}">Delete</button></div></div>`).join('') : empty('Nothing scheduled this day.');
+}
+
+function renderAlerts() {
+  const ms = Date.now();
+  const rs = [...data.reminders].sort((a, b) => (a.done - b.done) || (a.due - b.due));
+  $('#remList').innerHTML = rs.length ? rs.map(r => `<div class="row"><input type="checkbox" data-done="${esc(r.id)}" ${r.done ? 'checked' : ''} aria-label="Mark done"><div class="main"><div class="t ${r.done ? 'done' : (r.due < ms ? 'late' : '')}">${esc(r.text)}</div><div class="s">${fmtDT(r.due)}${!r.done && r.due < ms ? ' · overdue' : ''}</div></div><div class="ops"><button class="btn line sm" data-del="reminders:${esc(r.id)}">Delete</button></div></div>`).join('') : empty('No reminders yet.');
+  const al = [...data.alarms].sort(byTime);
+  $('#alList').innerHTML = al.length ? al.map(a => `<div class="row ${a.enabled ? '' : 'dim'}"><div class="time">${fmtTime(a.time)}</div><div class="main"><div class="t">${esc(a.label || 'Alarm')}</div><div class="s">${a.enabled ? 'Every day' : 'Off'}</div></div><div class="ops"><button class="btn line sm" data-alarm="${esc(a.id)}">${a.enabled ? 'Turn off' : 'Turn on'}</button><button class="btn line sm" data-del="alarms:${esc(a.id)}">Delete</button></div></div>`).join('') : empty('No alarms yet.');
+}
+
+function renderJournal() {
+  const q = $('#jrSearch').value.trim().toLowerCase();
+  const js = data.journal.filter(j => !q || (j.text || '').toLowerCase().includes(q) || (j.date || '').includes(q))
+    .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.created || 0) - (a.created || 0));
+  $('#jrList').innerHTML = js.length ? js.map(j => `<div class="row"><div class="main"><div class="t">${esc(j.date)} <span class="pill">${esc(j.mood || '')}</span></div><div class="body">${esc(j.text)}</div></div><div class="ops"><button class="btn line sm" data-del="journal:${esc(j.id)}">Delete</button></div></div>`).join('') : empty(q ? 'No entries match.' : 'Your entries appear here.');
+}
+
+function renderMail() {
+  const out = [...data.outbox].sort((a, b) => (b.created || 0) - (a.created || 0));
+  $('#outList').innerHTML = out.length ? out.map(o => {
+    const pill = o.status === 'sent' ? `<span class="pill">Sent${o.sentAt ? ' ' + fmtDT(o.sentAt) : ''}</span>` : o.status === 'failed' ? '<span class="pill bad">Failed</span>' : '<span class="pill wait">Waiting for Claude</span>';
+    return `<div class="row"><div class="main"><div class="t">${esc(o.subject || '(no subject)')}</div><div class="s">To ${esc(o.to)}${o.error ? ' · ' + esc(o.error) : ''}</div><div style="margin-top:4px">${pill}</div></div><div class="ops"><button class="btn line sm" data-del="outbox:${esc(o.id)}">${o.status === 'queued' ? 'Cancel' : 'Remove'}</button></div></div>`;
+  }).join('') : empty('Emails you queue appear here with their status.');
+  $('#cList').innerHTML = data.contacts.length ? data.contacts.map(c => `<div class="row"><div class="main"><div class="t">${esc(c.name)}</div><div class="s">${esc([c.phone, c.email].filter(Boolean).join(' · ') || 'No details')}</div></div><div class="ops">${c.email ? `<button class="btn line sm" data-mailto="${esc(c.id)}">Email</button>` : ''}<button class="btn line sm" data-del="contacts:${esc(c.id)}">Delete</button></div></div>`).join('') : empty('Contacts are also used by the emergency panel.');
+}
+function draftChanged() {
+  local.draft = { to: $('#mTo').value.trim(), subject: $('#mSubj').value, body: $('#mBody').value }; saveLocal();
+  const d = local.draft;
+  $('#mLink').href = d.to ? `mailto:${d.to.split(',').map(s => encodeURIComponent(s.trim())).join(',')}?subject=${encodeURIComponent(d.subject)}&body=${encodeURIComponent(d.body)}` : 'mailto:';
+}
+
+/* ---------- reminders and alarms ---------- */
+function checkReminders() {
+  const ms = Date.now(); let hit = false;
+  data.reminders.forEach(r => { if (!r.done && r.due <= ms && !local.notified[r.id]) { local.notified[r.id] = 1; hit = true; notify('Reminder: ' + r.text); } });
+  if (hit) { saveLocal(); renderToday(); renderAlerts(); }
+}
+let actx = null, beepTimer = null, ringing = null;
+function beep() { try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); const o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = 880; g.gain.value = .15; o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime + .5); } catch (e) {} }
+function checkAlarms() {
+  if (ringing) return;
+  const d = new Date(), hm = `${pad(d.getHours())}:${pad(d.getMinutes())}`, today = ymd(d), ms = d.getTime();
+  const a = data.alarms.find(x => { const s = local.ring[x.id] || {}; return x.enabled && ((s.snooze && s.snooze <= ms) || (x.time === hm && s.fired !== today)); });
+  if (!a) return;
+  local.ring[a.id] = { fired: today, snooze: 0 }; saveLocal(); ringing = a.id;
+  $('#ringTime').textContent = fmtTime(a.time); $('#ringLabel').textContent = a.label || 'Alarm';
+  $('#ring').classList.add('on'); beep(); beepTimer = setInterval(beep, 1200); notify('Alarm: ' + (a.label || fmtTime(a.time)));
+}
+function stopRing(min) {
+  if (ringing && min) { local.ring[ringing].snooze = Date.now() + min * 60000; saveLocal(); }
+  ringing = null; clearInterval(beepTimer); $('#ring').classList.remove('on');
+}
+
+/* ---------- emergency ---------- */
+let gps = '';
+const tel = p => String(p).replace(/[^\d+]/g, '');
+function sosText() { return `${$('#sosNote').value.trim()}\nTime: ${new Date().toLocaleString()}\nLocation: ${$('#sosWhere').value.trim() || gps || 'not available'}`; }
+function renderSosContacts() {
+  const m = encodeURIComponent($('#sosMsg').value), sub = encodeURIComponent('EMERGENCY: I need help');
+  $('#sosContacts').innerHTML = data.contacts.length ? data.contacts.map(c => `<div class="row"><div class="main"><div class="t">${esc(c.name)}</div><div class="s">${esc([c.phone, c.email].filter(Boolean).join(' · '))}</div></div><div class="ops">` +
+    (c.phone ? `<a class="btn red sm" href="tel:${tel(c.phone)}">Call</a><a class="btn line sm" href="sms:${tel(c.phone)}?&body=${m}">Text</a>` : '') +
+    (c.email ? `<a class="btn line sm" href="mailto:${encodeURIComponent(c.email)}?subject=${sub}&body=${m}">Email</a>` : '') + '</div></div>').join('') : empty('No contacts yet. Add them in the Email tab.');
+}
+function openSos() {
+  $('#sosPanel').style.display = 'flex'; $('#sosMsg').value = sosText(); renderSosContacts();
+  toast('Emergency panel open. If someone is in danger, call 911 now.');
+  try { navigator.geolocation.getCurrentPosition(p => { gps = `https://maps.google.com/?q=${p.coords.latitude.toFixed(5)},${p.coords.longitude.toFixed(5)}`; $('#sosMsg').value = sosText(); renderSosContacts(); }, () => {}, { timeout: 8000 }); } catch (e) {}
+}
+let holdAt = 0, raf = 0;
+function holdTick() { if (!holdAt) return; const p = Math.min(1, (Date.now() - holdAt) / 2000); $('#holdFill').style.width = p * 100 + '%'; if (p >= 1) { holdEnd(); openSos(); } else raf = requestAnimationFrame(holdTick); }
+function holdEnd() { holdAt = 0; cancelAnimationFrame(raf); $('#holdFill').style.width = '0'; }
+$('#hold').addEventListener('pointerdown', e => { e.preventDefault(); holdAt = Date.now(); holdTick(); });
+['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => $('#hold').addEventListener(ev, holdEnd));
+$('#hold').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && !e.repeat) { holdAt = Date.now(); holdTick(); } });
+$('#hold').addEventListener('keyup', holdEnd);
+
+/* ---------- actions ---------- */
+document.body.addEventListener('click', async e => {
+  const el = e.target.closest('button,[data-go]'); if (!el) return;
+  const d = el.dataset;
+  if (d.go) return show(d.go);
+  if (d.day) { selDate = d.day; $('#evDate').value = selDate; return renderCalendar(); }
+  if (d.del) { const [list, id] = d.del.split(':'); return remove(list, id); }
+  if (d.alarm) return change('alarms', d.alarm, a => { a.enabled = !a.enabled; });
+  if (d.mailto) { const c = data.contacts.find(x => x.id === d.mailto); if (c) { $('#mTo').value = c.email; draftChanged(); } return; }
+  if (d.copy) { try { await navigator.clipboard.writeText($('#' + d.copy).value); toast('Copied'); } catch (err) { toast('Copy was blocked. Select the text and copy it by hand.'); } return; }
+  switch (el.id) {
+    case 'calPrev': cursor.setMonth(cursor.getMonth() - 1); return renderCalendar();
+    case 'calNext': cursor.setMonth(cursor.getMonth() + 1); return renderCalendar();
+    case 'calNow': cursor = new Date(); cursor.setDate(1); selDate = ymd(); $('#evDate').value = selDate; return renderCalendar();
+    case 'evAdd': {
+      const title = $('#evTitle').value.trim(); if (!title) return toast('Give the event a title.');
+      selDate = $('#evDate').value || selDate;
+      add('events', { title, date: selDate, time: $('#evTime').value, notes: $('#evNotes').value.trim() });
+      $('#evTitle').value = ''; $('#evNotes').value = ''; return toast('Event added');
+    }
+    case 'remAdd': {
+      const text = $('#remText').value.trim(), when = $('#remWhen').value; if (!text || !when) return toast('Enter what and when.');
+      add('reminders', { text, due: new Date(when).getTime(), done: false }); $('#remText').value = ''; return toast('Reminder added');
+    }
+    case 'alAdd': {
+      const time = $('#alTime').value; if (!time) return toast('Pick a time.');
+      add('alarms', { time, label: $('#alLabel').value.trim(), enabled: true }); $('#alLabel').value = ''; return toast('Alarm set for ' + fmtTime(time));
+    }
+    case 'notifyBtn': try { const p = await Notification.requestPermission(); toast(p === 'granted' ? 'Notifications are on.' : 'Notifications are blocked in this browser.'); } catch (err) { toast('Notifications are not available here.'); } return;
+    case 'jrSave': {
+      const text = $('#jrText').value.trim(); if (!text) return toast('Write something first.');
+      add('journal', { date: $('#jrDate').value || ymd(), mood: $('#jrMood').value, text, created: Date.now() }); $('#jrText').value = ''; return toast('Entry saved');
+    }
+    case 'mQueue': {
+      const d2 = local.draft; if (!d2.to || !d2.body.trim()) return toast('Add a recipient and a message.');
+      add('outbox', { to: d2.to, subject: d2.subject, body: d2.body, status: 'queued', created: Date.now() });
+      $('#mTo').value = $('#mSubj').value = $('#mBody').value = ''; draftChanged();
+      return toast(backend() ? 'Queued. It sends when your Claude task next runs.' : 'Queued on this device. Connect sync so Claude can see it.');
+    }
+    case 'cAdd': {
+      const name = $('#cName').value.trim(); if (!name) return toast('A name is required.');
+      add('contacts', { name, phone: $('#cPhone').value.trim(), email: $('#cEmail').value.trim() });
+      $('#cName').value = $('#cPhone').value = $('#cEmail').value = ''; return toast('Contact saved');
+    }
+    case 'ringSnooze': return stopRing(5);
+    case 'ringStop': return stopRing(0);
+    case 'sosClose': $('#sosPanel').style.display = 'none'; return;
+    case 'ghSave': {
+      const c = { owner: $('#ghOwner').value.trim(), repo: $('#ghRepo').value.trim(), branch: $('#ghBranch').value.trim() || 'main', path: $('#ghPath').value.trim() || 'assistant-data.json', token: $('#ghToken').value.trim() };
+      if (!c.owner || !c.repo || !c.token) return toast('Enter the username, repository and token.');
+      cfg = c; store.set('pa-sync', cfg); ghSha = null; $('#syncChip').className = 'chip'; return sync();
+    }
+    case 'ghNow': $('#syncChip').className = 'chip'; return backend() ? sync() : toast('Connect a repository first.');
+    case 'ghOff': cfg = null; try { localStorage.removeItem('pa-sync'); } catch (err) {} $('#ghToken').value = ''; $('#syncChip').className = 'chip'; setStatus('', 'On this device'); return toast('Disconnected. Your data stays on this device.');
+  }
+});
+document.body.addEventListener('change', e => { const id = e.target.dataset.done; if (id) change('reminders', id, r => { r.done = e.target.checked; }); });
+['#mTo', '#mSubj', '#mBody'].forEach(s => $(s).addEventListener('input', draftChanged));
+$('#jrSearch').addEventListener('input', renderJournal);
+$('#sosNote').addEventListener('change', () => { data.prefs = { emergencyNote: $('#sosNote').value, u: Date.now() }; save(); });
+$('#sosWhere').addEventListener('input', () => { $('#sosMsg').value = sosText(); renderSosContacts(); });
+$('#sosMsg').addEventListener('input', renderSosContacts);
+window.addEventListener('hashchange', () => show(location.hash.slice(1), true));
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { scheduleSync(200); checkReminders(); checkAlarms(); } });
+
+/* ---------- start ---------- */
+$('#evDate').value = $('#jrDate').value = ymd();
+{ const d = new Date(Date.now() + 3600000); $('#remWhen').value = `${ymd(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}`; }
+$('#mTo').value = local.draft.to; $('#mSubj').value = local.draft.subject; $('#mBody').value = local.draft.body; draftChanged();
+if (cfg) { $('#ghOwner').value = cfg.owner; $('#ghRepo').value = cfg.repo; $('#ghBranch').value = cfg.branch; $('#ghPath').value = cfg.path; $('#ghToken').value = cfg.token; }
+renderAll();
+show(location.hash.slice(1) || 'today', true);
+sync();
+initArtifactDb();
+setInterval(() => { checkReminders(); checkAlarms(); }, 5000);
+setInterval(() => { renderToday(); if (!document.hidden && backend() && !db) sync(); }, 60000);
+if ('serviceWorker' in navigator && location.protocol === 'https:') { try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {} }
+</script>
+</body>
+</html>

@@ -65,9 +65,9 @@ A second task writes a morning briefing to `briefings` each day.
   "meds":      [{ "id": "", "u": 0, "name": "", "dose": "", "times": ["10:00", "22:00"], "notes": "", "active": true }],
   "doses":     [{ "id": "", "u": 0, "med": "med-id", "date": "YYYY-MM-DD", "time": "HH:MM", "at": 0 }],
   "asks":      [{ "id": "", "u": 0, "text": "", "created": 0, "status": "queued | working | done | failed", "answer": "", "answered": 0 }],
-  "places":    [{ "id": "", "u": 0, "name": "Liam OT", "address": "" }],
-  "stock":     [{ "id": "", "u": 0, "name": "Hydrocortisone", "onHand": 60, "unit": "tablets", "expires": "YYYY-MM-DD or empty", "notes": "", "cycle": 0 }],
-  "sick":      [{ "id": "", "u": 0, "at": 0, "type": "vomit | extra | double | unwell | injection | other", "tablets": 0, "note": "" }],
+  "places":    [{ "id": "", "u": 0, "name": "Clinic", "address": "" }],
+  "stock":     [{ "id": "", "u": 0, "name": "Vitamin D", "onHand": 60, "unit": "tablets", "expires": "YYYY-MM-DD or empty", "notes": "", "cycle": 0 }],
+  "sick":      [{ "id": "", "u": 0, "at": 0, "type": "vomit | extra | double | unwell | injection | other", "med": "", "tablets": 0, "note": "" }],
   "deleted":   { "item-id": 0 },
   "prefs":     { "emergencyNote": "", "medical": { "name": "", "blood": "", "allergies": "", "meds": "", "conditions": "", "doctor": "", "share": false }, "u": 0 }
 }
@@ -106,7 +106,7 @@ Each medication has its daily `times`. Ticking a dose adds an item to `doses` fo
 
 ## Sick day log
 
-Health > Sick day log records throwing up, extra or double doses, feeling unwell and emergency injections in `sick`. Extra tablets come off the Hydrocortisone supply and an injection comes off the injection kit; deleting an entry puts them back. **Copy for doctor** copies the last 90 days as text.
+Health > Sick day log records throwing up, extra or double doses, feeling unwell and emergency injections in `sick`. Extra tablets come off the supply you pick in the entry (`med`) and an injection comes off any supply whose name contains "inject"; deleting an entry puts them back. **Copy for doctor** copies the last 90 days as text.
 
 ## Rides
 

@@ -601,7 +601,7 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
         <div class="sickbtns"><button data-sick="vomit">Threw up</button><button data-sick="extra">Extra dose</button><button data-sick="double">Double dose</button><button data-sick="unwell">Feeling unwell</button><button data-sick="injection" class="red">Used injection</button></div>
         <div class="wstat" id="sickStats"></div><div class="list" id="sickList"></div>
         <p class="muted">Extra tablets and injections you log come off your supply counts. Deleting an entry puts them back.</p></div>
-      <div class="card"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-box"/></svg></span><h3>Supplies and refills</h3></div><button class="btn line sm" data-new="stock">+ Add</button></div><div class="list" id="stockList"></div><p class="muted">Ticking a dose counts it down. A supply with the same name as a medication is used by it (both Hydrocortisone entries share one). A reminder is added 5 days before you run out and 30 days before something expires.</p></div>
+      <div class="card"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-box"/></svg></span><h3>Supplies and refills</h3></div><button class="btn line sm" data-new="stock">+ Add</button></div><div class="list" id="stockList"></div><p class="muted">Ticking a dose counts it down. A supply with the same name as a medication is used by it (two entries for the same medicine share one). A reminder is added 5 days before you run out and 30 days before something expires.</p></div>
       <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-car"/></svg></span><h3>Places</h3></div><button class="btn line sm" data-new="place">+ Add</button></div><div class="list" id="placeEdit"></div></div>
       <div class="card"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-heart"/></svg></span><h3>Allergies and medications</h3></div><button class="btn line sm" id="healthMedEdit">Edit</button></div><div id="healthMed"></div><p class="muted">This is your Medical ID. Changes here also show on the SOS screen.</p></div>
       <p class="muted">Ranges follow the American Heart Association. This app does not diagnose anything. Talk to your doctor about your readings, and call 911 for a reading over 180/120 with chest pain, shortness of breath, weakness or trouble speaking.</p>
@@ -1109,7 +1109,7 @@ $('#dial').addEventListener('click', e => { if (!e.target.closest('button')) clo
 const KINDS = {
   event: { name: 'event', list: 'events', defaults: () => ({ date: selDate }), fields: [
     { k: 'title', l: 'Title', req: 1, ph: 'Dentist appointment' }, { k: 'date', l: 'Date', t: 'date', req: 1 }, { k: 'time', l: 'Time (leave empty for all day)', t: 'time' },
-    { k: 'repeat', l: 'Repeat', t: 'select', o: [['', 'Does not repeat'], ['daily', 'Every day'], ['weekly', 'Every week'], ['biweekly', 'Every other week'], ['monthly', 'Every month'], ['yearly', 'Every year']] }, { k: 'where', l: 'Where (address or a saved place)', ph: 'Liam OT' }, { k: 'notes', l: 'Notes', t: 'textarea' }] },
+    { k: 'repeat', l: 'Repeat', t: 'select', o: [['', 'Does not repeat'], ['daily', 'Every day'], ['weekly', 'Every week'], ['biweekly', 'Every other week'], ['monthly', 'Every month'], ['yearly', 'Every year']] }, { k: 'where', l: 'Where (address or a saved place)', ph: 'Clinic' }, { k: 'notes', l: 'Notes', t: 'textarea' }] },
   reminder: { name: 'reminder', list: 'reminders', defaults: () => ({ due: Date.now() + 3600000, repeat: '' }), hidden: () => ({ done: false }), fields: [
     { k: 'text', l: 'Remind me to', req: 1, ph: 'Call the pharmacy' }, { k: 'due', l: 'When', t: 'datetime-local', req: 1, from: v => v ? dtLocal(v) : '', to: v => new Date(v).getTime() },
     { k: 'repeat', l: 'Repeat', t: 'select', o: [['', 'Does not repeat'], ['daily', 'Every day'], ['weekly', 'Every week'], ['monthly', 'Every month']] }] },
@@ -1121,21 +1121,21 @@ const KINDS = {
     { k: 'date', l: 'Date', t: 'date', req: 1 }, { k: 'mood', l: 'Mood', t: 'select', o: ['Great', 'Good', 'Okay', 'Low', 'Rough'].map(m => [m, m]) }, { k: 'text', l: 'Entry', t: 'textarea', req: 1, ph: 'What happened today?', tall: 1 }] },
   contact: { name: 'contact', list: 'contacts', fields: [
     { k: 'name', l: 'Name', req: 1 }, { k: 'phone', l: 'Phone', t: 'tel' }, { k: 'email', l: 'Email', t: 'email' }, { k: 'ice', l: 'Emergency contact', t: 'check' }] },
-  sick: { name: 'sick day entry', list: 'sick', defaults: () => ({ at: Date.now(), type: 'unwell', tablets: '' }), fields: [
+  sick: { name: 'sick day entry', list: 'sick', defaults: () => ({ at: Date.now(), type: 'unwell', tablets: '', med: local.sickMed || (sickMeds()[1] || [''])[0] }), fields: [
     { k: 'type', l: 'What happened', t: 'select', o: SICK_TYPES }, { k: 'at', l: 'When', t: 'datetime-local', req: 1, from: v => v ? dtLocal(v) : '', to: v => new Date(v).getTime() },
-    { k: 'tablets', l: 'Extra hydrocortisone tablets taken (5 mg each)', t: 'number', ph: '0', to: v => v === '' ? '' : +v }, { k: 'note', l: 'Notes', t: 'textarea', ph: 'Threw up 20 minutes after the 9 AM dose, retook 2 tablets' }],
-    onAdd: v => sickStock(v, -1), onRemove: (id, it) => sickStock(it, 1) },
+    { k: 'med', l: 'Extra tablets were of', t: 'select', o: () => sickMeds() }, { k: 'tablets', l: 'Extra tablets taken', t: 'number', ph: '0', to: v => v === '' ? '' : +v }, { k: 'note', l: 'Notes', t: 'textarea', ph: 'Threw up 20 minutes after the 9 AM dose, retook 2 tablets' }],
+    onAdd: v => { if (v.med) { local.sickMed = v.med; saveLocal(); } sickStock(v, -1); }, onRemove: (id, it) => sickStock(it, 1) },
   place: { name: 'place', list: 'places', fields: [
-    { k: 'name', l: 'Name', req: 1, ph: 'Home, Liam OT, School' }, { k: 'address', l: 'Address', req: 1, ph: '123 Main St, Las Vegas, NV' }] },
+    { k: 'name', l: 'Name', req: 1, ph: 'Home, Clinic, School' }, { k: 'address', l: 'Address', req: 1, ph: '123 Main St, City, ST 00000' }] },
   stock: { name: 'supply', list: 'stock', defaults: () => ({ unit: 'tablets' }), hidden: () => ({ cycle: Date.now() }), fields: [
-    { k: 'name', l: 'Name (match the medication name to link it)', req: 1, ph: 'Hydrocortisone' }, { k: 'onHand', l: 'How many you have now', t: 'number', ph: '60', to: v => v === '' ? '' : +v },
+    { k: 'name', l: 'Name (match the medication name to link it)', req: 1, ph: 'Vitamin D' }, { k: 'onHand', l: 'How many you have now', t: 'number', ph: '60', to: v => v === '' ? '' : +v },
     { k: 'unit', l: 'Counted in', ph: 'tablets' }, { k: 'expires', l: 'Expires (optional)', t: 'date' }, { k: 'notes', l: 'Notes (optional)', ph: 'Pharmacy, prescription number' }] },
   shift: { name: 'shift', list: 'events', defaults: () => ({ date: ymd(), title: 'Work', time: '09:00', end: '17:00', repeat: '' }), hidden: () => ({ kind: 'shift' }), fields: [
     { k: 'title', l: 'Shift', req: 1, ph: 'Work, Store #12, Front desk' }, { k: 'date', l: 'Date', t: 'date', req: 1 },
     { k: 'time', l: 'Starts', t: 'time', req: 1 }, { k: 'end', l: 'Ends', t: 'time' },
     { k: 'repeat', l: 'Repeat', t: 'select', o: [['', 'Does not repeat'], ['weekly', 'Every week'], ['biweekly', 'Every other week']] }, { k: 'where', l: 'Where (address or a saved place)', ph: 'Work' }, { k: 'notes', l: 'Notes', t: 'textarea' }] },
   med: { name: 'medication', list: 'meds', defaults: () => ({ active: true, times: ['09:00'] }), fields: [
-    { k: 'name', l: 'Name', req: 1, ph: 'Midodrine' }, { k: 'dose', l: 'Dose (optional)', ph: '5 mg, 1 tablet' },
+    { k: 'name', l: 'Name', req: 1, ph: 'Vitamin D' }, { k: 'dose', l: 'Dose (optional)', ph: '5 mg, 1 tablet' },
     { k: 'perDose', l: 'Tablets per dose, for refill counting (optional)', t: 'number', ph: '1', to: v => v === '' ? '' : +v },
     { k: 'times', l: 'Times each day', t: 'times' }, { k: 'notes', l: 'Notes (optional)', ph: 'With food' }, { k: 'active', l: 'Remind me', t: 'check' }],
     check: v => v.times.length ? '' : 'Add at least one time.' },
@@ -1155,7 +1155,7 @@ let sheet = null;
 function fieldHtml(f) {
   const id = 'f_' + f.k, v = f.v, ph = f.ph ? ` placeholder="${esc(f.ph)}"` : '';
   if (f.t === 'textarea') return `<label>${f.l}<textarea id="${id}"${ph}${f.tall ? ' style="min-height:190px"' : ''}>${esc(v)}</textarea></label>`;
-  if (f.t === 'select') return `<label>${f.l}<select id="${id}">${f.o.map(([val, lab]) => `<option value="${esc(val)}"${val === v ? ' selected' : ''}>${esc(lab)}</option>`).join('')}</select></label>`;
+  if (f.t === 'select') return `<label>${f.l}<select id="${id}">${(typeof f.o === 'function' ? f.o() : f.o).map(([val, lab]) => `<option value="${esc(val)}"${val === v ? ' selected' : ''}>${esc(lab)}</option>`).join('')}</select></label>`;
   if (f.t === 'check') return `<label class="checkline"><input type="checkbox" id="${id}"${v ? ' checked' : ''}>${f.l}</label>`;
   if (f.t === 'times') { const t = [...(v || []), '', '', '', ''].slice(0, Math.max(4, (v || []).length)); return `<div class="lbl">${f.l}<div class="times">${t.map((x, i) => `<input type="time" data-tm="${i}" value="${esc(x)}" aria-label="Time ${i + 1}">`).join('')}</div></div>`; }
   if (f.t === 'days') return `<div class="lbl">${f.l}<div class="days">${DAYS.map((d, i) => `<label><input type="checkbox" data-wd="${i}"${(v || []).includes(i) ? ' checked' : ''}><span>${d[0]}</span></label>`).join('')}</div></div>`;
@@ -1462,14 +1462,16 @@ function renderPlaces() {
   const car = '<svg><use href="#i-car"/></svg>';
   $('#placeList').innerHTML = `<a class="uber" href="${esc(uberLink())}" target="_blank" rel="noopener">${car}Open Uber</a>` + ps.map(p => `<a href="${esc(uberLink(p.address, p.name))}" target="_blank" rel="noopener">${car}${esc(p.name)}</a>`).join('');
   $('#placeEdit').innerHTML = ps.length ? ps.map(p => `<div class="row">${editBtn('place', p.id, `<div class="t">${esc(p.name)}</div><div class="s">${esc(p.address)}</div>`)}<div class="ops"><a class="btn line sm ride" href="${esc(uberLink(p.address, p.name))}" target="_blank" rel="noopener">Ride</a></div></div>`).join('')
-    : empty('Save places like Home, Liam OT or Work for one-tap rides. Events and shifts can use a saved place name in their Where field.');
+    : empty('Save places like Home, a clinic or Work for one-tap rides. Events and shifts can use a saved place name in their Where field.');
 }
 
 /* ---------- sick day log ---------- */
-// Takes logged extra tablets off the Hydrocortisone supply, and an injection off the injection kit (sign -1), or puts them back (+1).
+// Supplies that extra tablets can come from (anything that is not an injection kit).
+const sickMeds = () => [['', 'Not counted']].concat(data.stock.filter(x => !/inject/i.test(x.name)).map(x => [x.name, x.name]));
+// Takes logged extra tablets off the chosen supply, and an injection off the injection kit (sign -1), or puts them back (+1).
 function sickStock(e, sign) {
   const adj = (st, n) => { if (st && n && st.onHand !== '' && st.onHand != null) { st.onHand = Math.max(0, +st.onHand + sign * n); st.u = Date.now(); } };
-  adj(data.stock.find(x => /hydrocortisone/i.test(x.name) && !/inject/i.test(x.name)), +e.tablets || 0);
+  if (e.med) adj(stockFor(e.med), +e.tablets || 0);
   if (e.type === 'injection') adj(data.stock.find(x => /inject/i.test(x.name)), 1);
 }
 const sickLabel = t => (SICK_TYPES.find(x => x[0] === t) || ['', 'Other'])[1];
@@ -1479,12 +1481,12 @@ function renderSick() {
   $('#sickStats').innerHTML = recent.length ? `<div><b>${recent.length}</b><span>entries, last 30 days</span></div><div><b>${tabs}</b><span>extra tablets</span></div><div><b>${n('injection')}</b><span>${n('injection') === 1 ? 'injection' : 'injections'}</span></div>` : '';
   const ls = [...data.sick].sort((a, b) => b.at - a.at).slice(0, 20);
   $('#sickList').innerHTML = ls.length ? ls.map(e => `<div class="row">${editBtn('sick', e.id, `<div class="t">${esc(sickLabel(e.type))}${e.tablets ? ` <small class="muted">+${e.tablets} tablets</small>` : ''}</div><div class="s">${fmtDT(e.at)}</div>${e.note ? `<div class="body">${esc(e.note)}</div>` : ''}`)}${e.type === 'injection' ? '<span class="pill bad">Injection</span>' : ''}</div>`).join('')
-    : empty('Tap a button above when you are sick, throw up a dose or take extra hydrocortisone.');
+    : empty('Tap a button above when you are sick, throw up a dose or take an extra dose.');
 }
 function sickText() {
   const since = Date.now() - 90 * 864e5, ls = data.sick.filter(e => e.at >= since).sort((a, b) => a.at - b.at);
   const name = ((data.prefs.medical || {}).name || '').trim();
-  return `Sick day log${name ? ' for ' + name : ''}, last 90 days\n` + (ls.length ? ls.map(e => `${fmtDT(e.at)}: ${sickLabel(e.type)}${e.tablets ? `, ${e.tablets} extra hydrocortisone tablets (5 mg)` : ''}${e.note ? ' - ' + e.note : ''}`).join('\n') : 'No entries.');
+  return `Sick day log${name ? ' for ' + name : ''}, last 90 days\n` + (ls.length ? ls.map(e => `${fmtDT(e.at)}: ${sickLabel(e.type)}${e.tablets ? `, ${e.tablets} extra tablets${e.med ? ' of ' + e.med : ''}` : ''}${e.note ? ' - ' + e.note : ''}`).join('\n') : 'No entries.');
 }
 
 /* ---------- supplies and refills ---------- */
@@ -1502,7 +1504,7 @@ function renderStock() {
     const bits = [i.has ? `${st.onHand} ${st.unit || ''}`.trim() + ' left' : 'Count not set', i.days !== null ? `about ${i.days} ${i.days === 1 ? 'day' : 'days'}` : '', st.expires ? (i.expDays < 0 ? 'Expired ' : 'Expires ') + fmtDay(st.expires) : ''].filter(Boolean).join(' · ');
     return `<div class="row">${editBtn('stock', st.id, `<div class="t">${esc(st.name)}</div><div class="s">${esc(bits)}</div>${st.notes ? `<div class="s">${esc(st.notes)}</div>` : ''}`)}` +
       (i.low ? '<span class="pill low">Refill soon</span>' : i.expSoon ? `<span class="pill low">${i.expDays < 0 ? 'Expired' : 'Expiring'}</span>` : '') + '</div>'; }).join('')
-    : empty('Add how many tablets you have of each medication, and your emergency injection kit with its expiry date.');
+    : empty('Add how many tablets you have of each medication, and anything with an expiry date such as an emergency kit.');
 }
 function supplyWarnings() { return data.stock.map(st => ({ st, i: stockInfo(st) })).filter(x => x.i.low || x.i.expSoon); }
 // Adds one reminder per refill cycle and per expiry date, so the calendar sync can put it on the phone.

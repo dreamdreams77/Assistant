@@ -93,6 +93,10 @@ The panel on Today follows real sunrise and sunset: its colour, the sun or moon 
 
 The Health tab logs blood pressure readings typed in from a monitor (the Omron 3 Series has no Bluetooth), shows the latest reading with its American Heart Association range, a 7-day average and a 30-day chart, and shows the allergies, medications and doctor from your Medical ID. Readings are stored in `bp`. A `pulse` of `""` means none was entered.
 
+## Work
+
+The Work tab lists shifts, this week's shift count and hours, weekly availability and work voice notes. A shift is an event with `"kind": "shift"` and an `end` time, so it also shows on Today and in the Calendar. Availability is kept in `avail` as items `avail-0` (Sunday) to `avail-6` with `status` any, hours (with `from` and `to`) or off, plus `avail-note`. Voice notes recorded from the Work tab carry `"tag": "work"`.
+
 ## Medications
 
 Each medication has its daily `times`. Ticking a dose adds an item to `doses` for that day and time. A time before 4 AM counts as the end of the previous day, so a 12 AM dose is the last dose of that day. The calendar sync copies each dose time to Google Calendar as a daily event with an alert.

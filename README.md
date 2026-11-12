@@ -62,6 +62,9 @@ A second task writes a morning briefing to `briefings` each day.
   "briefings": [{ "id": "", "u": 0, "title": "", "body": "", "created": 0 }],
   "tasks":     [{ "id": "", "u": 0, "name": "", "schedule": "Mondays 9:00 AM", "next": 0, "about": "", "enabled": true }],
   "bp":        [{ "id": "", "u": 0, "at": 0, "sys": 120, "dia": 80, "pulse": 70, "note": "" }],
+  "meds":      [{ "id": "", "u": 0, "name": "", "dose": "", "times": ["10:00", "22:00"], "notes": "", "active": true }],
+  "doses":     [{ "id": "", "u": 0, "med": "med-id", "date": "YYYY-MM-DD", "time": "HH:MM", "at": 0 }],
+  "asks":      [{ "id": "", "u": 0, "text": "", "created": 0, "status": "queued | working | done | failed", "answer": "", "answered": 0 }],
   "deleted":   { "item-id": 0 },
   "prefs":     { "emergencyNote": "", "medical": { "name": "", "blood": "", "allergies": "", "meds": "", "conditions": "", "doctor": "", "share": false }, "u": 0 }
 }
@@ -89,6 +92,18 @@ The panel on Today follows real sunrise and sunset: its colour, the sun or moon 
 ## Health
 
 The Health tab logs blood pressure readings typed in from a monitor (the Omron 3 Series has no Bluetooth), shows the latest reading with its American Heart Association range, a 7-day average and a 30-day chart, and shows the allergies, medications and doctor from your Medical ID. Readings are stored in `bp`. A `pulse` of `""` means none was entered.
+
+## Medications
+
+Each medication has its daily `times`. Ticking a dose adds an item to `doses` for that day and time. A time before 4 AM counts as the end of the previous day, so a 12 AM dose is the last dose of that day. The calendar sync copies each dose time to Google Calendar as a daily event with an alert.
+
+## Ask Claude
+
+Requests typed into **Ask Claude** go into `asks` with `status: "queued"`. A scheduled Claude task checks every hour from 7 AM to 10 PM, does the research or drafting, and writes `answer` with `status: "done"`. It never sends email, buys anything or contacts anyone.
+
+## PIN lock
+
+**Settings > PIN lock** asks for a PIN when the app opens and after a minute in the background. The PIN is kept, hashed, on that device only and is not synced. **Forgot PIN?** signs that device out; the data stays in the data repository.
 
 ## Wallet button
 

@@ -316,7 +316,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 .dial-list .ic{width:46px;height:46px;border-radius:15px;box-shadow:0 4px 14px rgba(0,0,0,.25)}.dial-list .ic svg{width:22px;height:22px}
 .dial.on .dial-list button{transform:none;opacity:1}
 .dial.on .dial-list button:nth-last-child(2){transition-delay:.03s}.dial.on .dial-list button:nth-last-child(3){transition-delay:.06s}.dial.on .dial-list button:nth-last-child(4){transition-delay:.09s}.dial.on .dial-list button:nth-last-child(5){transition-delay:.12s}.dial.on .dial-list button:nth-last-child(6){transition-delay:.15s}
-.dial.on .dial-list button:nth-last-child(7){transition-delay:.18s}
+.dial.on .dial-list button:nth-last-child(7){transition-delay:.18s}.dial.on .dial-list button:nth-last-child(8){transition-delay:.21s}
 .tabs svg{padding:3px 12px}
 .bpnow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .bpnow b{font-family:var(--display);font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
@@ -334,6 +334,19 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 .bplegend i{display:inline-block;width:14px;height:2px;border-radius:2px;vertical-align:middle;margin-right:5px}
 .bpread{font-size:13px;color:var(--ink);min-height:19px;margin-top:4px;font-variant-numeric:tabular-nums}
 .pill.ok{background:var(--accent-soft);color:var(--ok)}
+#lock{position:fixed;inset:0;z-index:60;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--paper);padding:24px;text-align:center}
+#lock.on{display:flex}
+#lock h2{font-family:var(--display);font-size:24px}
+#lock input{width:min(240px,100%);text-align:center;font-size:24px;letter-spacing:.4em;font-variant-numeric:tabular-nums}
+#lock .lbtn{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13px;padding:6px}
+.dose{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.dose label{display:inline-flex;flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-weight:500;margin:0;border:1px solid var(--line);border-radius:999px;padding:4px 10px 4px 6px;font-size:13px;font-variant-numeric:tabular-nums;cursor:pointer}
+.dose label.taken{background:var(--accent-soft);border-color:transparent}
+.dose label.late{border-color:var(--warn);color:var(--warn)}
+.dose input{width:18px;height:18px;margin:0}
+.times{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ask textarea{min-height:70px}
+.ask .actions{margin-top:8px}
 #toasts{bottom:calc(148px + env(safe-area-inset-bottom))}
 @media (min-width:900px){.fab{right:30px;bottom:30px}.dial-list{right:36px;bottom:104px}#toasts{bottom:30px}main{padding-bottom:110px}}
 
@@ -380,6 +393,8 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M5 4L3 6M19 4l2 2"/></symbol>
 <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM9 4v16"/></symbol>
 <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M5.5 12h3l1.5-2.5 2 5 1.5-2.5h5"/></symbol>
+<symbol id="i-pill" viewBox="0 0 24 24"><rect x="3" y="8.5" width="18" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M9.5 9.5l5 5"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
 <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3M4 7.5V17a2 2 0 0 0 2 2h14V8H6.5A2.5 2.5 0 0 1 4 7.5z"/><circle cx="16" cy="13.5" r="1.2"/></symbol>
 <symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"/></symbol>
 </defs></svg>
@@ -410,6 +425,12 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
   <div class="card" id="searchCard" style="display:none"><div class="head"><h3>Results</h3><span class="count" id="searchCount"></span></div><div class="list" id="searchList"></div></div>
   <div class="cols" id="todayCols">
     <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>From Claude</h3></div><span class="pill cl">Scheduled tasks</span></div><div class="list" id="briefList"></div></div>
+    <div class="card" id="medTodayCard"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-pill"/></svg></span><h3>Medications today</h3></div><span class="count" id="cMedToday"></span></div><div class="list" id="medToday"></div></div>
+    <div class="card ask"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>Ask Claude</h3></div><span class="count" id="cAsk"></span></div>
+      <textarea id="askText" placeholder="Find a pediatric dentist near me that takes my insurance" aria-label="What should Claude do?"></textarea>
+      <div class="actions"><button class="btn" id="askSend">Send to Claude</button></div>
+      <p class="muted">Claude picks this up within the hour, 7 AM to 10 PM, and answers here. It researches and drafts, but never sends email, buys anything or contacts anyone for you.</p>
+      <div class="list" id="askList"></div></div>
     <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>Claude tasks</h3></div><span class="count" id="cTask"></span></div><div class="list" id="taskList"></div></div>
     <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-cal"/></svg></span><h3 id="schedTitle">Today's schedule</h3></div><span class="count" id="cEv"></span></div><div class="list" id="todayEvents"></div></div>
     <div class="card" id="remCard"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-bell"/></svg></span><h3>Reminders</h3></div><span class="count" id="cRem"></span></div><div class="list" id="todayRems"></div></div>
@@ -467,6 +488,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
       <div class="card"><div class="head"><h3>Readings</h3></div><div class="list" id="bpList"></div></div>
     </div>
     <div class="stack">
+      <div class="card"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-pill"/></svg></span><h3>Medications</h3></div><button class="btn line sm" data-new="med">+ Add</button></div><div class="list" id="medList"></div><p class="muted">Tick each dose when you take it. Dose times are copied to your Google Calendar so your phone reminds you.</p></div>
       <div class="card"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-heart"/></svg></span><h3>Allergies and medications</h3></div><button class="btn line sm" id="healthMedEdit">Edit</button></div><div id="healthMed"></div><p class="muted">This is your Medical ID. Changes here also show on the SOS screen.</p></div>
       <p class="muted">Ranges follow the American Heart Association. This app does not diagnose anything. Talk to your doctor about your readings, and call 911 for a reading over 180/120 with chest pain, shortness of breath, weakness or trouble speaking.</p>
     </div>
@@ -549,8 +571,14 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
         <div class="lbl">Sunrise and sunset<p class="muted" id="locInfo" style="font-weight:400"></p><div class="actions"><button class="btn line sm" id="locBtn"></button></div></div>
       </div>
       <div class="card">
+        <div class="ttl"><span class="ic ev"><svg><use href="#i-lock"/></svg></span><h3>PIN lock</h3></div>
+        <p class="muted" id="pinInfo"></p>
+        <div class="fields" id="pinFields"><label>New PIN (4 to 8 digits)<input id="pinNew" type="password" inputmode="numeric" autocomplete="off" maxlength="8"></label><label>Type it again<input id="pinAgain" type="password" inputmode="numeric" autocomplete="off" maxlength="8"></label></div>
+        <div class="actions"><button class="btn line" id="pinSet">Set PIN</button><button class="btn line" id="pinOff">Turn off PIN</button><button class="btn line" id="pinLockNow">Lock now</button></div>
+      </div>
+      <div class="card">
         <h3>Backup</h3>
-        <p class="muted">A backup holds everything: events, reminders, to-dos, alarms, journal, contacts, blood pressure readings and your medical ID. Voice recordings are kept separately and are not in the backup file.</p>
+        <p class="muted">A backup holds everything: events, reminders, to-dos, alarms, journal, contacts, blood pressure readings, medications and your medical ID. Your PIN is not in it. Voice recordings are kept separately and are not in the backup file.</p>
         <div class="actions"><button class="btn line" id="bkDown">Download backup</button><button class="btn line" id="bkCopy">Copy backup</button></div>
         <label>Restore from a backup file<input type="file" id="bkFile" accept="application/json,.json"></label>
       </div>
@@ -571,6 +599,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 </div>
 
 <div class="dial" id="dial"><div class="dial-list">
+  <button data-new="med"><span>Medication</span><i class="ic red"><svg><use href="#i-pill"/></svg></i></button>
   <button data-new="bp"><span>Blood pressure</span><i class="ic red"><svg><use href="#i-pulse"/></svg></i></button>
   <button data-new="alarm"><span>Alarm</span><i class="ic al"><svg><use href="#i-clock"/></svg></i></button>
   <button data-new="voice"><span>Voice note</span><i class="ic vo"><svg><use href="#i-mic"/></svg></i></button>
@@ -589,11 +618,19 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 </form></div>
 <div id="ring"><div class="big" id="ringTime"></div><div id="ringLabel" style="font-size:18px"></div>
   <div class="actions" style="justify-content:center;margin-top:14px"><button class="btn" id="ringSnooze">Snooze 5 minutes</button><button class="btn red" id="ringStop">Dismiss</button></div></div>
+<div id="lock" role="dialog" aria-modal="true" aria-label="Enter PIN">
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><use href="#i-lock"/></svg>
+  <h2>Enter your PIN</h2>
+  <form id="lockForm"><input id="lockPin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN"></form>
+  <button class="btn" id="lockGo" type="button">Unlock</button>
+  <p class="muted" id="lockMsg"></p>
+  <button class="lbtn" id="lockForgot" type="button">Forgot PIN?</button>
+</div>
 <div id="toasts" aria-live="polite"></div>
 
 <script>
 /*PURE-START*/
-const LISTS = ['events','reminders','todos','alarms','journal','voice','contacts','outbox','briefings','tasks','bp'];
+const LISTS = ['events','reminders','todos','alarms','journal','voice','contacts','outbox','briefings','tasks','bp','meds','doses','asks'];
 // Blood pressure category, American Heart Association 2017 ranges.
 function bpCategory(sys, dia) {
   if (sys > 180 || dia > 120) return ['Very high', 'bad'];
@@ -602,6 +639,10 @@ function bpCategory(sys, dia) {
   if (sys >= 120) return ['Elevated', 'wait'];
   return ['Normal', 'ok'];
 }
+// Doses taken just after midnight (before 4 AM) belong to the day before, so a 12 AM dose is the last of that day.
+function doseDay(time, today) { if (time >= '04:00') return today; const d = new Date(today + 'T12:00'); d.setDate(d.getDate() + 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+const doseId = (med, day, time) => `dose-${med}-${day}-${time.replace(':', '')}`;
+const doseOrder = t => t < '04:00' ? '2' + t : '1' + t;
 const DEFAULT_NOTE = 'I need help. Please contact me or call 911.';
 function normalize(d) {
   d = d && typeof d === 'object' ? d : {};
@@ -962,6 +1003,10 @@ const KINDS = {
     { k: 'date', l: 'Date', t: 'date', req: 1 }, { k: 'mood', l: 'Mood', t: 'select', o: ['Great', 'Good', 'Okay', 'Low', 'Rough'].map(m => [m, m]) }, { k: 'text', l: 'Entry', t: 'textarea', req: 1, ph: 'What happened today?', tall: 1 }] },
   contact: { name: 'contact', list: 'contacts', fields: [
     { k: 'name', l: 'Name', req: 1 }, { k: 'phone', l: 'Phone', t: 'tel' }, { k: 'email', l: 'Email', t: 'email' }, { k: 'ice', l: 'Emergency contact', t: 'check' }] },
+  med: { name: 'medication', list: 'meds', defaults: () => ({ active: true, times: ['09:00'] }), fields: [
+    { k: 'name', l: 'Name', req: 1, ph: 'Midodrine' }, { k: 'dose', l: 'Dose (optional)', ph: '5 mg, 1 tablet' },
+    { k: 'times', l: 'Times each day', t: 'times' }, { k: 'notes', l: 'Notes (optional)', ph: 'With food' }, { k: 'active', l: 'Remind me', t: 'check' }],
+    check: v => v.times.length ? '' : 'Add at least one time.' },
   bp: { name: 'blood pressure reading', list: 'bp', defaults: () => ({ at: Date.now() }),
     check: v => v.sys < 60 || v.sys > 260 || v.dia < 30 || v.dia > 160 ? 'Check the numbers: systolic is the top number, diastolic the bottom.' : v.sys <= v.dia ? 'The top number (systolic) should be higher than the bottom number.' : v.pulse !== '' && (v.pulse < 25 || v.pulse > 250) ? 'Check the pulse.' : '',
     fields: [
@@ -980,6 +1025,7 @@ function fieldHtml(f) {
   if (f.t === 'textarea') return `<label>${f.l}<textarea id="${id}"${ph}${f.tall ? ' style="min-height:190px"' : ''}>${esc(v)}</textarea></label>`;
   if (f.t === 'select') return `<label>${f.l}<select id="${id}">${f.o.map(([val, lab]) => `<option value="${esc(val)}"${val === v ? ' selected' : ''}>${esc(lab)}</option>`).join('')}</select></label>`;
   if (f.t === 'check') return `<label class="checkline"><input type="checkbox" id="${id}"${v ? ' checked' : ''}>${f.l}</label>`;
+  if (f.t === 'times') { const t = [...(v || []), '', '', '', ''].slice(0, Math.max(4, (v || []).length)); return `<div class="lbl">${f.l}<div class="times">${t.map((x, i) => `<input type="time" data-tm="${i}" value="${esc(x)}" aria-label="Time ${i + 1}">`).join('')}</div></div>`; }
   if (f.t === 'days') return `<div class="lbl">${f.l}<div class="days">${DAYS.map((d, i) => `<label><input type="checkbox" data-wd="${i}"${(v || []).includes(i) ? ' checked' : ''}><span>${d[0]}</span></label>`).join('')}</div></div>`;
   return `<label>${f.l}<input id="${id}" type="${f.t || 'text'}" value="${esc(v)}"${ph}${f.t === 'number' ? ' inputmode="numeric"' : ''}></label>`;
 }
@@ -998,6 +1044,7 @@ function readForm() {
   for (const f of sheet.fields) {
     let v;
     if (f.t === 'days') v = $$('#sheetFields [data-wd]').filter(x => x.checked).map(x => +x.dataset.wd);
+    else if (f.t === 'times') v = [...new Set($$('#sheetFields [data-tm]').map(x => x.value).filter(Boolean))].sort((a, b) => doseOrder(a).localeCompare(doseOrder(b)));
     else if (f.t === 'check') v = $('#f_' + f.k).checked;
     else v = $('#f_' + f.k).value.trim();
     if (f.req && !v) { toast(f.l + ' is required.'); return null; }
@@ -1012,7 +1059,7 @@ function openItem(kind, id) {
   const src = it || (def.defaults ? def.defaults() : {}); buzz(6);
   openForm({
     title: (it ? 'Edit ' : 'New ') + def.name, editing: !!it, check: def.check,
-    fields: def.fields.map(f => Object.assign({}, f, { v: f.from ? f.from(src[f.k]) : (src[f.k] ?? (f.t === 'days' ? [] : f.t === 'check' ? false : '')) })),
+    fields: def.fields.map(f => Object.assign({}, f, { v: f.from ? f.from(src[f.k]) : (src[f.k] ?? (f.t === 'days' || f.t === 'times' ? [] : f.t === 'check' ? false : '')) })),
     save(v) {
       if (kind === 'event') { selDate = v.date; cursor = new Date(v.date + 'T00:00'); cursor.setDate(1); }
       if (kind === 'reminder' && it) delete local.notified[id];
@@ -1067,7 +1114,7 @@ function relText(date, time, now) {
 const openTodos = () => data.todos.filter(t => !t.done).sort((a, b) => (!!b.star - !!a.star) || (a.u - b.u));
 
 function renderAll() {
-  renderToday(); renderCalendar(); renderPlan(); renderJournal(); renderVoice(); renderMail(); renderHealth(); renderEmergency(); renderSync();
+  renderToday(); renderCalendar(); renderPlan(); renderJournal(); renderVoice(); renderMail(); renderHealth(); renderMeds(); renderAsks(); renderPin(); renderEmergency(); renderSync();
   if (document.activeElement !== $('#sosNote')) $('#sosNote').value = data.prefs.emergencyNote || DEFAULT_NOTE;
 }
 
@@ -1236,6 +1283,69 @@ function stopRing(min) {
   ringing = null; clearInterval(beepTimer); $('#ring').classList.remove('on');
 }
 
+/* ---------- medications ---------- */
+const todayKey = () => { const d = new Date(); if (d.getHours() < 4) d.setDate(d.getDate() - 1); return ymd(d); };
+// When a dose slot falls due, as a timestamp.
+const slotAt = (day, time) => new Date(doseDay(time, day) + 'T' + time).getTime();
+function medSlots(m, day) { return (m.times || []).map(t => { const id = doseId(m.id, day, t), taken = findDose(m.id, day, t), at = slotAt(day, t);
+  return { t, id, taken, late: !taken && Date.now() > at + 3600e3, due: !taken && Date.now() >= at }; }); }
+function medRow(m, day) {
+  const sl = medSlots(m, day);
+  return `<div class="row"><div class="main"><button class="main" data-edit="med:${esc(m.id)}" style="padding:0"><div class="t">${esc(m.name)}${m.dose ? ` <small class="muted">${esc(m.dose)}</small>` : ''}</div>${m.notes ? `<div class="s">${esc(m.notes)}</div>` : ''}</button>` +
+    `<div class="dose">${sl.map(x => `<label class="${x.taken ? 'taken' : x.late ? 'late' : ''}"><input type="checkbox" data-dose="${esc(m.id)}|${day}|${x.t}"${x.taken ? ' checked' : ''}>${fmtTime(x.t)}${x.late ? ' · missed?' : ''}</label>`).join('')}</div></div></div>`;
+}
+function renderMeds() {
+  const day = todayKey(), act = data.meds.filter(m => m.active !== false).sort((a, b) => a.name.localeCompare(b.name));
+  const all = act.flatMap(m => medSlots(m, day)), done = all.filter(x => x.taken).length;
+  $('#medTodayCard').style.display = act.length ? '' : 'none';
+  $('#cMedToday').textContent = all.length ? `${done} of ${all.length}` : '';
+  $('#medToday').innerHTML = act.map(m => medRow(m, day)).join('');
+  const off = data.meds.filter(m => m.active === false);
+  $('#medList').innerHTML = data.meds.length ? act.map(m => medRow(m, day)).join('') + off.map(m => `<div class="row">${editBtn('med', m.id, `<div class="t">${esc(m.name)}</div><div class="s">Reminders off</div>`)}</div>`).join('')
+    : empty('Add each medication and the times you take it.');
+}
+const findDose = (med, day, t) => data.doses.find(x => x.med === med && x.date === day && x.time === t);
+// A dose that was unticked keeps its id in `deleted`, so ticking it again needs a fresh id.
+function toggleDose(key, on) {
+  const [med, day, t] = key.split('|'), base = doseId(med, day, t);
+  if (on) { if (!findDose(med, day, t)) { data.doses.push({ id: data.deleted[base] ? base + '-' + uid() : base, u: Date.now(), med, date: day, time: t, at: Date.now() }); save(); } }
+  else { const now = Date.now(); data.doses.filter(x => x.med === med && x.date === day && x.time === t).forEach(x => { data.deleted[x.id] = now; }); data.doses = data.doses.filter(x => !(x.med === med && x.date === day && x.time === t)); save(); }
+}
+function checkMeds() {
+  const day = todayKey(); let hit = false;
+  data.meds.filter(m => m.active !== false).forEach(m => medSlots(m, day).forEach(x => {
+    if (x.due && !x.late && local.notified[x.id] !== 1) { local.notified[x.id] = 1; hit = true; notify(`Time for ${m.name}${m.dose ? ' ' + m.dose : ''}`); } }));
+  if (hit) { saveLocal(); renderMeds(); }
+}
+
+/* ---------- ask Claude ---------- */
+const ASK_PILL = { queued: ['Waiting for Claude', 'wait'], working: ['Claude is on it', 'wait'], done: ['Answered', 'ok'], failed: ["Couldn't finish", 'bad'] };
+function renderAsks() {
+  const as = [...data.asks].sort((a, b) => (b.created || 0) - (a.created || 0)).slice(0, 8);
+  $('#cAsk').textContent = data.asks.filter(a => a.status === 'queued' || a.status === 'working').length || '';
+  $('#askList').innerHTML = as.map(a => { const [lab, tone] = ASK_PILL[a.status] || ASK_PILL.queued;
+    return `<div class="row"><div class="main"><div class="t">${esc(a.text)}</div><div class="s">${fmtDT(a.created)} <span class="pill ${tone}">${lab}</span></div>${a.answer ? `<div class="body">${esc(a.answer)}</div>` : ''}</div><div class="ops"><button class="btn line sm" data-del="asks:${esc(a.id)}">${a.status === 'queued' ? 'Cancel' : 'Dismiss'}</button></div></div>`; }).join('');
+}
+
+/* ---------- PIN lock ---------- */
+async function pinHash(pin, salt) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(salt + ':' + pin)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
+const pinRec = () => store.get('pa-pin', null);
+let hiddenAt = 0, pinTries = 0, pinWait = 0;
+function lockApp() { if (!pinRec()) return; $('#lock').classList.add('on'); $('#lockPin').value = ''; $('#lockMsg').textContent = ''; setTimeout(() => $('#lockPin').focus(), 50); }
+async function tryUnlock() {
+  const r = pinRec(), v = $('#lockPin').value.trim(); if (!r) return $('#lock').classList.remove('on');
+  if (Date.now() < pinWait) return $('#lockMsg').textContent = 'Too many tries. Wait 30 seconds.';
+  if (await pinHash(v, r.salt) === r.hash) { pinTries = 0; $('#lock').classList.remove('on'); $('#lockPin').blur(); return; }
+  if (++pinTries >= 5) { pinTries = 0; pinWait = Date.now() + 30000; }
+  $('#lockMsg').textContent = 'That PIN is not right.'; $('#lockPin').value = ''; buzz(30);
+}
+function renderPin() {
+  const on = !!pinRec();
+  $('#pinInfo').textContent = on ? 'A PIN is set on this device. The app locks when you open it and after a minute in the background.' : 'Ask for a PIN when the app opens on this device. The PIN stays on this device and is not synced.';
+  $('#pinOff').style.display = on ? '' : 'none'; $('#pinLockNow').style.display = on ? '' : 'none';
+  $('#pinSet').textContent = on ? 'Change PIN' : 'Set PIN';
+}
+
 /* ---------- health ---------- */
 const bpVal = r => `${r.sys}/${r.dia}`;
 function renderHealth() {
@@ -1339,6 +1449,17 @@ document.body.addEventListener('click', async e => {
     case 'planNew': return openItem({ todos: 'todo', reminders: 'reminder', alarms: 'alarm' }[local.seg]);
     case 'todoClear': { const now = Date.now(); data.todos.filter(t => t.done).forEach(t => { data.deleted[t.id] = now; }); data.todos = data.todos.filter(t => !t.done); return save(); }
     case 'medEdit': case 'healthMedEdit': return openMedical();
+    case 'askSend': { const t = $('#askText').value.trim(); if (!t) return toast('Type what you want Claude to do.'); add('asks', { text: t, created: Date.now(), status: 'queued', answer: '' }); $('#askText').value = '';
+      return toast(backend() ? 'Sent. Claude answers here within the hour.' : 'Saved on this device. Connect sync so Claude can see it.'); }
+    case 'pinSet': { const a = $('#pinNew').value.trim(), b = $('#pinAgain').value.trim();
+      if (!/^\d{4,8}$/.test(a)) return toast('Use 4 to 8 digits.'); if (a !== b) return toast('The two PINs do not match.');
+      const salt = uid(); store.set('pa-pin', { salt, hash: await pinHash(a, salt) }); $('#pinNew').value = $('#pinAgain').value = ''; renderPin(); return toast('PIN set on this device.'); }
+    case 'pinOff': if (!confirm('Turn off the PIN on this device?')) return; try { localStorage.removeItem('pa-pin'); } catch (err) {} renderPin(); return toast('PIN turned off.');
+    case 'pinLockNow': return lockApp();
+    case 'lockGo': return tryUnlock();
+    case 'lockForgot':
+      if (!confirm('Forgot your PIN? This signs this device out: the PIN, the sync token and the copy saved on this device are removed. Your data stays safe in your GitHub data repository, and you can connect again in Settings.')) return;
+      try { ['pa-pin', 'pa-sync', 'pa-assistant-v1', 'pa-local'].forEach(k => localStorage.removeItem(k)); } catch (err) {} location.reload(); return;
     case 'locBtn':
       if (local.loc) { delete local.loc; saveLocal(); applyTheme(); return renderToday(); }
       try { navigator.geolocation.getCurrentPosition(p => { local.loc = { lat: +p.coords.latitude.toFixed(1), lon: +p.coords.longitude.toFixed(1) }; saveLocal(); applyTheme(); renderToday(); toast('Sunrise and sunset now match where you are.'); },
@@ -1367,6 +1488,7 @@ document.body.addEventListener('click', async e => {
 });
 document.body.addEventListener('change', e => {
   const el = e.target;
+  if (el.dataset.dose) { buzz(el.checked ? 12 : 5); return toggleDose(el.dataset.dose, el.checked); }
   if (el.dataset.check) {
     // Let the tick animation play before the list re-sorts.
     const [list, id] = el.dataset.check.split(':'), on = el.checked, row = el.closest('.row');
@@ -1394,7 +1516,8 @@ $('#search').addEventListener('input', renderSearch);
 $('#sosWhere').addEventListener('input', () => { $('#sosMsg').value = sosText(); renderEmergency(); });
 $('#sosMsg').addEventListener('input', renderEmergency);
 window.addEventListener('hashchange', () => show(location.hash.slice(1), true));
-document.addEventListener('visibilitychange', () => { if (!document.hidden) { scheduleSync(200); checkReminders(); checkAlarms(); } });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { hiddenAt = Date.now(); return; } if (hiddenAt && Date.now() - hiddenAt > 60000) lockApp(); scheduleSync(200); checkReminders(); checkAlarms(); checkMeds(); });
+$('#lockForm').addEventListener('submit', e => { e.preventDefault(); tryUnlock(); });
 
 /* ---------- voice notes: audio stays on the device and is copied to the private repository ---------- */
 SEARCH.push(['voice', 'voice', 'Voice note', v => v.title + ' ' + (v.note || ''), v => v.title, v => fmtDT(v.created)]);
@@ -1478,6 +1601,7 @@ function renderVoice() {
 }
 
 /* ---------- start ---------- */
+lockApp();
 applyTheme(); $('#theme').value = local.theme;
 if (inArtifact) $('#bkDown').style.display = 'none';
 $('#mTo').value = local.draft.to; $('#mSubj').value = local.draft.subject; $('#mBody').value = local.draft.body; draftChanged();
@@ -1486,7 +1610,7 @@ renderAll();
 show(location.hash.slice(1) || 'today', true);
 sync();
 initArtifactDb();
-setInterval(() => { checkReminders(); checkAlarms(); }, 5000);
+setInterval(() => { checkReminders(); checkAlarms(); checkMeds(); }, 5000);
 setInterval(() => { if (local.theme === 'sun' && document.documentElement.dataset.theme !== (skyState(new Date()).up ? 'light' : 'dark')) applyTheme(); renderToday(); if (!document.hidden && backend() && !db) sync(); }, 60000);
 if ('serviceWorker' in navigator && location.protocol === 'https:') { try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {} }
 </script>

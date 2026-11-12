@@ -108,6 +108,10 @@ Each medication has its daily `times`. Ticking a dose adds an item to `doses` fo
 
 Health > Sick day log records throwing up, extra or double doses, feeling unwell and emergency injections in `sick`. Extra tablets come off the supply you pick in the entry (`med`) and an injection comes off any supply whose name contains "inject"; deleting an entry puts them back. **Copy for doctor** copies the last 90 days as text.
 
+## Editions
+
+`index.html` has `const EDITION = 'full';`. Setting it to `'work'` hides the Health tab, medications, the Medical ID and the Claude tasks list, and puts a Work card first on Today. Shared copies for others use the work edition.
+
 ## Rides
 
 **Get a ride** on Today opens Uber with your current location as pickup, either with no destination or with a saved place as the drop-off. Events and shifts have a `where` field: a saved place's name or an address. When set, a **Ride** button appears next to them. Uber does the booking and payment; the app only fills in the trip.

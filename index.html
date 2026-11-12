@@ -365,6 +365,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 .sickbtns{display:flex;flex-wrap:wrap;gap:8px}
 .sickbtns button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600}
 .sickbtns button.red{border-color:var(--danger);color:var(--danger)}
+.ed-work [data-full]{display:none!important}
 #toasts{bottom:calc(148px + env(safe-area-inset-bottom))}
 @media (min-width:900px){.fab{right:30px;bottom:30px}.dial-list{right:36px;bottom:104px}#toasts{bottom:30px}main{padding-bottom:110px}}
 
@@ -512,13 +513,14 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
   <div class="card" id="searchCard" style="display:none"><div class="head"><h3>Results</h3><span class="count" id="searchCount"></span></div><div class="list" id="searchList"></div></div>
   <div class="cols" id="todayCols">
     <div class="grp">Your day</div>
-    <div class="card" id="medTodayCard"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-pill"/></svg></span><h3>Medications today</h3></div><span class="count" id="cMedToday"></span></div><div class="bar med"><i id="medBar"></i></div><div class="list" id="medToday"></div></div>
+    <div class="card" id="medTodayCard" data-full><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-pill"/></svg></span><h3>Medications today</h3></div><span class="count" id="cMedToday"></span></div><div class="bar med"><i id="medBar"></i></div><div class="list" id="medToday"></div></div>
+    <div class="card" id="todayWorkCard"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-brief"/></svg></span><h3>Work</h3></div><button class="btn line sm" data-go="work">Open</button></div><div class="wstat" id="todayWorkStats"></div><div class="list" id="todayShifts"></div></div>
     <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-cal"/></svg></span><h3 id="schedTitle">Today's schedule</h3></div><span class="count" id="cEv"></span></div><div class="list" id="todayEvents"></div></div>
     <div class="card" id="remCard"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-bell"/></svg></span><h3>Reminders</h3></div><span class="count" id="cRem"></span></div><div class="list" id="todayRems"></div></div>
     <div class="card" id="todoCard"><div class="head"><div class="ttl"><span class="ic todo"><svg><use href="#i-check"/></svg></span><h3>To-dos</h3></div><span class="count" id="cTodo"></span></div><div class="bar"><i id="todoBar"></i></div><div class="list" id="todayTodos"></div></div>
     <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-car"/></svg></span><h3>Get a ride</h3></div><button class="btn line sm" data-new="place">+ Place</button></div>
       <div class="places" id="placeList"></div>
-      <p class="muted">Opens Uber with the drop-off filled in. You confirm the ride and price there. Edit saved places under Health.</p></div>
+      <p class="muted">Opens Uber with the drop-off filled in. You confirm the ride and price there. Edit saved places under Work.</p></div>
     <div class="grp">Claude</div>
     <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>From Claude</h3></div><span class="pill cl">Briefings</span></div><div class="list" id="briefList"></div></div>
     <div class="card ask"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>Ask Claude</h3></div><span class="count" id="cAsk"></span></div>
@@ -526,7 +528,7 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
       <div class="actions"><button class="btn" id="askSend">Send to Claude</button></div>
       <div class="list" id="askList"></div>
       <p class="muted">Answered here within the hour, 7 AM to 10 PM. Claude researches and drafts, but never sends email, buys anything or contacts anyone for you.</p></div>
-    <details class="card fold"><summary><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><div><h3>Claude tasks</h3><div class="s" id="taskSub"></div></div></div><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="list" id="taskList"></div></details>
+    <details class="card fold" data-full><summary><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><div><h3>Claude tasks</h3><div class="s" id="taskSub"></div></div></div><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="list" id="taskList"></div></details>
   </div>
 </section>
 
@@ -572,6 +574,9 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
       <div class="avail" id="availGrid"></div>
       <label>Notes for my manager<input id="availNote" placeholder="No weekends after 6 PM, school pickup at 3"></label>
       <p class="muted">Copy puts your availability in a message you can paste into a text or email.</p></div>
+    <div class="stack">
+      <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-car"/></svg></span><h3>Places</h3></div><button class="btn line sm" data-new="place">+ Add</button></div><div class="list" id="placeEdit"></div></div>
+    </div>
   </div>
 </section>
 
@@ -588,7 +593,7 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
   </div>
 </section>
 
-<section class="view" id="v-health">
+<section class="view" id="v-health" data-full>
   <div class="vhead"><div><h2>Health</h2><p id="bpSub"></p></div><button class="btn" data-new="bp">+ Log reading</button></div>
   <div class="cols">
     <div class="stack">
@@ -602,7 +607,6 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
         <div class="wstat" id="sickStats"></div><div class="list" id="sickList"></div>
         <p class="muted">Extra tablets and injections you log come off your supply counts. Deleting an entry puts them back.</p></div>
       <div class="card"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-box"/></svg></span><h3>Supplies and refills</h3></div><button class="btn line sm" data-new="stock">+ Add</button></div><div class="list" id="stockList"></div><p class="muted">Ticking a dose counts it down. A supply with the same name as a medication is used by it (two entries for the same medicine share one). A reminder is added 5 days before you run out and 30 days before something expires.</p></div>
-      <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-car"/></svg></span><h3>Places</h3></div><button class="btn line sm" data-new="place">+ Add</button></div><div class="list" id="placeEdit"></div></div>
       <div class="card"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-heart"/></svg></span><h3>Allergies and medications</h3></div><button class="btn line sm" id="healthMedEdit">Edit</button></div><div id="healthMed"></div><p class="muted">This is your Medical ID. Changes here also show on the SOS screen.</p></div>
       <p class="muted">Ranges follow the American Heart Association. This app does not diagnose anything. Talk to your doctor about your readings, and call 911 for a reading over 180/120 with chest pain, shortness of breath, weakness or trouble speaking.</p>
     </div>
@@ -647,7 +651,7 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
         <p class="muted">Call, Text and Email open your phone's own apps. You press send there.</p>
       </div>
     </div>
-    <div class="card">
+    <div class="card" data-full>
       <div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-heart"/></svg></span><h3>Medical ID</h3></div><button class="btn line sm" id="medEdit">Edit</button></div>
       <div id="medBody"></div>
       <p class="muted">Shown here for anyone helping you. It is added to the emergency message only if you turn that on.</p>
@@ -708,15 +712,15 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
   <button data-go="plan"><svg viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>Plan</button>
   <button data-go="work"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 12h18"/></svg>Work</button>
   <button data-go="journal"><svg viewBox="0 0 24 24"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM9 4v16"/></svg>Journal</button>
-  <button data-go="health"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M5.5 12h3l1.5-2.5 2 5 1.5-2.5h5"/></svg>Health</button>
+  <button data-go="health" data-full><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M5.5 12h3l1.5-2.5 2 5 1.5-2.5h5"/></svg>Health</button>
   <button data-go="mail"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email</button>
 </nav>
 </div>
 
 <div class="dial" id="dial"><div class="dial-list">
   <button data-new="shift"><span>Work shift</span><i class="ic ev"><svg><use href="#i-brief"/></svg></i></button>
-  <button data-new="med"><span>Medication</span><i class="ic red"><svg><use href="#i-pill"/></svg></i></button>
-  <button data-new="bp"><span>Blood pressure</span><i class="ic red"><svg><use href="#i-pulse"/></svg></i></button>
+  <button data-new="med" data-full><span>Medication</span><i class="ic red"><svg><use href="#i-pill"/></svg></i></button>
+  <button data-new="bp" data-full><span>Blood pressure</span><i class="ic red"><svg><use href="#i-pulse"/></svg></i></button>
   <button data-new="alarm"><span>Alarm</span><i class="ic al"><svg><use href="#i-clock"/></svg></i></button>
   <button data-new="voice"><span>Voice note</span><i class="ic vo"><svg><use href="#i-mic"/></svg></i></button>
   <button data-new="journal"><span>Journal entry</span><i class="ic jr"><svg><use href="#i-book"/></svg></i></button>
@@ -849,6 +853,9 @@ function sunTimes(y, m, d, lat, lon) {
 // Moon phase from 0 (new) through 0.5 (full) back to 1.
 function moonPhase(ms) { const p = ((ms - Date.UTC(2000, 0, 6, 18, 14)) / 86400000 / 29.530588853) % 1; return p < 0 ? p + 1 : p; }
 /*PURE-END*/
+// 'full' shows everything. 'work' hides the health features and the Claude tasks list (used for shared copies).
+const EDITION = 'full';
+if (EDITION === 'work') document.documentElement.classList.add('ed-work');
 // Wallet button: opens Google Wallet on Android (falls back to the Wallet website), or an "Open Wallet" shortcut on iPhone.
 (() => {
   const a = document.getElementById('walletBtn'), ua = navigator.userAgent;
@@ -1091,7 +1098,7 @@ function paintSky(now) {
 const VIEWS = ['today', 'calendar', 'plan', 'work', 'journal', 'health', 'mail', 'emergency', 'sync'];
 function show(v, fromHash) {
   if (v === 'alerts') v = 'plan';
-  if (!VIEWS.includes(v)) v = 'today';
+  if (!VIEWS.includes(v) || (EDITION === 'work' && v === 'health')) v = 'today';
   const cur = VIEWS.findIndex(x => $('#v-' + x).classList.contains('on')), nxt = VIEWS.indexOf(v);
   if (cur !== nxt) { $('main').dataset.dir = nxt > cur ? 'r' : 'l'; if (!fromHash) buzz(6); }
   $('#fab').classList.toggle('hide', ['mail', 'emergency', 'sync'].includes(v)); closeDial();
@@ -1433,6 +1440,9 @@ function renderWork() {
   $('#workSub').textContent = next.length ? 'Next shift ' + (next[0].date === t ? 'today' : fmtDay(next[0].date)) + ' at ' + fmtTime(next[0].e.time) : 'No shifts in the next two weeks';
   $('#workStats').innerHTML = `<div><b>${wn}</b><span>${wn === 1 ? 'shift' : 'shifts'} this week</span></div><div><b>${+wk.toFixed(1)}</b><span>hours this week</span></div>`;
   $('#shiftList').innerHTML = next.length ? next.map(o => evRow(o.e, o.date)).join('') : empty('Tap + Add shift to put your work schedule in.');
+  $('#todayWorkCard').style.display = sh.length || EDITION === 'work' ? '' : 'none';
+  $('#todayWorkStats').innerHTML = $('#workStats').innerHTML;
+  $('#todayShifts').innerHTML = next.length ? next.slice(0, 3).map(o => evRow(o.e, o.date)).join('') : empty('No shifts yet. Open Work to add your schedule and availability.');
   const av = d => data.avail.find(x => x.id === 'avail-' + d) || { status: '' };
   $('#availGrid').innerHTML = DAYS.map((dn, d) => { const a = av(d);
     return `<b>${dn}</b><div class="ar"><select data-av="${d}" aria-label="${dn} availability"><option value="">Not set</option>${AVAIL.map(([v, l]) => `<option value="${v}"${a.status === v ? ' selected' : ''}>${l}</option>`).join('')}</select>` +

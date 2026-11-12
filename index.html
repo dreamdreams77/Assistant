@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* Layout idea: content first. Each screen is a list of what you have; adding and editing happen in one sheet. Phone gets a bottom tab bar, wide screens a left rail. One accent, red reserved for emergency. */
 :root{
@@ -19,9 +19,11 @@
   --accent:#0e6577; --accent-soft:#e1eff1; --on-accent:#ffffff;
   --danger:#b3261e; --danger-soft:#fbe9e7; --warn:#7a5200; --warn-soft:#fcf2d9; --ok:#1d7a4f;
   --shadow:0 1px 2px rgba(20,32,42,.05),0 4px 14px rgba(20,32,42,.04);
-  --display:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
   --body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
-  --r:14px;
+  --r:16px;
+  --top:#0b4f5e; --hero-a:#083f4c; --hero-b:#14889a; --tint:#dcedf0;
+  --rem:#a86200; --rem-soft:#fdefd3; --todo:#4650c4; --todo-soft:#e7e9fb; --jr:#b23562; --jr-soft:#fbe5ed; --cl:#6741b5; --cl-soft:#ede6fa;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -30,6 +32,8 @@
     --accent:#5cc0d1; --accent-soft:#15333a; --on-accent:#06222a;
     --danger:#e5534a; --danger-soft:#3a1c1a; --warn:#f0c060; --warn-soft:#33290f; --ok:#6fd3a0;
     --shadow:0 1px 2px rgba(0,0,0,.3);
+    --top:#0b2a33; --hero-a:#0b2a33; --hero-b:#14606e; --tint:#0f2329;
+    --rem:#f0b450; --rem-soft:#33290f; --todo:#a3abff; --todo-soft:#1f2347; --jr:#f08db0; --jr-soft:#3a1a27; --cl:#bda2f5; --cl-soft:#2a1f45;
   }
 }
 :root[data-theme="dark"]{
@@ -38,6 +42,8 @@
   --accent:#5cc0d1; --accent-soft:#15333a; --on-accent:#06222a;
   --danger:#e5534a; --danger-soft:#3a1c1a; --warn:#f0c060; --warn-soft:#33290f; --ok:#6fd3a0;
   --shadow:0 1px 2px rgba(0,0,0,.3);
+    --top:#0b2a33; --hero-a:#0b2a33; --hero-b:#14606e; --tint:#0f2329;
+    --rem:#f0b450; --rem-soft:#33290f; --todo:#a3abff; --todo-soft:#1f2347; --jr:#f08db0; --jr-soft:#3a1a27; --cl:#bda2f5; --cl-soft:#2a1f45;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -163,9 +169,79 @@ button.main{border:0;background:none;padding:0;display:block}
   @keyframes in{from{transform:translateY(4px)}to{transform:none}}
   @keyframes up{from{transform:translateY(24px)}to{transform:none}}
 }
+
+/* ---- visual layer: one bold place (the day panel on Today), category colour everywhere else ---- */
+.top{background:var(--top);border-bottom:0;color:#fff}
+.brand svg rect{fill:#fff}.brand svg path{stroke:var(--top)}
+.brand h1{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.top .chip{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#fff}
+.top .chip i{background:rgba(255,255,255,.6)}
+.top .chip.ok i{background:#7be3b0}.top .chip.err i{background:#ff8a80}.top .chip.busy i{background:#ffd27a}
+main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
+.vhead h2{font-size:30px;font-weight:800;letter-spacing:-.03em}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--hero-a),var(--hero-b));color:#fff;border-radius:22px;padding:20px 18px 16px;display:flex;flex-direction:column;gap:16px;box-shadow:0 14px 30px -16px var(--hero-a)}
+.hero::after{content:"";position:absolute;right:-70px;top:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%);pointer-events:none}
+.hero-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:relative;z-index:1}
+.hero-date{font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;opacity:.8}
+.hero h2{font-size:29px;font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-top:5px}
+.hero p{opacity:.9;margin-top:7px;font-size:14px}
+.hero-day{font-family:var(--display);font-weight:800;font-size:68px;line-height:.82;letter-spacing:-.05em;text-align:right;font-variant-numeric:tabular-nums}
+.hero-day small{display:block;font-family:var(--body);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;opacity:.8;margin-top:8px}
+.ribbon{position:relative;height:30px;border-radius:9px;background:rgba(255,255,255,.13)}
+.ribbon .past{position:absolute;inset:0 auto 0 0;background:rgba(255,255,255,.12);border-radius:9px 0 0 9px}
+.ribbon .mk{position:absolute;top:6px;bottom:6px;width:6px;margin-left:-3px;border-radius:3px}
+.mk.ev,.legend .ev{background:#8fe3f0}.mk.rem,.legend .rem{background:#ffd27a}.mk.al,.legend .al{background:#ffa3c4}
+.ribbon .nowl{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:#fff;border-radius:2px}
+.ticks{display:flex;justify-content:space-between;font-size:10px;opacity:.75;margin-top:5px;font-variant-numeric:tabular-nums}
+.legend{display:flex;gap:14px;font-size:11px;opacity:.9;margin-top:6px}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stats button{border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:13px;padding:10px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0}
+.stats b{font-family:var(--display);font-size:24px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.stats span{font-size:11px;opacity:.88;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.week button{border:1px solid var(--line);background:var(--surface);border-radius:13px;padding:8px 0 7px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--ink);box-shadow:var(--shadow)}
+.week small{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.week b{font-family:var(--display);font-size:17px;font-weight:700}
+.week i{display:flex;gap:2px;height:5px}
+.week u{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.week .now{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.week .now small{color:inherit;opacity:.85}.week .now u{background:var(--on-accent)}
+.ttl{display:flex;align-items:center;gap:10px;min-width:0}
+.card h3{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.ic{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;flex:none;background:var(--accent-soft);color:var(--accent)}
+.ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ic.rem{background:var(--rem-soft);color:var(--rem)}.ic.todo{background:var(--todo-soft);color:var(--todo)}.ic.jr{background:var(--jr-soft);color:var(--jr)}.ic.cl{background:var(--cl-soft);color:var(--cl)}.ic.red{background:var(--danger-soft);color:var(--danger)}
+.count{background:var(--sunk);border:1px solid var(--line);border-radius:999px;padding:1px 9px}
+.count:empty{display:none}
+.row .time{background:var(--accent-soft);border-radius:8px;padding:3px 0;text-align:center;font-size:12px;min-width:68px}
+.bar{height:6px;border-radius:3px;background:var(--todo-soft);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--todo);border-radius:3px;transition:width .3s}
+.empty{border:1px dashed var(--line);border-radius:11px;padding:14px;text-align:center;color:var(--muted);font-size:13px}
+.quick .btn{border-radius:999px;padding:7px 14px;font-size:13px;box-shadow:var(--shadow)}
+.btn{box-shadow:0 1px 2px rgba(20,32,42,.1)}
+.btn.del{box-shadow:none}
+.pill.mood-great{background:var(--accent-soft);color:var(--ok)}.pill.mood-okay{background:var(--sunk);color:var(--muted)}
+.pill.mood-low{background:var(--warn-soft);color:var(--warn)}.pill.mood-rough{background:var(--danger-soft);color:var(--danger)}
+.pill.cl{background:var(--cl-soft);color:var(--cl)}
+.tabs svg{box-sizing:content-box;padding:3px 16px;border-radius:999px}
+.tabs button.on svg{background:var(--accent-soft)}
+.tabs button.on{font-weight:600}
+@media (min-width:900px){.tabs svg{padding:0}.tabs button.on svg{background:none}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M11 3l1.9 5.1L18 10l-5.1 1.9L11 17l-1.9-5.1L4 10l5.1-1.9zM18.5 15l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 1 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+<symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19zM14 7l3 3"/></symbol>
+<symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"/></symbol>
+</defs></svg>
 <header class="top">
   <div class="brand">
     <svg viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="7" fill="var(--accent)"/><path d="M7.5 13.5l3.6 3.6 7.4-8" fill="none" stroke="var(--on-accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -179,7 +255,13 @@ button.main{border:0;background:none;padding:0;display:block}
 <main><div class="wrap">
 
 <section class="view on" id="v-today">
-  <div class="vhead"><div><div class="eyebrow" id="helloDate"></div><h2 id="helloHi"></h2><p id="helloLine"></p></div></div>
+  <div class="hero">
+    <div class="hero-top"><div><div class="hero-date" id="helloDate"></div><h2 id="helloHi"></h2><p id="helloLine"></p></div><div class="hero-day"><span id="heroNum"></span><small id="heroMon"></small></div></div>
+    <div><div class="ribbon" id="ribbon"></div><div class="ticks"><span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>12 AM</span></div>
+      <div class="legend"><span><i class="ev"></i>Events</span><span><i class="rem"></i>Reminders</span><span><i class="al"></i>Alarms</span></div></div>
+    <div class="stats" id="stats"></div>
+  </div>
+  <div class="week" id="week"></div>
   <input id="search" type="search" placeholder="Search everything" aria-label="Search everything">
   <div class="quick">
     <button class="btn line sm" data-new="event">+ Event</button>
@@ -190,10 +272,10 @@ button.main{border:0;background:none;padding:0;display:block}
   </div>
   <div class="card" id="searchCard" style="display:none"><div class="head"><h3>Results</h3><span class="count" id="searchCount"></span></div><div class="list" id="searchList"></div></div>
   <div class="cols" id="todayCols">
-    <div class="card"><div class="head"><h3>From Claude</h3><span class="pill">Scheduled tasks</span></div><div class="list" id="briefList"></div></div>
-    <div class="card"><div class="head"><h3>Today's schedule</h3><span class="count" id="cEv"></span></div><div class="list" id="todayEvents"></div></div>
-    <div class="card"><div class="head"><h3>Reminders</h3><span class="count" id="cRem"></span></div><div class="list" id="todayRems"></div></div>
-    <div class="card"><div class="head"><h3>To-dos</h3><span class="count" id="cTodo"></span></div><div class="list" id="todayTodos"></div></div>
+    <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>From Claude</h3></div><span class="pill cl">Scheduled tasks</span></div><div class="list" id="briefList"></div></div>
+    <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-cal"/></svg></span><h3>Today's schedule</h3></div><span class="count" id="cEv"></span></div><div class="list" id="todayEvents"></div></div>
+    <div class="card"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-bell"/></svg></span><h3>Reminders</h3></div><span class="count" id="cRem"></span></div><div class="list" id="todayRems"></div></div>
+    <div class="card"><div class="head"><div class="ttl"><span class="ic todo"><svg><use href="#i-check"/></svg></span><h3>To-dos</h3></div><span class="count" id="cTodo"></span></div><div class="bar"><i id="todoBar"></i></div><div class="list" id="todayTodos"></div></div>
   </div>
 </section>
 
@@ -211,7 +293,7 @@ button.main{border:0;background:none;padding:0;display:block}
     </div>
     <div class="stack">
       <div class="card"><h3 id="dayTitle"></h3><div class="list" id="dayList"></div></div>
-      <div class="card"><h3>Coming up</h3><div class="list" id="upList"></div></div>
+      <div class="card"><div class="ttl"><span class="ic ev"><svg><use href="#i-cal"/></svg></span><h3>Coming up</h3></div><div class="list" id="upList"></div></div>
     </div>
   </div>
 </section>
@@ -236,7 +318,7 @@ button.main{border:0;background:none;padding:0;display:block}
   <div class="vhead"><div><h2>Email</h2></div></div>
   <div class="cols">
     <div class="card">
-      <h3>Write an email</h3>
+      <div class="ttl"><span class="ic ev"><svg><use href="#i-pen"/></svg></span><h3>Write an email</h3></div>
       <label>To<input id="mTo" type="email" placeholder="name@example.com"></label>
       <label>Subject<input id="mSubj"></label>
       <label>Message<textarea id="mBody" style="min-height:150px"></textarea></label>
@@ -248,8 +330,8 @@ button.main{border:0;background:none;padding:0;display:block}
       <p class="muted">Queued emails go out from your Gmail when your scheduled Claude task next runs. This app never sends mail itself.</p>
     </div>
     <div class="stack">
-      <div class="card"><div class="head"><h3>Outbox</h3><span class="count" id="cOut"></span></div><div class="list" id="outList"></div></div>
-      <div class="card"><div class="head"><h3>Contacts</h3><button class="btn line sm" data-new="contact">+ Add</button></div><div class="list" id="cList"></div></div>
+      <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-mail"/></svg></span><h3>Outbox</h3></div><span class="count" id="cOut"></span></div><div class="list" id="outList"></div></div>
+      <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-user"/></svg></span><h3>Contacts</h3></div><button class="btn line sm" data-new="contact">+ Add</button></div><div class="list" id="cList"></div></div>
     </div>
   </div>
 </section>
@@ -271,7 +353,7 @@ button.main{border:0;background:none;padding:0;display:block}
       </div>
     </div>
     <div class="card">
-      <div class="head"><h3>Medical ID</h3><button class="btn line sm" id="medEdit">Edit</button></div>
+      <div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-heart"/></svg></span><h3>Medical ID</h3></div><button class="btn line sm" id="medEdit">Edit</button></div>
       <div id="medBody"></div>
       <p class="muted">Shown here for anyone helping you. It is added to the emergency message only if you turn that on.</p>
     </div>
@@ -282,13 +364,13 @@ button.main{border:0;background:none;padding:0;display:block}
   <div class="vhead"><div><h2>Settings</h2></div></div>
   <div class="cols">
     <div class="card">
-      <h3>Sync and Claude schedules</h3>
+      <div class="ttl"><span class="ic ev"><svg><use href="#i-sync"/></svg></span><h3>Sync and Claude schedules</h3></div>
       <p class="muted" id="syncInfo"></p>
       <div id="ghForm" class="stack">
         <p class="muted">Connect a <b>private</b> GitHub repository to hold your data. Your phone, your other devices and your scheduled Claude tasks then read and write the same file.</p>
         <div class="fields">
           <label>GitHub username<input id="ghOwner" autocomplete="off" autocapitalize="none"></label>
-          <label>Private data repository<input id="ghRepo" autocomplete="off" autocapitalize="none" placeholder="assistant-data"></label>
+          <label>Private data repository (not the app one)<input id="ghRepo" autocomplete="off" autocapitalize="none" placeholder="assistant-data"></label>
         </div>
         <div class="fields">
           <label>Branch<input id="ghBranch" value="main" autocapitalize="none"></label>
@@ -412,7 +494,7 @@ const fmtTime = t => { if (!t) return 'All day'; const [h, m] = t.split(':').map
 const fmtDT = ms => new Date(ms).toLocaleString([], {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
 const fmtDay = s => new Date(s + 'T00:00').toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
 const byTime = (a, b) => (a.time || '').localeCompare(b.time || '');
-const empty = msg => `<div class="muted">${msg}</div>`;
+const empty = msg => `<div class="empty">${msg}</div>`;
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const REPEAT = { daily: 'Repeats daily', weekly: 'Repeats weekly', monthly: 'Repeats monthly' };
@@ -435,7 +517,7 @@ function remove(list, id) { data[list] = data[list].filter(x => x.id !== id); da
 function setPrefs(patch) { data.prefs = Object.assign({}, data.prefs, patch, { u: Date.now() }); save(); }
 
 /* ---------- sync: Claude artifact storage, or a private GitHub repository ---------- */
-let db = null, ghSha = null, busy = false, again = false, syncTimer = null;
+let db = null, ghSha = null, ghChecked = false, busy = false, again = false, syncTimer = null;
 const DOC = 'assistant/data';
 const inArtifact = !!(window.claude && typeof window.claude.use === 'function');
 function setStatus(kind, text) { $('#syncChip').className = 'chip ' + kind; $('#syncLabel').textContent = text; renderSync(); }
@@ -444,20 +526,22 @@ function ghRepoUrl() { return `https://api.github.com/repos/${encodeURIComponent
 function ghUrl() { return `${ghRepoUrl()}/contents/${cfg.path.split('/').map(encodeURIComponent).join('/')}`; }
 function ghFail(r) {
   if (r.status === 401) return new Error('GitHub rejected the token. Create a new one and save it again.');
-  if (r.status === 403) return new Error('The token cannot write to this repository. It needs Contents read and write.');
+  if (r.status === 403) return new Error('The token is not allowed to write to this repository. Edit the token on GitHub so it covers this repository with Contents set to Read and write.');
   if (r.status === 404) return new Error('Repository not found. Check the username, repository name and that the token covers it.');
   return new Error('GitHub answered ' + r.status + '.');
 }
 const backends = {
   github: {
     async get() {
-      const r = await fetch(ghUrl() + '?ref=' + encodeURIComponent(cfg.branch), { headers: ghHeaders(), cache: 'no-store' });
-      if (r.status === 404) {
-        // A missing file is fine on first run; a missing repository is not.
+      if (!ghChecked) {
+        // Never put personal data in a repository anyone can read.
         const repo = await fetch(ghRepoUrl(), { headers: ghHeaders(), cache: 'no-store' });
         if (!repo.ok) throw ghFail(repo);
-        ghSha = null; return null;
+        if (!(await repo.json()).private) throw new Error(`"${cfg.repo}" is a public repository, so anyone could read your journal and contacts there. Create a separate private repository and enter its name here.`);
+        ghChecked = true;
       }
+      const r = await fetch(ghUrl() + '?ref=' + encodeURIComponent(cfg.branch), { headers: ghHeaders(), cache: 'no-store' });
+      if (r.status === 404) { ghSha = null; return null; } // first run: the file does not exist yet
       if (!r.ok) throw ghFail(r);
       const j = await r.json(); ghSha = j.sha;
       return JSON.parse(b64dec(j.content));
@@ -499,6 +583,7 @@ async function sync() {
     setStatus('ok', 'Synced ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }));
   } catch (e) {
     setStatus('err', 'Sync problem');
+    $('#syncInfo').className = 'note red';
     $('#syncInfo').textContent = e.message || 'Could not reach the sync storage.';
   }
   busy = false;
@@ -517,6 +602,7 @@ async function initArtifactDb() {
 function renderSync() {
   $('#ghForm').style.display = db ? 'none' : 'flex';
   if ($('#syncChip').classList.contains('err')) return;
+  $('#syncInfo').className = 'muted';
   $('#syncInfo').textContent = db
     ? 'This copy saves to Claude artifact storage. Scheduled Claude tasks can read and write it there.'
     : (cfg && cfg.token ? `Connected to ${cfg.owner}/${cfg.repo}, file ${cfg.path}.` : 'Your data is saved on this device only. Nothing is shared until you connect a repository.');
@@ -640,25 +726,42 @@ function renderAll() {
 }
 
 function renderToday() {
-  const now = new Date(), t = ymd(now), ms = now.getTime(), h = now.getHours();
-  $('#helloDate').textContent = now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+  const now = new Date(), t = ymd(now), ms = now.getTime(), h = now.getHours(), mins = h * 60 + now.getMinutes();
+  $('#helloDate').textContent = now.toLocaleDateString([], { weekday: 'long' });
+  $('#heroNum').textContent = now.getDate();
+  $('#heroMon').textContent = now.toLocaleDateString([], { month: 'short', year: 'numeric' });
   const name = ((data.prefs.medical || {}).name || '').split(' ')[0];
   $('#helloHi').textContent = (h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening') + (name ? ', ' + name : '');
   const evs = data.events.filter(e => e.date === t).sort(byTime);
   const rems = data.reminders.filter(r => !r.done).sort((a, b) => a.due - b.due);
-  const todos = openTodos();
+  const todos = openTodos(), doneTodos = data.todos.length - todos.length;
   const late = rems.filter(r => r.due < ms).length, queued = data.outbox.filter(o => o.status === 'queued').length;
-  const nextAlarm = data.alarms.filter(a => a.enabled).sort(byTime)[0];
-  $('#helloLine').textContent = [plural(evs.length, 'event') + ' today', plural(rems.length, 'open reminder') + (late ? ` (${late} overdue)` : ''), plural(todos.length, 'to-do'),
-    queued ? plural(queued, 'email') + ' waiting to send' : '', nextAlarm ? 'alarm at ' + fmtTime(nextAlarm.time) : ''].filter(Boolean).join(' · ');
-  $('#cEv').textContent = evs.length || ''; $('#cRem').textContent = rems.length || ''; $('#cTodo').textContent = todos.length || '';
+  const hm = `${pad(h)}:${pad(now.getMinutes())}`;
+  const nextEv = evs.find(e => e.time && e.time >= hm), nextRem = rems.find(r => r.due >= ms);
+  $('#helloLine').textContent = late ? `${plural(late, 'reminder')} overdue.` : nextEv ? `Next: ${nextEv.title} at ${fmtTime(nextEv.time)}.` : nextRem ? `Next reminder: ${nextRem.text}, ${fmtDT(nextRem.due)}.` : 'Nothing else scheduled today.';
+  // The day as a ribbon: midnight to midnight, with a line for now.
+  const at = m => (m / 1440 * 100).toFixed(2) + '%', toMin = x => { const [a, b] = x.split(':').map(Number); return a * 60 + b; };
+  const end = new Date(now); end.setHours(24, 0, 0, 0); const start = end.getTime() - 86400000;
+  $('#ribbon').innerHTML = `<div class="past" style="width:${at(mins)}"></div>` +
+    evs.filter(e => e.time).map(e => `<span class="mk ev" style="left:${at(toMin(e.time))}" title="${esc(e.title)}"></span>`).join('') +
+    rems.filter(r => r.due >= start && r.due < end.getTime()).map(r => `<span class="mk rem" style="left:${at((r.due - start) / 60000)}" title="${esc(r.text)}"></span>`).join('') +
+    data.alarms.filter(a => a.enabled && (!a.days || !a.days.length || a.days.includes(now.getDay()))).map(a => `<span class="mk al" style="left:${at(toMin(a.time))}" title="${esc(a.label || 'Alarm')}"></span>`).join('') +
+    `<span class="nowl" style="left:${at(mins)}"></span>`;
+  $('#stats').innerHTML = [[evs.length, 'Events', 'calendar', ''], [rems.length, late ? late + ' overdue' : 'Reminders', 'plan', 'reminders'], [todos.length, 'To-dos', 'plan', 'todos'], [queued, 'To send', 'mail', '']]
+    .map(([n, l, go, seg]) => `<button data-go="${go}"${seg ? ` data-seg="${seg}"` : ''}><b>${n}</b><span>${l}</span></button>`).join('');
+  const ws = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+  $('#week').innerHTML = DAYS.map((dn, i) => { const d = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + i), s = ymd(d), n = data.events.filter(e => e.date === s).length;
+    return `<button class="${s === t ? 'now' : ''}" data-day="${s}" aria-label="${fmtDay(s)}, ${plural(n, 'event')}"><small>${dn}</small><b>${d.getDate()}</b><i>${'<u></u>'.repeat(Math.min(n, 3))}</i></button>`; }).join('');
+  $('#cEv').textContent = evs.length || ''; $('#cRem').textContent = rems.length || '';
+  $('#cTodo').textContent = data.todos.length ? `${doneTodos} of ${data.todos.length} done` : '';
+  $('#todoBar').style.width = data.todos.length ? (doneTodos / data.todos.length * 100) + '%' : '0';
   const br = [...data.briefings].sort((a, b) => (b.created || 0) - (a.created || 0)).slice(0, 5);
   $('#briefList').innerHTML = br.length
     ? br.map(b => `<div class="row"><div class="main"><div class="t">${esc(b.title || 'Briefing')}</div><div class="s">${b.created ? fmtDT(b.created) : ''}</div><div class="body">${esc(b.body)}</div></div><div class="ops"><button class="btn line sm" data-del="briefings:${esc(b.id)}">Dismiss</button></div></div>`).join('')
     : empty('Briefings written by your scheduled Claude tasks appear here.');
   $('#todayEvents').innerHTML = evs.length ? evs.map(e => evRow(e)).join('') : empty('Nothing scheduled today.');
   $('#todayRems').innerHTML = rems.length ? rems.slice(0, 6).map(r => remRow(r, ms)).join('') : empty('No open reminders.');
-  $('#todayTodos').innerHTML = todos.length ? todos.slice(0, 6).map(todoRow).join('') : empty('Nothing on your list.');
+  $('#todayTodos').innerHTML = todos.length ? todos.slice(0, 6).map(todoRow).join('') : empty(data.todos.length ? 'Everything is done.' : 'Nothing on your list.');
   renderSearch();
 }
 const SEARCH = [
@@ -724,7 +827,7 @@ function renderJournal() {
   $('#jrStreak').textContent = plural(data.journal.length, 'entry').replace('entrys', 'entries') + (n > 1 ? ` · ${n}-day streak` : '');
   const js = data.journal.filter(j => !q || (j.text || '').toLowerCase().includes(q) || (j.date || '').includes(q))
     .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.created || 0) - (a.created || 0));
-  $('#jrList').innerHTML = js.length ? js.map(j => `<div class="row">${editBtn('journal', j.id, `<div class="t">${esc(fmtDay(j.date))} <span class="pill">${esc(j.mood || '')}</span></div><div class="body">${esc(j.text)}</div>`)}</div>`).join('') : empty(q ? 'No entries match.' : 'Your entries appear here. Tap one to edit it.');
+  $('#jrList').innerHTML = js.length ? js.map(j => `<div class="row">${editBtn('journal', j.id, `<div class="t">${esc(fmtDay(j.date))} <span class="pill mood-${esc((j.mood || '').toLowerCase())}">${esc(j.mood || '')}</span></div><div class="body">${esc(j.text)}</div>`)}</div>`).join('') : empty(q ? 'No entries match.' : 'Your entries appear here. Tap one to edit it.');
 }
 
 function renderMail() {
@@ -801,11 +904,11 @@ $('#hold').addEventListener('keyup', holdEnd);
 document.body.addEventListener('click', async e => {
   const el = e.target.closest('button,[data-go]'); if (!el) return;
   const d = el.dataset;
-  if (d.go) return show(d.go);
+  if (d.go) { if (d.seg) { local.seg = d.seg; saveLocal(); renderPlan(); } return show(d.go); }
   if (d.new) return openItem(d.new);
   if (d.edit) { const [kind, id] = d.edit.split(':'); return openItem(kind, id); }
   if (d.seg) { local.seg = d.seg; saveLocal(); return renderPlan(); }
-  if (d.day) { selDate = d.day; return renderCalendar(); }
+  if (d.day) { selDate = d.day; cursor = new Date(d.day + 'T00:00'); cursor.setDate(1); renderCalendar(); if (el.closest('#week')) show('calendar'); return; }
   if (d.del) { const [list, id] = d.del.split(':'); return remove(list, id); }
   if (d.alarm) return change('alarms', d.alarm, a => { a.enabled = !a.enabled; });
   if (d.mailto) { const c = data.contacts.find(x => x.id === d.mailto); if (c) { $('#mTo').value = c.email; draftChanged(); $('main').scrollTop = 0; } return; }
@@ -832,7 +935,7 @@ document.body.addEventListener('click', async e => {
     case 'ghSave': {
       const c = { owner: $('#ghOwner').value.trim(), repo: $('#ghRepo').value.trim(), branch: $('#ghBranch').value.trim() || 'main', path: $('#ghPath').value.trim() || 'assistant-data.json', token: $('#ghToken').value.trim() };
       if (!c.owner || !c.repo || !c.token) return toast('Enter the username, repository and token.');
-      cfg = c; store.set('pa-sync', cfg); ghSha = null; $('#syncChip').className = 'chip'; return sync();
+      cfg = c; store.set('pa-sync', cfg); ghSha = null; ghChecked = false; $('#syncChip').className = 'chip'; return sync();
     }
     case 'ghNow': $('#syncChip').className = 'chip'; return backend() ? sync() : toast('Connect a repository first.');
     case 'ghOff': cfg = null; try { localStorage.removeItem('pa-sync'); } catch (err) {} $('#ghToken').value = ''; $('#syncChip').className = 'chip'; setStatus('', 'On this device'); return toast('Disconnected. Your data stays on this device.');

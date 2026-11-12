@@ -362,6 +362,9 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 .places a.uber{background:var(--ink);color:var(--surface);border-color:var(--ink)}
 .row a.ride{text-decoration:none}
 .pill.low{background:var(--danger-soft);color:var(--danger)}
+.sickbtns{display:flex;flex-wrap:wrap;gap:8px}
+.sickbtns button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600}
+.sickbtns button.red{border-color:var(--danger);color:var(--danger)}
 #toasts{bottom:calc(148px + env(safe-area-inset-bottom))}
 @media (min-width:900px){.fab{right:30px;bottom:30px}.dial-list{right:36px;bottom:104px}#toasts{bottom:30px}main{padding-bottom:110px}}
 
@@ -526,6 +529,10 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
     </div>
     <div class="stack">
       <div class="card"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-pill"/></svg></span><h3>Medications</h3></div><button class="btn line sm" data-new="med">+ Add</button></div><div class="list" id="medList"></div><p class="muted">Tick each dose when you take it. Dose times are copied to your Google Calendar so your phone reminds you.</p></div>
+      <div class="card"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-heart"/></svg></span><h3>Sick day log</h3></div><button class="btn line sm" id="sickCopy">Copy for doctor</button></div>
+        <div class="sickbtns"><button data-sick="vomit">Threw up</button><button data-sick="extra">Extra dose</button><button data-sick="double">Double dose</button><button data-sick="unwell">Feeling unwell</button><button data-sick="injection" class="red">Used injection</button></div>
+        <div class="wstat" id="sickStats"></div><div class="list" id="sickList"></div>
+        <p class="muted">Extra tablets and injections you log come off your supply counts. Deleting an entry puts them back.</p></div>
       <div class="card"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-box"/></svg></span><h3>Supplies and refills</h3></div><button class="btn line sm" data-new="stock">+ Add</button></div><div class="list" id="stockList"></div><p class="muted">Ticking a dose counts it down. A supply with the same name as a medication is used by it (both Hydrocortisone entries share one). A reminder is added 5 days before you run out and 30 days before something expires.</p></div>
       <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-car"/></svg></span><h3>Places</h3></div><button class="btn line sm" data-new="place">+ Add</button></div><div class="list" id="placeEdit"></div></div>
       <div class="card"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-heart"/></svg></span><h3>Allergies and medications</h3></div><button class="btn line sm" id="healthMedEdit">Edit</button></div><div id="healthMed"></div><p class="muted">This is your Medical ID. Changes here also show on the SOS screen.</p></div>
@@ -617,7 +624,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
       </div>
       <div class="card">
         <h3>Backup</h3>
-        <p class="muted">A backup holds everything: events, work shifts and availability, places, supplies, reminders, to-dos, alarms, journal, contacts, blood pressure readings, medications and your medical ID. Your PIN is not in it. Voice recordings are kept separately and are not in the backup file.</p>
+        <p class="muted">A backup holds everything: events, work shifts and availability, places, supplies, sick day log, reminders, to-dos, alarms, journal, contacts, blood pressure readings, medications and your medical ID. Your PIN is not in it. Voice recordings are kept separately and are not in the backup file.</p>
         <div class="actions"><button class="btn line" id="bkDown">Download backup</button><button class="btn line" id="bkCopy">Copy backup</button></div>
         <label>Restore from a backup file<input type="file" id="bkFile" accept="application/json,.json"></label>
       </div>
@@ -671,7 +678,7 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
 
 <script>
 /*PURE-START*/
-const LISTS = ['events','reminders','todos','alarms','journal','voice','contacts','outbox','briefings','tasks','bp','meds','doses','asks','avail','places','stock'];
+const LISTS = ['events','reminders','todos','alarms','journal','voice','contacts','outbox','briefings','tasks','bp','meds','doses','asks','avail','places','stock','sick'];
 // Blood pressure category, American Heart Association 2017 ranges.
 function bpCategory(sys, dia) {
   if (sys > 180 || dia > 120) return ['Very high', 'bad'];
@@ -684,6 +691,7 @@ function bpCategory(sys, dia) {
 function doseDay(time, today) { if (time >= '04:00') return today; const d = new Date(today + 'T12:00'); d.setDate(d.getDate() + 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 const doseId = (med, day, time) => `dose-${med}-${day}-${time.replace(':', '')}`;
 const doseOrder = t => t < '04:00' ? '2' + t : '1' + t;
+const SICK_TYPES = [['vomit', 'Threw up'], ['extra', 'Extra dose'], ['double', 'Double dose'], ['unwell', 'Feeling unwell'], ['injection', 'Used emergency injection'], ['other', 'Other']];
 const DEFAULT_NOTE = 'I need help. Please contact me or call 911.';
 function normalize(d) {
   d = d && typeof d === 'object' ? d : {};
@@ -1045,6 +1053,10 @@ const KINDS = {
     { k: 'date', l: 'Date', t: 'date', req: 1 }, { k: 'mood', l: 'Mood', t: 'select', o: ['Great', 'Good', 'Okay', 'Low', 'Rough'].map(m => [m, m]) }, { k: 'text', l: 'Entry', t: 'textarea', req: 1, ph: 'What happened today?', tall: 1 }] },
   contact: { name: 'contact', list: 'contacts', fields: [
     { k: 'name', l: 'Name', req: 1 }, { k: 'phone', l: 'Phone', t: 'tel' }, { k: 'email', l: 'Email', t: 'email' }, { k: 'ice', l: 'Emergency contact', t: 'check' }] },
+  sick: { name: 'sick day entry', list: 'sick', defaults: () => ({ at: Date.now(), type: 'unwell', tablets: '' }), fields: [
+    { k: 'type', l: 'What happened', t: 'select', o: SICK_TYPES }, { k: 'at', l: 'When', t: 'datetime-local', req: 1, from: v => v ? dtLocal(v) : '', to: v => new Date(v).getTime() },
+    { k: 'tablets', l: 'Extra hydrocortisone tablets taken (5 mg each)', t: 'number', ph: '0', to: v => v === '' ? '' : +v }, { k: 'note', l: 'Notes', t: 'textarea', ph: 'Threw up 20 minutes after the 9 AM dose, retook 2 tablets' }],
+    onAdd: v => sickStock(v, -1), onRemove: (id, it) => sickStock(it, 1) },
   place: { name: 'place', list: 'places', fields: [
     { k: 'name', l: 'Name', req: 1, ph: 'Home, Liam OT, School' }, { k: 'address', l: 'Address', req: 1, ph: '123 Main St, Las Vegas, NV' }] },
   stock: { name: 'supply', list: 'stock', defaults: () => ({ unit: 'tablets' }), hidden: () => ({ cycle: Date.now() }), fields: [
@@ -1116,7 +1128,8 @@ function openItem(kind, id) {
       if (kind === 'event' || kind === 'shift') { selDate = v.date; cursor = new Date(v.date + 'T00:00'); cursor.setDate(1); }
       if (kind === 'reminder' && it) delete local.notified[id];
       if (kind === 'stock' && it && v.onHand !== it.onHand) v.cycle = Date.now();
-      if (it) change(def.list, id, x => Object.assign(x, v)); else add(def.list, Object.assign(def.hidden ? def.hidden() : {}, v));
+      if (it) change(def.list, id, x => Object.assign(x, v)); else { if (def.onAdd) def.onAdd(v); add(def.list, Object.assign(def.hidden ? def.hidden() : {}, v)); }
+      if (kind === 'sick' && !it && v.type === 'injection') { toast('Injection logged. After using the emergency injection, call 911 or get to an emergency room.'); return; }
       toast(def.name[0].toUpperCase() + def.name.slice(1) + ' saved');
     },
     remove: it ? () => { if (def.onRemove) def.onRemove(id, it); remove(def.list, id); toast('Deleted'); } : null
@@ -1169,7 +1182,7 @@ function relText(date, time, now) {
 const openTodos = () => data.todos.filter(t => !t.done).sort((a, b) => (!!b.star - !!a.star) || (a.u - b.u));
 
 function renderAll() {
-  renderToday(); renderCalendar(); renderPlan(); renderJournal(); renderVoice(); renderMail(); renderHealth(); renderMeds(); renderWork(); renderPlaces(); renderStock(); renderAsks(); renderPin(); renderEmergency(); renderSync();
+  renderToday(); renderCalendar(); renderPlan(); renderJournal(); renderVoice(); renderMail(); renderHealth(); renderMeds(); renderWork(); renderPlaces(); renderStock(); renderSick(); renderAsks(); renderPin(); renderEmergency(); renderSync();
   if (document.activeElement !== $('#sosNote')) $('#sosNote').value = data.prefs.emergencyNote || DEFAULT_NOTE;
 }
 
@@ -1383,6 +1396,28 @@ function renderPlaces() {
     : empty('Save places like Home, Liam OT or Work for one-tap rides. Events and shifts can use a saved place name in their Where field.');
 }
 
+/* ---------- sick day log ---------- */
+// Takes logged extra tablets off the Hydrocortisone supply, and an injection off the injection kit (sign -1), or puts them back (+1).
+function sickStock(e, sign) {
+  const adj = (st, n) => { if (st && n && st.onHand !== '' && st.onHand != null) { st.onHand = Math.max(0, +st.onHand + sign * n); st.u = Date.now(); } };
+  adj(data.stock.find(x => /hydrocortisone/i.test(x.name) && !/inject/i.test(x.name)), +e.tablets || 0);
+  if (e.type === 'injection') adj(data.stock.find(x => /inject/i.test(x.name)), 1);
+}
+const sickLabel = t => (SICK_TYPES.find(x => x[0] === t) || ['', 'Other'])[1];
+function renderSick() {
+  const since = Date.now() - 30 * 864e5, recent = data.sick.filter(e => e.at >= since);
+  const n = t => recent.filter(e => e.type === t).length, tabs = recent.reduce((a, e) => a + (+e.tablets || 0), 0);
+  $('#sickStats').innerHTML = recent.length ? `<div><b>${recent.length}</b><span>entries, last 30 days</span></div><div><b>${tabs}</b><span>extra tablets</span></div><div><b>${n('injection')}</b><span>${n('injection') === 1 ? 'injection' : 'injections'}</span></div>` : '';
+  const ls = [...data.sick].sort((a, b) => b.at - a.at).slice(0, 20);
+  $('#sickList').innerHTML = ls.length ? ls.map(e => `<div class="row">${editBtn('sick', e.id, `<div class="t">${esc(sickLabel(e.type))}${e.tablets ? ` <small class="muted">+${e.tablets} tablets</small>` : ''}</div><div class="s">${fmtDT(e.at)}</div>${e.note ? `<div class="body">${esc(e.note)}</div>` : ''}`)}${e.type === 'injection' ? '<span class="pill bad">Injection</span>' : ''}</div>`).join('')
+    : empty('Tap a button above when you are sick, throw up a dose or take extra hydrocortisone.');
+}
+function sickText() {
+  const since = Date.now() - 90 * 864e5, ls = data.sick.filter(e => e.at >= since).sort((a, b) => a.at - b.at);
+  const name = ((data.prefs.medical || {}).name || '').trim();
+  return `Sick day log${name ? ' for ' + name : ''}, last 90 days\n` + (ls.length ? ls.map(e => `${fmtDT(e.at)}: ${sickLabel(e.type)}${e.tablets ? `, ${e.tablets} extra hydrocortisone tablets (5 mg)` : ''}${e.note ? ' - ' + e.note : ''}`).join('\n') : 'No entries.');
+}
+
 /* ---------- supplies and refills ---------- */
 const stockFor = name => data.stock.find(x => (x.name || '').trim().toLowerCase() === String(name || '').trim().toLowerCase());
 // Units used per day by the active medications that share this supply's name.
@@ -1573,6 +1608,8 @@ document.body.addEventListener('click', async e => {
   if (d.color) { local.color = d.color; saveLocal(); return applyTheme(); }
   if (el.id === 'recBtn') return recToggle();
   if (el.id === 'workRec') return recToggle('work');
+  if (d.sick) { const t = d.sick; openItem('sick'); $('#f_type').value = t; if (t === 'double') $('#f_tablets').value = ''; return; }
+  if (el.id === 'sickCopy') { try { await navigator.clipboard.writeText(sickText()); toast('Copied. Paste it into a message or patient portal.'); } catch (err) { toast('Copy was blocked here.'); } return; }
   if (el.id === 'availCopy') { try { await navigator.clipboard.writeText(availText()); toast('Availability copied. Paste it into a text or email.'); } catch (err) { toast('Copy was blocked here.'); } return; }
   if (d.edit) { const [kind, id] = d.edit.split(':'); return openItem(kind, id); }
   if (d.seg) { local.seg = d.seg; saveLocal(); return renderPlan(); }

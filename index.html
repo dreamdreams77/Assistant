@@ -713,6 +713,7 @@ function occursOn(e, s) {
   if (e.repeat === 'daily') return true;
   const a = new Date(e.date + 'T00:00'), b = new Date(s + 'T00:00');
   if (e.repeat === 'weekly') return a.getDay() === b.getDay();
+  if (e.repeat === 'biweekly') return Math.round((b - a) / 864e5) % 14 === 0;
   if (e.repeat === 'monthly') return a.getDate() === b.getDate();
   if (e.repeat === 'yearly') return a.getDate() === b.getDate() && a.getMonth() === b.getMonth();
   return false;
@@ -753,7 +754,7 @@ const byTime = (a, b) => (a.time || '').localeCompare(b.time || '');
 const empty = msg => `<div class="empty">${msg}</div>`;
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const REPEAT = { daily: 'Repeats daily', weekly: 'Repeats weekly', monthly: 'Repeats monthly', yearly: 'Repeats yearly' };
+const REPEAT = { daily: 'Repeats daily', weekly: 'Repeats weekly', biweekly: 'Every other week', monthly: 'Repeats monthly', yearly: 'Repeats yearly' };
 const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 const buzz = ms => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
 
@@ -991,7 +992,7 @@ $('#dial').addEventListener('click', e => { if (!e.target.closest('button')) clo
 const KINDS = {
   event: { name: 'event', list: 'events', defaults: () => ({ date: selDate }), fields: [
     { k: 'title', l: 'Title', req: 1, ph: 'Dentist appointment' }, { k: 'date', l: 'Date', t: 'date', req: 1 }, { k: 'time', l: 'Time (leave empty for all day)', t: 'time' },
-    { k: 'repeat', l: 'Repeat', t: 'select', o: [['', 'Does not repeat'], ['daily', 'Every day'], ['weekly', 'Every week'], ['monthly', 'Every month'], ['yearly', 'Every year']] }, { k: 'notes', l: 'Notes', t: 'textarea' }] },
+    { k: 'repeat', l: 'Repeat', t: 'select', o: [['', 'Does not repeat'], ['daily', 'Every day'], ['weekly', 'Every week'], ['biweekly', 'Every other week'], ['monthly', 'Every month'], ['yearly', 'Every year']] }, { k: 'notes', l: 'Notes', t: 'textarea' }] },
   reminder: { name: 'reminder', list: 'reminders', defaults: () => ({ due: Date.now() + 3600000, repeat: '' }), hidden: () => ({ done: false }), fields: [
     { k: 'text', l: 'Remind me to', req: 1, ph: 'Call the pharmacy' }, { k: 'due', l: 'When', t: 'datetime-local', req: 1, from: v => v ? dtLocal(v) : '', to: v => new Date(v).getTime() },
     { k: 'repeat', l: 'Repeat', t: 'select', o: [['', 'Does not repeat'], ['daily', 'Every day'], ['weekly', 'Every week'], ['monthly', 'Every month']] }] },

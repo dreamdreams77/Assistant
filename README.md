@@ -51,7 +51,7 @@ A second task writes a morning briefing to `briefings` each day.
 ```json
 {
   "version": 2,
-  "events":    [{ "id": "", "u": 0, "title": "", "date": "YYYY-MM-DD", "time": "HH:MM or empty", "repeat": "'' | daily | weekly | monthly | yearly", "notes": "" }],
+  "events":    [{ "id": "", "u": 0, "title": "", "date": "YYYY-MM-DD", "time": "HH:MM or empty", "repeat": "'' | daily | weekly | biweekly | monthly | yearly", "notes": "" }],
   "reminders": [{ "id": "", "u": 0, "text": "", "due": 0, "done": false, "repeat": "'' | daily | weekly | monthly" }],
   "todos":     [{ "id": "", "u": 0, "text": "", "done": false, "star": false }],
   "alarms":    [{ "id": "", "u": 0, "time": "HH:MM", "label": "", "enabled": true, "days": [0, 6] }],

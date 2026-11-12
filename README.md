@@ -1,6 +1,6 @@
 # Personal Assistant
 
-A phone-friendly web app with a calendar, reminders, daily alarms, a journal, an email queue and an emergency panel. It installs to your home screen from GitHub Pages and shares its data with scheduled Claude tasks through a private GitHub repository.
+A phone-friendly web app with a calendar, to-dos, repeating reminders, alarms, a journal, an email queue, and an emergency panel with a medical ID. It installs to your home screen from GitHub Pages and shares its data with scheduled Claude tasks through a private GitHub repository.
 
 ## What is in this folder
 
@@ -24,7 +24,7 @@ You need two repositories: a **public** one for the app and a **private** one fo
 
 1. Create a **private** repository, for example `assistant-data`. Add a README so it has a `main` branch.
 2. Create a fine-grained token at **GitHub > Settings > Developer settings > Fine-grained tokens**. Give it access to only `assistant-data`, with **Contents: Read and write**.
-3. In the app tap the sync chip in the top bar. Enter your username, `assistant-data`, and the token, then tap **Save and sync**.
+3. In the app tap the status chip in the top bar to open Settings. Enter your username, `assistant-data`, and the token, then tap **Save and sync**.
 
 The app now saves to `assistant-data.json` in that repository. The token stays in that browser on that device. Repeat step 3 on each device you use.
 
@@ -45,14 +45,15 @@ Things a task can do:
 {
   "version": 2,
   "events":    [{ "id": "", "u": 0, "title": "", "date": "YYYY-MM-DD", "time": "HH:MM or empty", "notes": "" }],
-  "reminders": [{ "id": "", "u": 0, "text": "", "due": 0, "done": false }],
-  "alarms":    [{ "id": "", "u": 0, "time": "HH:MM", "label": "", "enabled": true }],
+  "reminders": [{ "id": "", "u": 0, "text": "", "due": 0, "done": false, "repeat": "'' | daily | weekly | monthly" }],
+  "todos":     [{ "id": "", "u": 0, "text": "", "done": false, "star": false }],
+  "alarms":    [{ "id": "", "u": 0, "time": "HH:MM", "label": "", "enabled": true, "days": [0, 6] }],
   "journal":   [{ "id": "", "u": 0, "date": "YYYY-MM-DD", "mood": "", "text": "", "created": 0 }],
-  "contacts":  [{ "id": "", "u": 0, "name": "", "phone": "", "email": "" }],
+  "contacts":  [{ "id": "", "u": 0, "name": "", "phone": "", "email": "", "ice": false }],
   "outbox":    [{ "id": "", "u": 0, "to": "", "subject": "", "body": "", "status": "queued | sent | failed", "created": 0, "sentAt": 0, "error": "" }],
   "briefings": [{ "id": "", "u": 0, "title": "", "body": "", "created": 0 }],
   "deleted":   { "item-id": 0 },
-  "prefs":     { "emergencyNote": "", "u": 0 }
+  "prefs":     { "emergencyNote": "", "medical": { "name": "", "blood": "", "allergies": "", "meds": "", "conditions": "", "doctor": "", "share": false }, "u": 0 }
 }
 ```
 
@@ -60,6 +61,8 @@ Rules for anything that writes this file:
 
 - All times (`u`, `due`, `created`, `sentAt`) are milliseconds since 1970 UTC.
 - Give every new item a unique `id`.
+- Alarm `days` uses 0 for Sunday through 6 for Saturday. An empty list means every day.
+- `prefs` is replaced as a whole, so copy the existing fields when changing one.
 - Set `u` to the current time whenever you add or change an item. The newest `u` wins a merge.
 - To delete an item, remove it from its list **and** add `"its-id": <now>` to `deleted`. Otherwise another device puts it back.
 - Leave items you are not changing exactly as they are.
@@ -69,3 +72,7 @@ Rules for anything that writes this file:
 - Reminders and alarms in the app alert only while the app is open. Phones do not let a web app wake itself.
 - The emergency panel opens your phone's call, text and email apps. It cannot place a call or send a message on its own.
 - The app does not send email. Queued email is sent by a Claude task; "Open in email app" hands the draft to your mail app.
+
+## Backups
+
+Settings has **Download backup** and **Restore from a backup file**. Restoring merges the file with what is already in the app.

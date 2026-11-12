@@ -228,6 +228,49 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
 .tabs button.on svg{background:var(--accent-soft)}
 .tabs button.on{font-weight:600}
 @media (min-width:900px){.tabs svg{padding:0}.tabs button.on svg{background:none}}
+
+/* ---- sky panel, tiles, themes, voice ---- */
+.hero{background:var(--sky,linear-gradient(135deg,var(--hero-a),var(--hero-b)));box-shadow:0 16px 34px -18px rgba(10,20,60,.55);text-shadow:0 1px 10px rgba(0,0,0,.22)}
+.hero::after{display:none}
+.hero>div{position:relative;z-index:1}
+.sky-dawn{--sky:linear-gradient(160deg,#2f3f7e 0%,#b5607a 58%,#f0a868 100%)}
+.sky-day{--sky:linear-gradient(160deg,#0a5a86 0%,#1391b6 60%,#49c2c8 100%)}
+.sky-dusk{--sky:linear-gradient(160deg,#2b2a6b 0%,#8a3b7a 55%,#e2734f 100%)}
+.sky-night{--sky:linear-gradient(160deg,#080d2a 0%,#182250 60%,#2a3a6e 100%)}
+.orb{position:absolute;z-index:0;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff8d6 0,#ffdc85 50%,rgba(255,220,133,0) 72%);box-shadow:0 0 70px 26px rgba(255,222,140,.28);opacity:.6}
+.sky-night .orb{width:42px;height:42px;margin:-21px 0 0 -21px;background:radial-gradient(circle at 38% 36%,#ffffff 0,#dfe5ff 60%,#c3ccf5 100%);box-shadow:0 0 44px 10px rgba(190,205,255,.35)}
+.sky-night::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.85;background-image:radial-gradient(1.3px 1.3px at 9% 18%,#fff,transparent 60%),radial-gradient(1px 1px at 22% 62%,#fff,transparent 60%),radial-gradient(1.4px 1.4px at 37% 12%,#fff,transparent 60%),radial-gradient(1px 1px at 48% 40%,#fff,transparent 60%),radial-gradient(1.2px 1.2px at 58% 8%,#fff,transparent 60%),radial-gradient(1px 1px at 66% 55%,#fff,transparent 60%),radial-gradient(1.4px 1.4px at 78% 30%,#fff,transparent 60%),radial-gradient(1px 1px at 88% 68%,#fff,transparent 60%),radial-gradient(1.2px 1.2px at 94% 14%,#fff,transparent 60%),radial-gradient(1px 1px at 30% 86%,#fff,transparent 60%)}
+.stats button{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.16)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tiles button{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:14px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);box-shadow:var(--shadow)}
+.tiles .ic{width:42px;height:42px;border-radius:13px}.tiles .ic svg{width:22px;height:22px}
+.tiles button:active{transform:scale(.97)}
+@media (min-width:700px){.tiles{grid-template-columns:repeat(6,1fr)}}
+.ic.al{background:var(--jr-soft);color:var(--jr)}.ic.vo{background:var(--danger-soft);color:var(--danger)}
+.card{border-top:3px solid transparent}
+.card:has(>.head .ic.cl),.card:has(>.ttl .ic.cl){border-top-color:var(--cl)}
+.card:has(>.head .ic.ev),.card:has(>.ttl .ic.ev){border-top-color:var(--accent)}
+.card:has(>.head .ic.rem){border-top-color:var(--rem)}
+.card:has(>.head .ic.todo){border-top-color:var(--todo)}
+.card:has(>.head .ic.red){border-top-color:var(--danger)}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.swatches button{width:38px;height:38px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 1px var(--line)}
+.swatches button.on{box-shadow:0 0 0 3px var(--ink)}
+.recbox{flex-direction:row;align-items:center;gap:16px}
+.rec{width:68px;height:68px;border-radius:50%;border:0;background:var(--danger);flex:none;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px -8px var(--danger)}
+.rec span{width:24px;height:24px;border-radius:50%;background:#fff;transition:border-radius .15s}
+.rec.live span{border-radius:5px}
+.rec:disabled{opacity:.4}
+.play{width:38px;height:38px;border-radius:50%;border:0;background:var(--accent-soft);color:var(--accent);flex:none;display:flex;align-items:center;justify-content:center}
+.play svg{width:18px;height:18px;fill:currentColor}
+.play.on{background:var(--accent);color:var(--on-accent)}
+@media (prefers-reduced-motion:no-preference){
+  .rec.live{animation:pulse 1.2s ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 12px rgba(229,83,74,.18)}}
+  .view.on .hero,.view.on .week,.view.on .tiles,.view.on .card{animation:rise .38s cubic-bezier(.2,.7,.2,1) both}
+  .view.on .week{animation-delay:.04s}.view.on .tiles{animation-delay:.08s}.view.on .cols>:nth-child(n){animation-delay:.12s}.view.on .cols>:nth-child(n+2){animation-delay:.17s}.view.on .cols>:nth-child(n+3){animation-delay:.22s}
+  @keyframes rise{from{transform:translateY(12px)}to{transform:none}}
+}
 </style>
 </head>
 <body>
@@ -240,6 +283,9 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
 <symbol id="i-user" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></symbol>
 <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
 <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19zM14 7l3 3"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M5 4L3 6M19 4l2 2"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM9 4v16"/></symbol>
 <symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"/></symbol>
 </defs></svg>
 <header class="top">
@@ -255,7 +301,7 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
 <main><div class="wrap">
 
 <section class="view on" id="v-today">
-  <div class="hero">
+  <div class="hero" id="hero"><span class="orb" id="orb"></span>
     <div class="hero-top"><div><div class="hero-date" id="helloDate"></div><h2 id="helloHi"></h2><p id="helloLine"></p></div><div class="hero-day"><span id="heroNum"></span><small id="heroMon"></small></div></div>
     <div><div class="ribbon" id="ribbon"></div><div class="ticks"><span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>12 AM</span></div>
       <div class="legend"><span><i class="ev"></i>Events</span><span><i class="rem"></i>Reminders</span><span><i class="al"></i>Alarms</span></div></div>
@@ -263,12 +309,13 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
   </div>
   <div class="week" id="week"></div>
   <input id="search" type="search" placeholder="Search everything" aria-label="Search everything">
-  <div class="quick">
-    <button class="btn line sm" data-new="event">+ Event</button>
-    <button class="btn line sm" data-new="reminder">+ Reminder</button>
-    <button class="btn line sm" data-new="todo">+ To-do</button>
-    <button class="btn line sm" data-new="journal">+ Journal entry</button>
-    <button class="btn line sm" data-new="alarm">+ Alarm</button>
+  <div class="tiles">
+    <button data-new="event"><span class="ic ev"><svg><use href="#i-cal"/></svg></span>Event</button>
+    <button data-new="reminder"><span class="ic rem"><svg><use href="#i-bell"/></svg></span>Reminder</button>
+    <button data-new="todo"><span class="ic todo"><svg><use href="#i-check"/></svg></span>To-do</button>
+    <button data-new="journal"><span class="ic jr"><svg><use href="#i-book"/></svg></span>Journal</button>
+    <button data-new="voice"><span class="ic vo"><svg><use href="#i-mic"/></svg></span>Voice note</button>
+    <button data-new="alarm"><span class="ic al"><svg><use href="#i-clock"/></svg></span>Alarm</button>
   </div>
   <div class="card" id="searchCard" style="display:none"><div class="head"><h3>Results</h3><span class="count" id="searchCount"></span></div><div class="list" id="searchList"></div></div>
   <div class="cols" id="todayCols">
@@ -310,8 +357,15 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
 
 <section class="view" id="v-journal">
   <div class="vhead"><div><h2>Journal</h2><p id="jrStreak"></p></div><button class="btn" data-new="journal">+ New entry</button></div>
-  <input id="jrSearch" type="search" placeholder="Search by word or date" aria-label="Search entries">
-  <div class="card"><div class="list" id="jrList"></div></div>
+  <div><div class="seg"><button data-jseg="entries">Entries</button><button data-jseg="voice">Voice notes</button></div></div>
+  <div class="stack" id="entryPane">
+    <input id="jrSearch" type="search" placeholder="Search by word or date" aria-label="Search entries">
+    <div class="card"><div class="list" id="jrList"></div></div>
+  </div>
+  <div class="stack" id="voicePane" style="display:none">
+    <div class="card recbox"><button class="rec" id="recBtn" aria-label="Record or stop"><span></span></button><div><div class="t" id="recState" style="font-weight:600"></div><div class="muted" id="recTime"></div></div></div>
+    <div class="card"><div class="list" id="voiceList"></div></div>
+  </div>
 </section>
 
 <section class="view" id="v-mail">
@@ -384,11 +438,12 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
     <div class="stack">
       <div class="card">
         <h3>Appearance</h3>
-        <label>Theme<select id="theme"><option value="auto">Match my device</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+        <div class="lbl">Colour<div class="swatches" id="swatches"></div></div>
+        <label>Light or dark<select id="theme"><option value="auto">Match my device</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
       </div>
       <div class="card">
         <h3>Backup</h3>
-        <p class="muted">A backup holds everything: events, reminders, to-dos, alarms, journal, contacts and your medical ID.</p>
+        <p class="muted">A backup holds everything: events, reminders, to-dos, alarms, journal, contacts and your medical ID. Voice recordings are kept separately and are not in the backup file.</p>
         <div class="actions"><button class="btn line" id="bkDown">Download backup</button><button class="btn line" id="bkCopy">Copy backup</button></div>
         <label>Restore from a backup file<input type="file" id="bkFile" accept="application/json,.json"></label>
       </div>
@@ -418,7 +473,7 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
 
 <script>
 /*PURE-START*/
-const LISTS = ['events','reminders','todos','alarms','journal','contacts','outbox','briefings'];
+const LISTS = ['events','reminders','todos','alarms','journal','voice','contacts','outbox','briefings'];
 const DEFAULT_NOTE = 'I need help. Please contact me or call 911.';
 function normalize(d) {
   d = d && typeof d === 'object' ? d : {};
@@ -506,7 +561,7 @@ const store = {
 };
 let data = normalize(store.get('pa-assistant-v1', null));
 // Things that belong to this device only: which reminders already fired, alarm ring state, the unsent draft, theme.
-let local = Object.assign({ notified: {}, ring: {}, draft: { to: '', subject: '', body: '' }, theme: 'auto', seg: 'todos' }, store.get('pa-local', {}));
+let local = Object.assign({ notified: {}, ring: {}, draft: { to: '', subject: '', body: '' }, theme: 'auto', color: 'teal', seg: 'todos', jseg: 'entries' }, store.get('pa-local', {}));
 let cfg = store.get('pa-sync', null);
 const saveLocal = () => store.set('pa-local', local);
 
@@ -581,6 +636,7 @@ async function sync() {
       break;
     }
     setStatus('ok', 'Synced ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }));
+    uploadPending();
   } catch (e) {
     setStatus('err', 'Sync problem');
     $('#syncInfo').className = 'note red';
@@ -619,7 +675,25 @@ async function notify(msg) {
     else new Notification('Personal Assistant', { body: msg });
   } catch (e) {}
 }
-function applyTheme() { if (local.theme === 'auto') { if (!inArtifact) delete document.documentElement.dataset.theme; } else document.documentElement.dataset.theme = local.theme; }
+// Colour themes: [accent, soft, text on accent, top bar, page tint] for light and dark.
+const PAL = {
+  teal: { sw: '#0e6577' },
+  indigo: { sw: '#4350c9', l: ['#4350c9', '#e6e8fb', '#ffffff', '#2c3594', '#e0e4f8'], d: ['#a3abff', '#1f2347', '#0d1030', '#171b47', '#14173a'] },
+  forest: { sw: '#2f7d4f', l: ['#2f7d4f', '#e1f1e6', '#ffffff', '#1f5c38', '#dcede2'], d: ['#7fd6a0', '#15331f', '#06220f', '#10301c', '#0f2416'] },
+  sunset: { sw: '#c2531a', l: ['#c2531a', '#fbe8dc', '#ffffff', '#9a3f10', '#f7e4d7'], d: ['#ffab7a', '#3a2012', '#2a1203', '#3a1c0c', '#26160c'] },
+  rose: { sw: '#b83a66', l: ['#b83a66', '#fbe5ed', '#ffffff', '#8f2a4d', '#f6dfe8'], d: ['#f08db0', '#3a1a27', '#2b0a17', '#35121f', '#26111a'] }
+};
+const darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+function applyTheme() {
+  const root = document.documentElement;
+  if (local.theme === 'auto') { if (!inArtifact) delete root.dataset.theme; } else root.dataset.theme = local.theme;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : !!(darkQuery && darkQuery.matches);
+  const p = PAL[local.color] || PAL.teal;
+  ['--accent', '--accent-soft', '--on-accent', '--top', '--tint'].forEach((k, i) => { if (p.l) root.style.setProperty(k, (dark ? p.d : p.l)[i]); else root.style.removeProperty(k); });
+  const meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = getComputedStyle(root).getPropertyValue('--top').trim() || '#0b4f5e';
+  $('#swatches').innerHTML = Object.keys(PAL).map(k => `<button data-color="${k}" class="${k === local.color ? 'on' : ''}" style="background:${PAL[k].sw}" aria-label="${k} theme"></button>`).join('');
+}
+if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener('change', applyTheme);
 const VIEWS = ['today', 'calendar', 'plan', 'journal', 'mail', 'emergency', 'sync'];
 function show(v, fromHash) {
   if (v === 'alerts') v = 'plan';
@@ -644,7 +718,9 @@ const KINDS = {
   journal: { name: 'journal entry', list: 'journal', defaults: () => ({ date: ymd(), mood: 'Okay' }), hidden: () => ({ created: Date.now() }), fields: [
     { k: 'date', l: 'Date', t: 'date', req: 1 }, { k: 'mood', l: 'Mood', t: 'select', o: ['Great', 'Good', 'Okay', 'Low', 'Rough'].map(m => [m, m]) }, { k: 'text', l: 'Entry', t: 'textarea', req: 1, ph: 'What happened today?', tall: 1 }] },
   contact: { name: 'contact', list: 'contacts', fields: [
-    { k: 'name', l: 'Name', req: 1 }, { k: 'phone', l: 'Phone', t: 'tel' }, { k: 'email', l: 'Email', t: 'email' }, { k: 'ice', l: 'Emergency contact', t: 'check' }] }
+    { k: 'name', l: 'Name', req: 1 }, { k: 'phone', l: 'Phone', t: 'tel' }, { k: 'email', l: 'Email', t: 'email' }, { k: 'ice', l: 'Emergency contact', t: 'check' }] },
+  voice: { name: 'voice note', list: 'voice', onRemove: id => { idbDel(id); deleteRemoteVoice(id); if (playing === id) stopPlay(); }, fields: [
+    { k: 'title', l: 'Title', req: 1 }, { k: 'note', l: 'Notes', t: 'textarea' }] }
 };
 const MEDICAL = [
   { k: 'name', l: 'Full name' }, { k: 'blood', l: 'Blood type' }, { k: 'allergies', l: 'Allergies' }, { k: 'meds', l: 'Medications' },
@@ -694,7 +770,7 @@ function openItem(kind, id) {
       if (it) change(def.list, id, x => Object.assign(x, v)); else add(def.list, Object.assign(def.hidden ? def.hidden() : {}, v));
       toast(def.name[0].toUpperCase() + def.name.slice(1) + ' saved');
     },
-    remove: it ? () => { remove(def.list, id); toast('Deleted'); } : null
+    remove: it ? () => { if (def.onRemove) def.onRemove(id, it); remove(def.list, id); toast('Deleted'); } : null
   });
 }
 function openMedical() {
@@ -721,13 +797,18 @@ function evRow(e, withDate) {
 const openTodos = () => data.todos.filter(t => !t.done).sort((a, b) => (!!b.star - !!a.star) || (a.u - b.u));
 
 function renderAll() {
-  renderToday(); renderCalendar(); renderPlan(); renderJournal(); renderMail(); renderEmergency(); renderSync();
+  renderToday(); renderCalendar(); renderPlan(); renderJournal(); renderVoice(); renderMail(); renderEmergency(); renderSync();
   if (document.activeElement !== $('#sosNote')) $('#sosNote').value = data.prefs.emergencyNote || DEFAULT_NOTE;
 }
 
 function renderToday() {
   const now = new Date(), t = ymd(now), ms = now.getTime(), h = now.getHours(), mins = h * 60 + now.getMinutes();
   $('#helloDate').textContent = now.toLocaleDateString([], { weekday: 'long' });
+  // The panel is the sky right now: the sun crosses it from 5 AM to 8 PM, the moon overnight.
+  const sky = h < 5 || h >= 20 ? 'night' : h < 8 ? 'dawn' : h < 17 ? 'day' : 'dusk';
+  const frac = sky === 'night' ? (((h + 4) % 24) * 60 + now.getMinutes()) / 540 : (mins - 300) / 900;
+  $('#hero').className = 'hero sky-' + sky;
+  $('#orb').style.left = (8 + frac * 84) + '%'; $('#orb').style.top = (48 - Math.sin(Math.PI * frac) * 36) + '%';
   $('#heroNum').textContent = now.getDate();
   $('#heroMon').textContent = now.toLocaleDateString([], { month: 'short', year: 'numeric' });
   const name = ((data.prefs.medical || {}).name || '').split(' ')[0];
@@ -806,7 +887,7 @@ function renderCalendar() {
 
 function renderPlan() {
   const seg = local.seg, ms = Date.now();
-  $$('.seg button').forEach(b => b.classList.toggle('on', b.dataset.seg === seg));
+  $$('.seg [data-seg]').forEach(b => b.classList.toggle('on', b.dataset.seg === seg));
   $('#planNew').textContent = '+ New ' + { todos: 'to-do', reminders: 'reminder', alarms: 'alarm' }[seg];
   $('#planNote').style.display = seg === 'todos' ? 'none' : '';
   $('#todoClear').style.display = seg === 'todos' && data.todos.some(t => t.done) ? '' : 'none';
@@ -905,7 +986,12 @@ document.body.addEventListener('click', async e => {
   const el = e.target.closest('button,[data-go]'); if (!el) return;
   const d = el.dataset;
   if (d.go) { if (d.seg) { local.seg = d.seg; saveLocal(); renderPlan(); } return show(d.go); }
+  if (d.new === 'voice') { local.jseg = 'voice'; saveLocal(); show('journal'); renderVoice(); return rec ? null : recToggle(); }
   if (d.new) return openItem(d.new);
+  if (d.jseg) { local.jseg = d.jseg; saveLocal(); return renderVoice(); }
+  if (d.play) return playVoice(d.play);
+  if (d.color) { local.color = d.color; saveLocal(); return applyTheme(); }
+  if (el.id === 'recBtn') return recToggle();
   if (d.edit) { const [kind, id] = d.edit.split(':'); return openItem(kind, id); }
   if (d.seg) { local.seg = d.seg; saveLocal(); return renderPlan(); }
   if (d.day) { selDate = d.day; cursor = new Date(d.day + 'T00:00'); cursor.setDate(1); renderCalendar(); if (el.closest('#week')) show('calendar'); return; }
@@ -970,6 +1056,87 @@ $('#sosWhere').addEventListener('input', () => { $('#sosMsg').value = sosText();
 $('#sosMsg').addEventListener('input', renderEmergency);
 window.addEventListener('hashchange', () => show(location.hash.slice(1), true));
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { scheduleSync(200); checkReminders(); checkAlarms(); } });
+
+/* ---------- voice notes: audio stays on the device and is copied to the private repository ---------- */
+SEARCH.push(['voice', 'voice', 'Voice note', v => v.title + ' ' + (v.note || ''), v => v.title, v => fmtDT(v.created)]);
+const canRecord = !inArtifact && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+const fmtDur = sec => `${Math.floor(sec / 60)}:${pad(Math.round(sec) % 60)}`;
+function idbOpen() { return new Promise((res, rej) => { const r = indexedDB.open('pa-audio', 1); r.onupgradeneeded = () => r.result.createObjectStore('a'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function idbRun(mode, fn) { const d = await idbOpen(); return new Promise((res, rej) => { const t = d.transaction('a', mode); const q = fn(t.objectStore('a')); t.oncomplete = () => res(q.result); t.onerror = () => rej(t.error); }); }
+async function idbPut(k, v) { try { await idbRun('readwrite', o => o.put(v, k)); return true; } catch (e) { return false; } }
+async function idbGet(k) { try { return (await idbRun('readonly', o => o.get(k))) || null; } catch (e) { return null; } }
+async function idbDel(k) { try { await idbRun('readwrite', o => o.delete(k)); } catch (e) {} }
+const voiceUrl = v => `${ghRepoUrl()}/contents/voice/${encodeURIComponent(v.id)}.${v.mime === 'audio/mp4' ? 'm4a' : 'webm'}`;
+const ghReady = () => !db && cfg && cfg.token && ghChecked;
+
+let rec = null, recChunks = [], recStart = 0, recTimer = null, recStream = null;
+async function recToggle() {
+  if (rec) return rec.stop();
+  if (!canRecord) return toast('Recording is not available here. Use the installed app on your phone.');
+  try { recStream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { return toast('The microphone was blocked. Allow it for this site in your browser settings.'); }
+  const mime = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm'].find(m => MediaRecorder.isTypeSupported(m)) || '';
+  const r = new MediaRecorder(recStream, Object.assign({ audioBitsPerSecond: 32000 }, mime ? { mimeType: mime } : {}));
+  recChunks = [];
+  r.ondataavailable = e => { if (e.data && e.data.size) recChunks.push(e.data); };
+  r.onstop = async () => {
+    const dur = Math.round((Date.now() - recStart) / 1000), type = (r.mimeType || mime || 'audio/webm').split(';')[0];
+    const blob = new Blob(recChunks, { type });
+    recStream.getTracks().forEach(t => t.stop()); rec = null; clearInterval(recTimer);
+    if (dur < 1 || !blob.size) { renderVoice(); return toast('That was too short to save.'); }
+    const id = uid();
+    if (!(await idbPut(id, blob))) { renderVoice(); return toast('The recording could not be saved on this device.'); }
+    data.voice.push({ id, u: Date.now(), title: 'Voice note, ' + fmtDT(Date.now()), note: '', created: Date.now(), dur, mime: type, size: blob.size });
+    save(); toast('Voice note saved');
+  };
+  rec = r; recStart = Date.now(); r.start();
+  recTimer = setInterval(() => { const sec = (Date.now() - recStart) / 1000; $('#recTime').textContent = fmtDur(sec) + ' of 5:00'; if (sec >= 300) r.stop(); }, 500);
+  renderVoice();
+}
+let uploading = false;
+async function uploadPending() {
+  if (uploading || !ghReady()) return;
+  uploading = true;
+  try {
+    for (const v of data.voice.filter(x => !x.up)) {
+      const blob = await idbGet(v.id); if (!blob) continue;
+      const b64 = await new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(',')[1]); fr.onerror = rej; fr.readAsDataURL(blob); });
+      const r = await fetch(voiceUrl(v), { method: 'PUT', headers: ghHeaders(), body: JSON.stringify({ message: 'Add voice note', content: b64, branch: cfg.branch }) });
+      if (r.ok || r.status === 422) change('voice', v.id, x => { x.up = 1; }); else break; // 422: the file is already there
+    }
+  } catch (e) {}
+  uploading = false;
+}
+async function deleteRemoteVoice(id) {
+  const v = data.voice.find(x => x.id === id); if (!v || !v.up || !ghReady()) return;
+  try { const r = await fetch(voiceUrl(v) + '?ref=' + encodeURIComponent(cfg.branch), { headers: ghHeaders(), cache: 'no-store' }); if (!r.ok) return;
+    await fetch(voiceUrl(v), { method: 'DELETE', headers: ghHeaders(), body: JSON.stringify({ message: 'Delete voice note', sha: (await r.json()).sha, branch: cfg.branch }) }); } catch (e) {}
+}
+const player = new Audio(); let playing = null;
+function stopPlay() { player.pause(); playing = null; renderVoice(); }
+player.onended = stopPlay;
+async function playVoice(id) {
+  if (playing === id) return stopPlay();
+  const v = data.voice.find(x => x.id === id); if (!v) return;
+  let blob = await idbGet(id);
+  if (!blob && v.up && ghReady()) {
+    try { const r = await fetch(voiceUrl(v) + '?ref=' + encodeURIComponent(cfg.branch), { headers: Object.assign(ghHeaders(), { 'Accept': 'application/vnd.github.raw' }), cache: 'no-store' });
+      if (r.ok) { blob = new Blob([await r.arrayBuffer()], { type: v.mime }); idbPut(id, blob); } } catch (e) {}
+  }
+  if (!blob) return toast(v.up ? 'The recording could not be downloaded. Check your connection and sync.' : 'This recording is still on the device that made it. Open the app there so it can upload.');
+  try { player.src = URL.createObjectURL(blob); await player.play(); playing = id; renderVoice(); } catch (e) { toast('This device cannot play that recording format.'); }
+}
+function renderVoice() {
+  const j = local.jseg;
+  $$('[data-jseg]').forEach(b => b.classList.toggle('on', b.dataset.jseg === j));
+  $('#entryPane').style.display = j === 'voice' ? 'none' : 'flex';
+  $('#voicePane').style.display = j === 'voice' ? 'flex' : 'none';
+  $('#recBtn').classList.toggle('live', !!rec); $('#recBtn').disabled = !canRecord;
+  $('#recState').textContent = rec ? 'Recording. Tap to stop.' : canRecord ? 'Tap to record' : 'Recording is not available here';
+  if (!rec) $('#recTime').textContent = canRecord ? 'Up to 5 minutes per note.' : 'Open the installed app on your phone to record.';
+  const vs = [...data.voice].sort((a, b) => (b.created || 0) - (a.created || 0));
+  $('#voiceList').innerHTML = vs.length ? vs.map(v => `<div class="row"><button class="play ${playing === v.id ? 'on' : ''}" data-play="${esc(v.id)}" aria-label="${playing === v.id ? 'Stop' : 'Play'}"><svg viewBox="0 0 24 24"><path d="${playing === v.id ? 'M7 5h4v14H7zM13 5h4v14h-4z' : 'M8 5v14l11-7z'}"/></svg></button>` +
+    editBtn('voice', v.id, `<div class="t">${esc(v.title)}</div><div class="s">${fmtDur(v.dur || 0)} · ${fmtDT(v.created)}${v.up ? ' · backed up' : ''}</div>${v.note ? `<div class="body">${esc(v.note)}</div>` : ''}`) + '</div>').join('') : empty('Your recordings appear here. Tap one to rename it or add notes.');
+}
 
 /* ---------- start ---------- */
 applyTheme(); $('#theme').value = local.theme;

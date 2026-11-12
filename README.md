@@ -1,6 +1,6 @@
 # Personal Assistant
 
-A phone-friendly web app with a calendar, to-dos, repeating reminders, alarms, a journal, an email queue, and an emergency panel with a medical ID. It installs to your home screen from GitHub Pages and shares its data with scheduled Claude tasks through a private GitHub repository.
+A phone-friendly web app with a calendar, to-dos, voice notes, repeating reminders, alarms, a journal, an email queue, and an emergency panel with a medical ID. It installs to your home screen from GitHub Pages and shares its data with scheduled Claude tasks through a private GitHub repository.
 
 ## What is in this folder
 
@@ -49,6 +49,7 @@ Things a task can do:
   "todos":     [{ "id": "", "u": 0, "text": "", "done": false, "star": false }],
   "alarms":    [{ "id": "", "u": 0, "time": "HH:MM", "label": "", "enabled": true, "days": [0, 6] }],
   "journal":   [{ "id": "", "u": 0, "date": "YYYY-MM-DD", "mood": "", "text": "", "created": 0 }],
+  "voice":     [{ "id": "", "u": 0, "title": "", "note": "", "created": 0, "dur": 0, "mime": "audio/webm", "size": 0, "up": 1 }],
   "contacts":  [{ "id": "", "u": 0, "name": "", "phone": "", "email": "", "ice": false }],
   "outbox":    [{ "id": "", "u": 0, "to": "", "subject": "", "body": "", "status": "queued | sent | failed", "created": 0, "sentAt": 0, "error": "" }],
   "briefings": [{ "id": "", "u": 0, "title": "", "body": "", "created": 0 }],
@@ -66,6 +67,10 @@ Rules for anything that writes this file:
 - Set `u` to the current time whenever you add or change an item. The newest `u` wins a merge.
 - To delete an item, remove it from its list **and** add `"its-id": <now>` to `deleted`. Otherwise another device puts it back.
 - Leave items you are not changing exactly as they are.
+
+### Voice notes
+
+Recordings are saved on the device and copied to the data repository as `voice/<id>.webm` (or `.m4a`). `up: 1` means the copy exists. Recordings made on Android may not play on an iPhone and the other way round.
 
 ## Limits
 

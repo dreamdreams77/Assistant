@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* Layout idea: content first. Each screen is a list of what you have; adding and editing happen in one sheet. Phone gets a bottom tab bar, wide screens a left rail. One accent, red reserved for emergency. */
 :root{
@@ -19,8 +19,8 @@
   --accent:#0e6577; --accent-soft:#e1eff1; --on-accent:#ffffff;
   --danger:#b3261e; --danger-soft:#fbe9e7; --warn:#7a5200; --warn-soft:#fcf2d9; --ok:#1d7a4f;
   --shadow:0 1px 2px rgba(20,32,42,.05),0 4px 14px rgba(20,32,42,.04);
-  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
-  --body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --display:"Manrope","Segoe UI",system-ui,sans-serif;
+  --body:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
   --r:16px;
   --top:#0b4f5e; --hero-a:#083f4c; --hero-b:#14889a; --tint:#dcedf0;
   --rem:#a86200; --rem-soft:#fdefd3; --todo:#4650c4; --todo-soft:#e7e9fb; --jr:#b23562; --jr-soft:#fbe5ed; --cl:#6741b5; --cl-soft:#ede6fa;
@@ -394,6 +394,72 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
   .row.ticking input{animation:pop .36s cubic-bezier(.3,1.6,.5,1)}
   @keyframes pop{40%{transform:scale(1.25)}}
 }
+
+/* ---- polish: calmer type, panel cards with a header band and a footnote, Today in groups ---- */
+:root{--paper:#f3f5f8;--sunk:#f5f7f9;--ink:#111c26;--muted:#5c6a77;--line:#e3e8ee;--r:18px;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 10px 24px -14px rgba(16,24,40,.14)}
+body{-webkit-font-smoothing:antialiased}
+.top{gap:8px;padding-left:14px;padding-right:14px}
+.brand{flex:1 0 auto}
+.brand h1{font-size:18px;overflow:visible}
+.chip{min-width:0;flex:0 1 auto;font-weight:500}
+.chip i{flex:none}
+.chip span{overflow:hidden;text-overflow:ellipsis}
+.grp{grid-column:1/-1;font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:10px 4px -6px}
+.grp:first-child{margin-top:2px}
+.card{border-radius:var(--r);gap:14px;box-shadow:var(--shadow)}
+.card>.head:first-child,.card>.ttl:first-child,.card>h3:first-child{margin:-16px -16px 0;padding:11px 16px;min-height:58px;border-bottom:1px solid var(--line)}
+.card>h3:first-child{display:flex;align-items:center}
+.ic{width:34px;height:34px;border-radius:11px}
+.count{padding:3px 10px;white-space:nowrap}
+.card>p.muted:last-child,.card>.stack:last-child>p.muted:last-child{margin:0 -16px -16px;padding:11px 16px 12px;background:var(--sunk);border-top:1px solid var(--line);border-radius:0 0 calc(var(--r) - 1px) calc(var(--r) - 1px);font-size:12.5px;line-height:1.5}
+.list:empty,#bpChart:empty,#sickStats:empty{display:none}
+.row{padding:12px 0;gap:12px}
+.row .t{line-height:1.35}
+.row .s{font-size:12.5px;margin-top:2px}
+.row .time{border-radius:9px;padding:4px 0;min-width:70px}
+#taskList .body{color:var(--muted);font-size:13.5px;line-height:1.5}
+.empty{background:none;border:0;border-radius:0;padding:2px 0;text-align:left;font-size:13.5px;line-height:1.5}
+.fold{display:block;padding:0;overflow:hidden}
+.fold summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 16px;min-height:58px;cursor:pointer;list-style:none}
+.fold summary::-webkit-details-marker{display:none}
+.fold .s{font-size:12.5px;color:var(--muted);margin-top:1px}
+.fold .chev{width:20px;height:20px;flex:none;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.fold[open] .chev{transform:rotate(180deg)}
+.fold[open] summary{border-bottom:1px solid var(--line)}
+.fold>.list{padding:14px 16px 16px}
+.bar.med{background:var(--accent-soft)}.bar.med i{background:var(--accent)}
+.dose{margin-top:8px}
+.dose label{padding:7px 12px 7px 8px;background:var(--surface)}
+.dose label.taken{color:var(--accent)}
+.dose label.late{background:var(--warn-soft);border-color:transparent}
+.week{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:6px;gap:2px;box-shadow:var(--shadow)}
+.week button{border:0;box-shadow:none;background:none}
+#search,#jrSearch{border-radius:16px}
+.btn{border-radius:12px;padding:10px 16px}
+.btn.sm{border-radius:10px;padding:6px 11px}
+.btn.line{box-shadow:none}
+.vhead h2{font-size:28px}
+.vhead .btn{border-radius:999px}
+input,select,textarea{border-radius:12px;padding:11px 12px;transition:border-color .15s,box-shadow .15s}
+input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.seg{display:flex;max-width:440px;border-radius:13px;padding:4px}
+.seg button{flex:1;padding:8px 10px;border-radius:10px}
+.note{border-radius:12px;padding:11px 13px;line-height:1.45}
+.places a,.sickbtns button{padding:8px 13px}
+.kv{grid-template-columns:1fr;gap:4px}
+.kv dt{font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-top:10px}
+.kv dt:first-child{margin-top:0}
+.kv dd{line-height:1.45}
+.kv dd span{display:block;padding:3px 0}
+.tabs{box-shadow:0 -8px 24px -18px rgba(16,24,40,.25)}
+@media (max-width:600px){
+  .cal{gap:2px 0}
+  .day{border:0;background:none;min-height:50px;border-radius:13px;flex-direction:row;flex-wrap:wrap;justify-content:center;align-content:flex-start;gap:3px;padding:5px 0 6px}
+  .day .n{width:30px;height:30px;line-height:30px;padding:0;margin:0 calc(50% - 15px);font-size:14px;border-radius:50%}
+  .day .ev{width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none}
+  .day.sel{background:var(--accent-soft);box-shadow:none}
+}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 </style>
 </head>
@@ -445,20 +511,22 @@ input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--a
   <input id="search" type="search" placeholder="Search everything" aria-label="Search everything">
   <div class="card" id="searchCard" style="display:none"><div class="head"><h3>Results</h3><span class="count" id="searchCount"></span></div><div class="list" id="searchList"></div></div>
   <div class="cols" id="todayCols">
-    <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>From Claude</h3></div><span class="pill cl">Scheduled tasks</span></div><div class="list" id="briefList"></div></div>
-    <div class="card" id="medTodayCard"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-pill"/></svg></span><h3>Medications today</h3></div><span class="count" id="cMedToday"></span></div><div class="list" id="medToday"></div></div>
-    <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-car"/></svg></span><h3>Get a ride</h3></div><button class="btn line sm" data-new="place">+ Place</button></div>
-      <div class="places" id="placeList"></div>
-      <p class="muted">Opens Uber with you as the pickup and the place as the drop-off. You confirm the ride and price in Uber. Change saved places under Health &gt; Places.</p></div>
-    <div class="card ask"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>Ask Claude</h3></div><span class="count" id="cAsk"></span></div>
-      <textarea id="askText" placeholder="Find a pediatric dentist near me that takes my insurance" aria-label="What should Claude do?"></textarea>
-      <div class="actions"><button class="btn" id="askSend">Send to Claude</button></div>
-      <p class="muted">Claude picks this up within the hour, 7 AM to 10 PM, and answers here. It researches and drafts, but never sends email, buys anything or contacts anyone for you.</p>
-      <div class="list" id="askList"></div></div>
-    <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>Claude tasks</h3></div><span class="count" id="cTask"></span></div><div class="list" id="taskList"></div></div>
+    <div class="grp">Your day</div>
+    <div class="card" id="medTodayCard"><div class="head"><div class="ttl"><span class="ic red"><svg><use href="#i-pill"/></svg></span><h3>Medications today</h3></div><span class="count" id="cMedToday"></span></div><div class="bar med"><i id="medBar"></i></div><div class="list" id="medToday"></div></div>
     <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-cal"/></svg></span><h3 id="schedTitle">Today's schedule</h3></div><span class="count" id="cEv"></span></div><div class="list" id="todayEvents"></div></div>
     <div class="card" id="remCard"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-bell"/></svg></span><h3>Reminders</h3></div><span class="count" id="cRem"></span></div><div class="list" id="todayRems"></div></div>
     <div class="card" id="todoCard"><div class="head"><div class="ttl"><span class="ic todo"><svg><use href="#i-check"/></svg></span><h3>To-dos</h3></div><span class="count" id="cTodo"></span></div><div class="bar"><i id="todoBar"></i></div><div class="list" id="todayTodos"></div></div>
+    <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-car"/></svg></span><h3>Get a ride</h3></div><button class="btn line sm" data-new="place">+ Place</button></div>
+      <div class="places" id="placeList"></div>
+      <p class="muted">Opens Uber with the drop-off filled in. You confirm the ride and price there. Edit saved places under Health.</p></div>
+    <div class="grp">Claude</div>
+    <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>From Claude</h3></div><span class="pill cl">Briefings</span></div><div class="list" id="briefList"></div></div>
+    <div class="card ask"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>Ask Claude</h3></div><span class="count" id="cAsk"></span></div>
+      <textarea id="askText" placeholder="Find a pediatric dentist near me that takes my insurance" aria-label="What should Claude do?"></textarea>
+      <div class="actions"><button class="btn" id="askSend">Send to Claude</button></div>
+      <div class="list" id="askList"></div>
+      <p class="muted">Answered here within the hour, 7 AM to 10 PM. Claude researches and drafts, but never sends email, buys anything or contacts anyone for you.</p></div>
+    <details class="card fold"><summary><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><div><h3>Claude tasks</h3><div class="s" id="taskSub"></div></div></div><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="list" id="taskList"></div></details>
   </div>
 </section>
 
@@ -1232,9 +1300,10 @@ function renderToday() {
   const br = [...data.briefings].sort((a, b) => (b.created || 0) - (a.created || 0)).slice(0, 5);
   $('#briefList').innerHTML = br.length
     ? br.map(b => `<div class="row"><div class="main"><div class="t">${esc(b.title || 'Briefing')}</div><div class="s">${b.created ? fmtDT(b.created) : ''}</div><div class="body">${esc(b.body)}</div></div><div class="ops"><button class="btn line sm" data-del="briefings:${esc(b.id)}">Dismiss</button></div></div>`).join('')
-    : empty('Briefings written by your scheduled Claude tasks appear here.');
+    : empty('Your morning briefing and other notes from Claude show up here.');
   const tk = [...data.tasks].sort((a, b) => (a.enabled === false) - (b.enabled === false) || (a.next || Infinity) - (b.next || Infinity));
-  $('#cTask').textContent = tk.length || '';
+  const tkOn = tk.filter(k => k.enabled !== false).length;
+  $('#taskSub').textContent = tk.length ? `${tkOn} running on a schedule${tk.length > tkOn ? `, ${tk.length - tkOn} paused` : ''}` : 'None set up yet';
   $('#taskList').innerHTML = tk.length
     ? tk.map(k => `<div class="row"><div class="main"><div class="t">${esc(k.name || 'Task')}</div><div class="s">${esc(k.schedule || '')}${k.enabled === false ? ' · Paused' : k.next ? ' · Next ' + fmtDT(k.next) : ''}</div>${k.about ? `<div class="body">${esc(k.about)}</div>` : ''}</div></div>`).join('')
     : empty('Your scheduled Claude tasks are listed here.');
@@ -1467,7 +1536,8 @@ function renderMeds() {
   const day = todayKey(), act = data.meds.filter(m => m.active !== false).sort((a, b) => a.name.localeCompare(b.name));
   const all = act.flatMap(m => medSlots(m, day)), done = all.filter(x => x.taken).length;
   $('#medTodayCard').style.display = act.length ? '' : 'none';
-  $('#cMedToday').textContent = all.length ? `${done} of ${all.length}` : '';
+  $('#cMedToday').textContent = all.length ? `${done} of ${all.length} taken` : '';
+  $('#medBar').style.width = all.length ? (done / all.length * 100) + '%' : '0';
   const warn = supplyWarnings();
   $('#medToday').innerHTML = act.map(m => medRow(m, day)).join('') + (warn.length ? `<div class="note red" style="margin-top:4px">${warn.map(({ st, i }) => i.low ? `Refill ${esc(st.name)}: about ${i.days} ${i.days === 1 ? 'day' : 'days'} left.` : `${esc(st.name)} ${i.expDays < 0 ? 'has expired' : 'expires ' + fmtDay(st.expires)}.`).join(' ')}</div>` : '');
   if (warn.length) $('#medTodayCard').style.display = '';
@@ -1537,7 +1607,7 @@ function renderHealth() {
   $('#bpList').innerHTML = rs.length ? rs.slice(0, 30).map(r => { const [cat, tone] = bpCategory(r.sys, r.dia);
     return `<div class="row">${editBtn('bp', r.id, `<div class="t">${bpVal(r)}${r.pulse ? ` <small class="muted">pulse ${r.pulse}</small>` : ''}</div><div class="s">${esc([fmtDT(r.at), r.note].filter(Boolean).join(' · '))}</div>`)}<span class="pill ${tone}">${cat}</span></div>`; }).join('') : empty('Your readings appear here. Tap one to edit or delete it.');
   const lines = medLines().filter(([l]) => ['Allergies', 'Medications', 'Conditions', 'Doctor and phone'].includes(l));
-  $('#healthMed').innerHTML = lines.length ? `<dl class="kv">${lines.map(([l, v]) => `<dt>${esc(l)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>` : empty('Add your allergies, medications and doctor.');
+  $('#healthMed').innerHTML = lines.length ? kvHtml(lines) : empty('Add your allergies, medications and doctor.');
 }
 // Systolic and diastolic over the last 30 days, one shared mmHg axis. Tap or drag to read a point.
 function bpChart(rs) {
@@ -1566,6 +1636,8 @@ function bpChart(rs) {
 /* ---------- emergency ---------- */
 let gps = '';
 const tel = p => String(p).replace(/[^\d+]/g, '');
+// Medical ID values read better one sentence per line. The doctor line is left whole ("Dr. Lee").
+const kvHtml = lines => `<dl class="kv">${lines.map(([l, v]) => `<dt>${esc(l)}</dt><dd>${l === 'Doctor and phone' || l === 'Full name' ? esc(v) : esc(v).replace(/\.\s+/g, '.\n').split('\n').map(x => `<span>${x}</span>`).join('')}</dd>`).join('')}</dl>`;
 function medLines() { const m = data.prefs.medical || {}; return MEDICAL.filter(f => f.t !== 'check' && m[f.k]).map(f => [f.l, m[f.k]]); }
 function sosText() {
   const m = data.prefs.medical || {};
@@ -1574,7 +1646,7 @@ function sosText() {
 }
 function renderEmergency() {
   const lines = medLines();
-  $('#medBody').innerHTML = lines.length ? `<dl class="kv">${lines.map(([l, v]) => `<dt>${esc(l)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>` : empty('Add your blood type, allergies and medications.');
+  $('#medBody').innerHTML = lines.length ? kvHtml(lines) : empty('Add your blood type, allergies and medications.');
   const ice = data.contacts.filter(c => c.ice), list = ice.length ? ice : data.contacts;
   const m = encodeURIComponent($('#sosMsg').value), sub = encodeURIComponent('EMERGENCY: I need help');
   $('#sosContacts').innerHTML = list.length ? list.map(c => `<div class="row"><div class="main"><div class="t">${esc(c.name)}</div><div class="s">${esc([c.phone, c.email].filter(Boolean).join(' · '))}</div></div><div class="ops">` +

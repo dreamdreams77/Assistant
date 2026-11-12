@@ -165,7 +165,6 @@ button.main{border:0;background:none;padding:0;display:block}
 .toast{background:var(--ink);color:var(--paper);padding:10px 14px;border-radius:10px;font-size:14px;max-width:420px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
 @media (prefers-reduced-motion:no-preference){
   .view.on{animation:in .18s ease-out}
-  .sheet.on form{animation:up .2s ease-out}
   @keyframes in{from{transform:translateY(4px)}to{transform:none}}
   @keyframes up{from{transform:translateY(24px)}to{transform:none}}
 }
@@ -231,28 +230,8 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
 
 /* ---- sky panel, tiles, themes, voice ---- */
 .hero{background:var(--sky,linear-gradient(135deg,var(--hero-a),var(--hero-b)));box-shadow:0 16px 34px -18px rgba(10,20,60,.55);text-shadow:0 1px 10px rgba(0,0,0,.22)}
-.hero::after{display:none}
-.hero>div{position:relative;z-index:1}
-.sky-dawn{--sky:linear-gradient(160deg,#2f3f7e 0%,#b5607a 58%,#f0a868 100%)}
-.sky-day{--sky:linear-gradient(160deg,#0a5a86 0%,#1391b6 60%,#49c2c8 100%)}
-.sky-dusk{--sky:linear-gradient(160deg,#2b2a6b 0%,#8a3b7a 55%,#e2734f 100%)}
-.sky-night{--sky:linear-gradient(160deg,#080d2a 0%,#182250 60%,#2a3a6e 100%)}
-.orb{position:absolute;z-index:0;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff8d6 0,#ffdc85 50%,rgba(255,220,133,0) 72%);box-shadow:0 0 70px 26px rgba(255,222,140,.28);opacity:.6}
-.sky-night .orb{width:42px;height:42px;margin:-21px 0 0 -21px;background:radial-gradient(circle at 38% 36%,#ffffff 0,#dfe5ff 60%,#c3ccf5 100%);box-shadow:0 0 44px 10px rgba(190,205,255,.35)}
-.sky-night::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.85;background-image:radial-gradient(1.3px 1.3px at 9% 18%,#fff,transparent 60%),radial-gradient(1px 1px at 22% 62%,#fff,transparent 60%),radial-gradient(1.4px 1.4px at 37% 12%,#fff,transparent 60%),radial-gradient(1px 1px at 48% 40%,#fff,transparent 60%),radial-gradient(1.2px 1.2px at 58% 8%,#fff,transparent 60%),radial-gradient(1px 1px at 66% 55%,#fff,transparent 60%),radial-gradient(1.4px 1.4px at 78% 30%,#fff,transparent 60%),radial-gradient(1px 1px at 88% 68%,#fff,transparent 60%),radial-gradient(1.2px 1.2px at 94% 14%,#fff,transparent 60%),radial-gradient(1px 1px at 30% 86%,#fff,transparent 60%)}
 .stats button{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.16)}
-.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.tiles button{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:14px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);box-shadow:var(--shadow)}
-.tiles .ic{width:42px;height:42px;border-radius:13px}.tiles .ic svg{width:22px;height:22px}
-.tiles button:active{transform:scale(.97)}
-@media (min-width:700px){.tiles{grid-template-columns:repeat(6,1fr)}}
 .ic.al{background:var(--jr-soft);color:var(--jr)}.ic.vo{background:var(--danger-soft);color:var(--danger)}
-.card{border-top:3px solid transparent}
-.card:has(>.head .ic.cl),.card:has(>.ttl .ic.cl){border-top-color:var(--cl)}
-.card:has(>.head .ic.ev),.card:has(>.ttl .ic.ev){border-top-color:var(--accent)}
-.card:has(>.head .ic.rem){border-top-color:var(--rem)}
-.card:has(>.head .ic.todo){border-top-color:var(--todo)}
-.card:has(>.head .ic.red){border-top-color:var(--danger)}
 .swatches{display:flex;gap:10px;flex-wrap:wrap}
 .swatches button{width:38px;height:38px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 1px var(--line)}
 .swatches button.on{box-shadow:0 0 0 3px var(--ink)}
@@ -267,10 +246,100 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
 @media (prefers-reduced-motion:no-preference){
   .rec.live{animation:pulse 1.2s ease-in-out infinite}
   @keyframes pulse{50%{box-shadow:0 0 0 12px rgba(229,83,74,.18)}}
-  .view.on .hero,.view.on .week,.view.on .tiles,.view.on .card{animation:rise .38s cubic-bezier(.2,.7,.2,1) both}
-  .view.on .week{animation-delay:.04s}.view.on .tiles{animation-delay:.08s}.view.on .cols>:nth-child(n){animation-delay:.12s}.view.on .cols>:nth-child(n+2){animation-delay:.17s}.view.on .cols>:nth-child(n+3){animation-delay:.22s}
   @keyframes rise{from{transform:translateY(12px)}to{transform:none}}
 }
+
+/* ---- living sky, next up, add button, motion ---- */
+:root{--check:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--check:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='%2306222a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}}
+:root[data-theme="dark"]{--check:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='%2306222a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.top{transition:background-color 1.2s}
+main{padding-bottom:104px;transition:background-color 1.2s}
+.card{border-radius:20px;box-shadow:0 1px 2px rgba(20,32,42,.04),0 12px 28px -18px rgba(20,32,42,.22)}
+.empty{border:0;background:var(--sunk);border-radius:14px;padding:16px}
+#search,#jrSearch{border-radius:14px;padding:12px 14px 12px 42px;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='6.5' fill='none' stroke='%238795a1' stroke-width='2'/%3E%3Cpath d='M16 16l4.5 4.5' stroke='%238795a1' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 13px center/19px;box-shadow:var(--shadow)}
+
+/* The panel is the real sky: colour, sun and moon follow sunrise and sunset. */
+.hero{border-radius:26px;padding:16px 18px 18px;gap:14px}
+.hero>*{position:relative;z-index:1}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(4,10,30,0) 30%,rgba(4,10,30,.36) 100%)}
+.hero::after{content:"";position:absolute;left:var(--gx,50%);top:var(--gy,50px);width:340px;height:340px;margin:-170px 0 0 -170px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,var(--glow,rgba(255,225,150,.3)),transparent 68%);transition:left 1.2s linear,top 1.2s linear}
+.hero>.stars{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:var(--night,0);transition:opacity 2s}
+.stars i{position:absolute;left:0;top:0;width:1.6px;height:1.6px;border-radius:50%}
+.skyband{height:84px;margin:0 -4px -2px}
+.skyband svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.skyband path{fill:none;stroke:rgba(255,255,255,.42);stroke-width:1.2;stroke-dasharray:2 5;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.skyband .hz{stroke-dasharray:none;stroke:rgba(255,255,255,.24)}
+.sk{position:absolute;bottom:0;font-size:11px;font-weight:600;opacity:.9;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sk.l{left:4px}.sk.r{right:4px}.sk.c{left:50%;transform:translateX(-50%);opacity:.78;font-weight:500}
+.orb{position:absolute;border-radius:50%;pointer-events:none;transition:left 1.2s linear,top 1.2s linear}
+.orb.sun{width:30px;height:30px;margin:-15px 0 0 -15px;background:radial-gradient(circle,var(--sun-core,#fffbe6) 0,var(--sun,#ffdc85) 62%,var(--sun,#ffdc85) 100%);box-shadow:0 0 0 6px var(--sun-ring,rgba(255,222,140,.22)),0 0 34px 10px var(--sun-ring,rgba(255,222,140,.3))}
+.orb.moon{width:32px;height:32px;margin:-16px 0 0 -16px;filter:drop-shadow(0 0 10px rgba(200,212,255,.6))}
+.orb svg{position:static;width:100%;height:100%;display:block}
+.orb svg path{stroke:none;fill:#eef1ff}
+.legend:empty{display:none}
+#nextUp:empty,.stats:empty{display:none}
+#nextUp button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid rgba(255,255,255,.2);background:rgba(8,16,40,.3);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;border-radius:16px;padding:11px 12px}
+#nextUp .ic{background:rgba(255,255,255,.18);color:#fff;width:40px;height:40px;border-radius:13px}
+#nextUp .nx{min-width:0;display:flex;flex-direction:column}
+#nextUp small{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.82}
+#nextUp b{font-family:var(--display);font-size:17px;font-weight:700;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#nextUp .nx span{font-size:13px;opacity:.92}
+#nextUp .go{margin-left:auto;width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
+.stats{display:flex;flex-wrap:wrap;gap:8px}
+.stats button{flex-direction:row;align-items:baseline;gap:6px;padding:6px 13px;border-radius:999px;background:rgba(8,16,40,.28)}
+.stats b{font-size:15px}.stats span{font-size:12px;opacity:.92}
+
+/* Round check boxes that fill when ticked. */
+input[type=checkbox]{-webkit-appearance:none;appearance:none;width:22px;height:22px;border:2px solid var(--muted);border-radius:50%;background:transparent no-repeat center/15px;cursor:pointer;transition:background-color .2s,border-color .2s}
+input[type=checkbox]:checked{background-color:var(--accent);border-color:var(--accent);background-image:var(--check)}
+.row .main{transition:opacity .35s}
+.row.ticking .main{opacity:.45}.row.ticking .t{text-decoration:line-through}
+
+/* One add button instead of a grid of tiles. */
+.fab{position:fixed;right:18px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:23;width:58px;height:58px;border-radius:20px;border:0;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 24px -10px var(--accent),0 2px 8px rgba(0,0,0,.22);transition:transform .28s cubic-bezier(.3,1.4,.5,1),border-radius .28s}
+.fab svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;transition:transform .28s cubic-bezier(.3,1.4,.5,1)}
+.fab:active{transform:scale(.93)}
+.fab.open{border-radius:50%}.fab.open svg{transform:rotate(135deg)}
+.fab.hide{transform:scale(0);pointer-events:none}
+.dial{position:fixed;inset:0;z-index:22;background:rgba(8,13,18,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s .2s}
+.dial.on{opacity:1;visibility:visible;transition:opacity .2s}
+.dial-list{position:absolute;right:24px;bottom:calc(148px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:flex-end;gap:11px}
+.dial-list button{display:flex;align-items:center;gap:11px;border:0;background:none;padding:0;font-weight:600;font-size:15px;transform:translateY(16px) scale(.9);opacity:0;transition:transform .3s cubic-bezier(.3,1.4,.5,1),opacity .18s}
+.dial-list button span{background:var(--surface);color:var(--ink);padding:7px 13px;border-radius:11px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.dial-list .ic{width:46px;height:46px;border-radius:15px;box-shadow:0 4px 14px rgba(0,0,0,.25)}.dial-list .ic svg{width:22px;height:22px}
+.dial.on .dial-list button{transform:none;opacity:1}
+.dial.on .dial-list button:nth-last-child(2){transition-delay:.03s}.dial.on .dial-list button:nth-last-child(3){transition-delay:.06s}.dial.on .dial-list button:nth-last-child(4){transition-delay:.09s}.dial.on .dial-list button:nth-last-child(5){transition-delay:.12s}.dial.on .dial-list button:nth-last-child(6){transition-delay:.15s}
+#toasts{bottom:calc(148px + env(safe-area-inset-bottom))}
+@media (min-width:900px){.fab{right:30px;bottom:30px}.dial-list{right:36px;bottom:104px}#toasts{bottom:30px}main{padding-bottom:110px}}
+
+/* The sheet springs up and can be pulled down. */
+.sheet{display:flex;opacity:0;visibility:hidden;transition:opacity .22s,visibility 0s .3s}
+.sheet.on{opacity:1;visibility:visible;transition:opacity .22s}
+.sheet form{transform:translateY(105%);transition:transform .36s cubic-bezier(.2,.9,.25,1.05);border-radius:24px 24px 0 0;padding-top:8px}
+.sheet.on form{transform:none}
+.grab{display:flex;justify-content:center;padding:6px 0 4px;margin:0 -16px;touch-action:none;cursor:grab}
+.grab i{width:40px;height:5px;border-radius:3px;background:var(--line)}
+@media (min-width:700px){.sheet form{border-radius:22px;padding-top:22px}.grab{display:none}}
+
+/* Touch feedback. */
+.btn,.week button,.stats button,#nextUp button,.sos,.chip,.seg button,.day,.swatches button{transition:transform .13s,background-color .2s,box-shadow .2s}
+.btn:active,.week button:active,.stats button:active,#nextUp button:active,.sos:active,.chip:active,.day:active,.swatches button:active{transform:scale(.96)}
+.tabs svg{transition:background-color .25s,transform .15s}
+.tabs button:active svg{transform:scale(.88)}
+@media (prefers-reduced-motion:no-preference){
+  main[data-dir="r"] .view.on{animation:slr .3s cubic-bezier(.2,.8,.2,1) both}
+  main[data-dir="l"] .view.on{animation:sll .3s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes slr{from{transform:translateX(26px);opacity:0}to{transform:none;opacity:1}}
+  @keyframes sll{from{transform:translateX(-26px);opacity:0}to{transform:none;opacity:1}}
+  .toast{animation:toastin .32s cubic-bezier(.3,1.3,.5,1)}
+  @keyframes toastin{from{transform:translateY(14px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+  .stars i{animation:tw 4.5s ease-in-out infinite}.stars i:nth-child(2){animation-duration:6s;animation-delay:-2s}.stars i:nth-child(3){animation-duration:7.5s;animation-delay:-4s}
+  @keyframes tw{50%{opacity:.25}}
+  .row.ticking input{animation:pop .36s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes pop{40%{transform:scale(1.25)}}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -301,28 +370,22 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
 <main><div class="wrap">
 
 <section class="view on" id="v-today">
-  <div class="hero" id="hero"><span class="orb" id="orb"></span>
+  <div class="hero" id="hero"><span class="stars" id="stars"><i></i><i></i><i></i></span>
+    <div class="skyband"><svg viewBox="0 0 100 48" preserveAspectRatio="none" aria-hidden="true"><path d="M6 36A44 30 0 0 1 94 36"/><path class="hz" d="M0 36H100"/></svg><span class="orb" id="orb"></span><span class="sk l" id="skyL"></span><span class="sk c" id="skyC"></span><span class="sk r" id="skyR"></span></div>
     <div class="hero-top"><div><div class="hero-date" id="helloDate"></div><h2 id="helloHi"></h2><p id="helloLine"></p></div><div class="hero-day"><span id="heroNum"></span><small id="heroMon"></small></div></div>
     <div><div class="ribbon" id="ribbon"></div><div class="ticks"><span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>12 AM</span></div>
-      <div class="legend"><span><i class="ev"></i>Events</span><span><i class="rem"></i>Reminders</span><span><i class="al"></i>Alarms</span></div></div>
+      <div class="legend" id="legend"></div></div>
+    <div id="nextUp"></div>
     <div class="stats" id="stats"></div>
   </div>
   <div class="week" id="week"></div>
   <input id="search" type="search" placeholder="Search everything" aria-label="Search everything">
-  <div class="tiles">
-    <button data-new="event"><span class="ic ev"><svg><use href="#i-cal"/></svg></span>Event</button>
-    <button data-new="reminder"><span class="ic rem"><svg><use href="#i-bell"/></svg></span>Reminder</button>
-    <button data-new="todo"><span class="ic todo"><svg><use href="#i-check"/></svg></span>To-do</button>
-    <button data-new="journal"><span class="ic jr"><svg><use href="#i-book"/></svg></span>Journal</button>
-    <button data-new="voice"><span class="ic vo"><svg><use href="#i-mic"/></svg></span>Voice note</button>
-    <button data-new="alarm"><span class="ic al"><svg><use href="#i-clock"/></svg></span>Alarm</button>
-  </div>
   <div class="card" id="searchCard" style="display:none"><div class="head"><h3>Results</h3><span class="count" id="searchCount"></span></div><div class="list" id="searchList"></div></div>
   <div class="cols" id="todayCols">
     <div class="card"><div class="head"><div class="ttl"><span class="ic cl"><svg><use href="#i-spark"/></svg></span><h3>From Claude</h3></div><span class="pill cl">Scheduled tasks</span></div><div class="list" id="briefList"></div></div>
-    <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-cal"/></svg></span><h3>Today's schedule</h3></div><span class="count" id="cEv"></span></div><div class="list" id="todayEvents"></div></div>
-    <div class="card"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-bell"/></svg></span><h3>Reminders</h3></div><span class="count" id="cRem"></span></div><div class="list" id="todayRems"></div></div>
-    <div class="card"><div class="head"><div class="ttl"><span class="ic todo"><svg><use href="#i-check"/></svg></span><h3>To-dos</h3></div><span class="count" id="cTodo"></span></div><div class="bar"><i id="todoBar"></i></div><div class="list" id="todayTodos"></div></div>
+    <div class="card"><div class="head"><div class="ttl"><span class="ic ev"><svg><use href="#i-cal"/></svg></span><h3 id="schedTitle">Today's schedule</h3></div><span class="count" id="cEv"></span></div><div class="list" id="todayEvents"></div></div>
+    <div class="card" id="remCard"><div class="head"><div class="ttl"><span class="ic rem"><svg><use href="#i-bell"/></svg></span><h3>Reminders</h3></div><span class="count" id="cRem"></span></div><div class="list" id="todayRems"></div></div>
+    <div class="card" id="todoCard"><div class="head"><div class="ttl"><span class="ic todo"><svg><use href="#i-check"/></svg></span><h3>To-dos</h3></div><span class="count" id="cTodo"></span></div><div class="bar"><i id="todoBar"></i></div><div class="list" id="todayTodos"></div></div>
   </div>
 </section>
 
@@ -439,7 +502,9 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
       <div class="card">
         <h3>Appearance</h3>
         <div class="lbl">Colour<div class="swatches" id="swatches"></div></div>
-        <label>Light or dark<select id="theme"><option value="auto">Match my device</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+        <label>Light or dark<select id="theme"><option value="auto">Match my device</option><option value="light">Light</option><option value="dark">Dark</option><option value="sun">Follow the sun: light by day, dark at night</option></select></label>
+        <label class="checkline"><input type="checkbox" id="skyFollow">Tint the whole app with the sky</label>
+        <div class="lbl">Sunrise and sunset<p class="muted" id="locInfo" style="font-weight:400"></p><div class="actions"><button class="btn line sm" id="locBtn"></button></div></div>
       </div>
       <div class="card">
         <h3>Backup</h3>
@@ -462,7 +527,18 @@ main{background:linear-gradient(180deg,var(--tint) 0,var(--paper) 280px)}
 </nav>
 </div>
 
+<div class="dial" id="dial"><div class="dial-list">
+  <button data-new="alarm"><span>Alarm</span><i class="ic al"><svg><use href="#i-clock"/></svg></i></button>
+  <button data-new="voice"><span>Voice note</span><i class="ic vo"><svg><use href="#i-mic"/></svg></i></button>
+  <button data-new="journal"><span>Journal entry</span><i class="ic jr"><svg><use href="#i-book"/></svg></i></button>
+  <button data-new="todo"><span>To-do</span><i class="ic todo"><svg><use href="#i-check"/></svg></i></button>
+  <button data-new="reminder"><span>Reminder</span><i class="ic rem"><svg><use href="#i-bell"/></svg></i></button>
+  <button data-new="event"><span>Event</span><i class="ic ev"><svg><use href="#i-cal"/></svg></i></button>
+</div></div>
+<button class="fab" id="fab" aria-label="Add something" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+
 <div class="sheet" id="sheet"><form id="sheetForm" novalidate>
+  <div class="grab" id="sheetGrab"><i></i></div>
   <div class="actions" style="justify-content:space-between"><h2 id="sheetTitle"></h2><button type="button" class="btn line sm" id="sheetClose">Close</button></div>
   <div class="stack" id="sheetFields"></div>
   <div class="actions"><button class="btn" type="submit">Save</button><button type="button" class="btn del" id="sheetDel">Delete</button></div>
@@ -536,6 +612,31 @@ function streak(dates, today) {
   let n = 0; while (set.has(key(d))) { n++; d.setDate(d.getDate() - 1); }
   return n;
 }
+// Does an event (optionally repeating) fall on the day `s` ("YYYY-MM-DD")?
+function occursOn(e, s) {
+  if (!e.date || s < e.date) return false;
+  if (s === e.date) return true;
+  if (!e.repeat) return false;
+  if (e.repeat === 'daily') return true;
+  const a = new Date(e.date + 'T00:00'), b = new Date(s + 'T00:00');
+  if (e.repeat === 'weekly') return a.getDay() === b.getDay();
+  if (e.repeat === 'monthly') return a.getDate() === b.getDate();
+  if (e.repeat === 'yearly') return a.getDate() === b.getDate() && a.getMonth() === b.getMonth();
+  return false;
+}
+// Sunrise and sunset (ms since 1970) for a calendar day at a place; null where the sun does not rise or set that day.
+function sunTimes(y, m, d, lat, lon) {
+  const base = Date.UTC(y, m, d), doy = Math.round((base - Date.UTC(y, 0, 1)) / 86400000);
+  const g = 2 * Math.PI / 365 * doy, rad = Math.PI / 180;
+  const eq = 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
+  const dec = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g) - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
+  const c = (Math.cos(90.833 * rad) - Math.sin(lat * rad) * Math.sin(dec)) / (Math.cos(lat * rad) * Math.cos(dec));
+  if (c > 1 || c < -1) return null;
+  const ha = Math.acos(c) / rad;
+  return { rise: base + (720 - 4 * (lon + ha) - eq) * 60000, set: base + (720 - 4 * (lon - ha) - eq) * 60000 };
+}
+// Moon phase from 0 (new) through 0.5 (full) back to 1.
+function moonPhase(ms) { const p = ((ms - Date.UTC(2000, 0, 6, 18, 14)) / 86400000 / 29.530588853) % 1; return p < 0 ? p + 1 : p; }
 /*PURE-END*/
 
 const $ = s => document.querySelector(s);
@@ -552,7 +653,9 @@ const byTime = (a, b) => (a.time || '').localeCompare(b.time || '');
 const empty = msg => `<div class="empty">${msg}</div>`;
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const REPEAT = { daily: 'Repeats daily', weekly: 'Repeats weekly', monthly: 'Repeats monthly' };
+const REPEAT = { daily: 'Repeats daily', weekly: 'Repeats weekly', monthly: 'Repeats monthly', yearly: 'Repeats yearly' };
+const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+const buzz = ms => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
 
 /* ---------- storage ---------- */
 const store = {
@@ -561,7 +664,7 @@ const store = {
 };
 let data = normalize(store.get('pa-assistant-v1', null));
 // Things that belong to this device only: which reminders already fired, alarm ring state, the unsent draft, theme.
-let local = Object.assign({ notified: {}, ring: {}, draft: { to: '', subject: '', body: '' }, theme: 'auto', color: 'teal', seg: 'todos', jseg: 'entries' }, store.get('pa-local', {}));
+let local = Object.assign({ notified: {}, ring: {}, draft: { to: '', subject: '', body: '' }, theme: 'auto', color: 'teal', seg: 'todos', jseg: 'entries', sky: true }, store.get('pa-local', {}));
 let cfg = store.get('pa-sync', null);
 const saveLocal = () => store.set('pa-local', local);
 
@@ -684,30 +787,111 @@ const PAL = {
   rose: { sw: '#b83a66', l: ['#b83a66', '#fbe5ed', '#ffffff', '#8f2a4d', '#f6dfe8'], d: ['#f08db0', '#3a1a27', '#2b0a17', '#35121f', '#26111a'] }
 };
 const darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+const isDark = () => { const r = document.documentElement; return r.dataset.theme ? r.dataset.theme === 'dark' : !!(darkQuery && darkQuery.matches); };
 function applyTheme() {
   const root = document.documentElement;
-  if (local.theme === 'auto') { if (!inArtifact) delete root.dataset.theme; } else root.dataset.theme = local.theme;
-  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : !!(darkQuery && darkQuery.matches);
+  if (local.theme === 'sun') root.dataset.theme = skyState(new Date()).up ? 'light' : 'dark';
+  else if (local.theme === 'auto') { if (!inArtifact) delete root.dataset.theme; } else root.dataset.theme = local.theme;
+  const dark = isDark();
   const p = PAL[local.color] || PAL.teal;
   ['--accent', '--accent-soft', '--on-accent', '--top', '--tint'].forEach((k, i) => { if (p.l) root.style.setProperty(k, (dark ? p.d : p.l)[i]); else root.style.removeProperty(k); });
   const meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = getComputedStyle(root).getPropertyValue('--top').trim() || '#0b4f5e';
   $('#swatches').innerHTML = Object.keys(PAL).map(k => `<button data-color="${k}" class="${k === local.color ? 'on' : ''}" style="background:${PAL[k].sw}" aria-label="${k} theme"></button>`).join('');
+  $('#skyFollow').checked = local.sky !== false;
+  $('#locInfo').textContent = local.loc ? 'Using your location, saved on this device only.' : 'Estimated from your time zone. Use your location for exact times.';
+  $('#locBtn').textContent = local.loc ? 'Stop using my location' : 'Use my location';
+  paintSky(new Date());
 }
 if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener('change', applyTheme);
+
+/* ---------- the sky: colour, sun and moon follow real sunrise and sunset ---------- */
+// Each look is [top, middle, horizon] colours plus how visible the stars are.
+const SKY = {
+  night: [[7, 11, 36], [20, 29, 74], [38, 53, 103], 1], predawn: [[27, 34, 87], [91, 63, 134], [194, 106, 124], .45],
+  dawn: [[58, 90, 156], [217, 138, 138], [246, 192, 122], 0], day: [[11, 95, 147], [28, 147, 189], [63, 179, 196], 0],
+  golden: [[42, 79, 142], [217, 133, 102], [245, 179, 92], 0], dusk: [[36, 35, 95], [138, 59, 122], [226, 115, 79], .3]
+};
+const MOONS = ['New moon', 'Waxing crescent', 'First quarter', 'Waxing gibbous', 'Full moon', 'Waning gibbous', 'Last quarter', 'Waning crescent'];
+const mixc = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
+const rgb = c => `rgb(${c.map(Math.round).join(',')})`;
+const fmtClock = ms => new Date(ms).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+// Without permission to use location, place the device from its time zone: good to within about half an hour.
+function guessLoc() { const y = new Date().getFullYear(), jan = new Date(y, 0, 1).getTimezoneOffset(), jul = new Date(y, 6, 1).getTimezoneOffset(); return { lat: jan < jul ? -34 : 37, lon: -Math.max(jan, jul) / 4 }; }
+function skyState(now) {
+  const loc = local.loc || guessLoc(), t = now.getTime(), M = 60000;
+  const day = off => { const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + off);
+    return sunTimes(d.getFullYear(), d.getMonth(), d.getDate(), loc.lat, loc.lon) || { rise: d.getTime() + 6 * 3600000, set: d.getTime() + 18 * 3600000 }; };
+  const yd = day(-1), td = day(0), tm = day(1);
+  const up = t >= td.rise && t < td.set, a = up ? td.rise : t < td.rise ? yd.set : td.set, b = up ? td.set : t < td.rise ? td.rise : tm.rise;
+  const keys = [];
+  const rise = x => keys.push([x - 75 * M, 'night'], [x - 25 * M, 'predawn'], [x + 20 * M, 'dawn'], [x + 90 * M, 'day']);
+  const set = x => keys.push([x - 100 * M, 'day'], [x - 35 * M, 'golden'], [x + 8 * M, 'dusk'], [x + 70 * M, 'night']);
+  set(yd.set); rise(td.rise); set(td.set); rise(tm.rise); keys.sort((p, q) => p[0] - q[0]);
+  let i = keys.findIndex(k => k[0] > t); if (i < 0) i = keys.length - 1;
+  const k0 = keys[Math.max(0, i - 1)], k1 = keys[i], f = k1[0] > k0[0] ? Math.min(1, Math.max(0, (t - k0[0]) / (k1[0] - k0[0]))) : 0;
+  const A = SKY[k0[1]], B = SKY[k1[1]];
+  return { up, frac: Math.min(1, Math.max(0, (t - a) / (b - a))), a, b, rise: td.rise, set: td.set, south: loc.lat < 0,
+    cols: [0, 1, 2].map(n => mixc(A[n], B[n], f)), night: A[3] + (B[3] - A[3]) * f };
+}
+let orbKey = '';
+function paintSky(now) {
+  const s = skyState(now), hero = $('#hero'), orb = $('#orb'), root = document.documentElement;
+  hero.style.setProperty('--sky', `linear-gradient(175deg,${rgb(s.cols[0])} 0%,${rgb(s.cols[1])} 58%,${rgb(s.cols[2])} 100%)`);
+  hero.style.setProperty('--night', s.night.toFixed(2));
+  // The orb rides the dashed arc: left edge at rise (or set), right edge at set (or rise).
+  const x = 50 - 44 * Math.cos(Math.PI * s.frac), y = 36 - 30 * Math.sin(Math.PI * s.frac), high = Math.sin(Math.PI * s.frac);
+  orb.style.left = x.toFixed(2) + '%'; orb.style.top = (y / 48 * 100).toFixed(2) + '%';
+  hero.style.setProperty('--gx', `calc(14px + ${(x / 100).toFixed(4)} * (100% - 28px))`); hero.style.setProperty('--gy', (16 + y / 48 * 84).toFixed(0) + 'px');
+  const ph = moonPhase(now.getTime()), key = s.up ? 'sun' : 'moon' + Math.round(ph * 60);
+  if (s.up) {
+    hero.style.setProperty('--sun', rgb(mixc([255, 150, 70], [255, 222, 130], high))); hero.style.setProperty('--sun-core', rgb(mixc([255, 214, 150], [255, 252, 232], high)));
+    hero.style.setProperty('--sun-ring', `rgba(255,${Math.round(170 + 55 * high)},${Math.round(90 + 50 * high)},.3)`);
+    hero.style.setProperty('--glow', `rgba(255,${Math.round(190 + 40 * high)},${Math.round(120 + 40 * high)},${(.42 - .16 * high).toFixed(2)})`);
+  } else hero.style.setProperty('--glow', `rgba(170,190,255,${(.08 + .09 * (1 - Math.cos(2 * Math.PI * ph))).toFixed(2)})`);
+  if (key !== orbKey) {
+    orbKey = key; orb.className = 'orb ' + (s.up ? 'sun' : 'moon');
+    if (s.up) orb.innerHTML = '';
+    else { // Lit part of the moon: the outer limb plus an elliptical terminator.
+      const wax = ph < .5, k = Math.cos(2 * Math.PI * ph), rx = Math.max(.05, Math.abs(k) * 10), term = wax ? (k > 0 ? 0 : 1) : (k > 0 ? 1 : 0);
+      orb.innerHTML = `<svg viewBox="-12 -12 24 24"${s.south ? ' style="transform:scaleX(-1)"' : ''}><circle r="10" fill="rgba(214,222,255,.2)"/><path d="M0 -10A10 10 0 0 ${wax ? 1 : 0} 0 10A${rx.toFixed(2)} 10 0 0 ${term} 0 -10Z"/></svg>`;
+    }
+  }
+  $('#skyL').textContent = (s.up ? '↑ ' : '↓ ') + fmtClock(s.a); $('#skyR').textContent = (s.up ? '↓ ' : '↑ ') + fmtClock(s.b);
+  $('#skyL').setAttribute('aria-label', (s.up ? 'Sunrise ' : 'Sunset ') + fmtClock(s.a)); $('#skyR').setAttribute('aria-label', (s.up ? 'Sunset ' : 'Sunrise ') + fmtClock(s.b));
+  const len = Math.round((s.set - s.rise) / 60000);
+  $('#skyC').textContent = s.up ? `${Math.floor(len / 60)} h ${len % 60} min of daylight` : MOONS[Math.round(ph * 8) % 8];
+  if (local.sky !== false) { // carry the sky into the rest of the app
+    const dark = isDark(), top = rgb(mixc(s.cols[0], [3, 6, 14], dark ? .45 : .08));
+    root.style.setProperty('--top', top); root.style.setProperty('--tint', rgb(mixc(dark ? [14, 21, 27] : [242, 244, 246], s.cols[1], dark ? .26 : .22)));
+    const meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = top;
+  }
+  return s;
+}
+// Stars: three layers of dots that fade in with the night and twinkle at different speeds.
+(() => { let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  $$('#stars i').forEach(el => { el.style.boxShadow = Array.from({ length: 26 }, () => `${Math.round(rnd() * 900)}px ${Math.round(rnd() * 300)}px 0 ${(rnd() * .7).toFixed(1)}px rgba(255,255,255,${(.55 + rnd() * .45).toFixed(2)})`).join(','); }); })();
 const VIEWS = ['today', 'calendar', 'plan', 'journal', 'mail', 'emergency', 'sync'];
 function show(v, fromHash) {
   if (v === 'alerts') v = 'plan';
   if (!VIEWS.includes(v)) v = 'today';
+  const cur = VIEWS.findIndex(x => $('#v-' + x).classList.contains('on')), nxt = VIEWS.indexOf(v);
+  if (cur !== nxt) { $('main').dataset.dir = nxt > cur ? 'r' : 'l'; if (!fromHash) buzz(6); }
+  $('#fab').classList.toggle('hide', ['mail', 'emergency', 'sync'].includes(v)); closeDial();
   $$('.view').forEach(el => el.classList.toggle('on', el.id === 'v-' + v));
   $$('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.go === v));
   if (!fromHash) { try { history.replaceState(null, '', '#' + v); } catch (e) {} }
   $('main').scrollTop = 0;
 }
 
+function closeDial() { $('#dial').classList.remove('on'); $('#fab').classList.remove('open'); $('#fab').setAttribute('aria-expanded', 'false'); }
+function toggleDial() { if ($('#dial').classList.contains('on')) return closeDial(); $('#dial').classList.add('on'); $('#fab').classList.add('open'); $('#fab').setAttribute('aria-expanded', 'true'); buzz(8); }
+$('#dial').addEventListener('click', e => { if (!e.target.closest('button')) closeDial(); });
+
 /* ---------- one sheet for adding and editing ---------- */
 const KINDS = {
   event: { name: 'event', list: 'events', defaults: () => ({ date: selDate }), fields: [
-    { k: 'title', l: 'Title', req: 1, ph: 'Dentist appointment' }, { k: 'date', l: 'Date', t: 'date', req: 1 }, { k: 'time', l: 'Time (leave empty for all day)', t: 'time' }, { k: 'notes', l: 'Notes', t: 'textarea' }] },
+    { k: 'title', l: 'Title', req: 1, ph: 'Dentist appointment' }, { k: 'date', l: 'Date', t: 'date', req: 1 }, { k: 'time', l: 'Time (leave empty for all day)', t: 'time' },
+    { k: 'repeat', l: 'Repeat', t: 'select', o: [['', 'Does not repeat'], ['daily', 'Every day'], ['weekly', 'Every week'], ['monthly', 'Every month'], ['yearly', 'Every year']] }, { k: 'notes', l: 'Notes', t: 'textarea' }] },
   reminder: { name: 'reminder', list: 'reminders', defaults: () => ({ due: Date.now() + 3600000, repeat: '' }), hidden: () => ({ done: false }), fields: [
     { k: 'text', l: 'Remind me to', req: 1, ph: 'Call the pharmacy' }, { k: 'due', l: 'When', t: 'datetime-local', req: 1, from: v => v ? dtLocal(v) : '', to: v => new Date(v).getTime() },
     { k: 'repeat', l: 'Repeat', t: 'select', o: [['', 'Does not repeat'], ['daily', 'Every day'], ['weekly', 'Every week'], ['monthly', 'Every month']] }] },
@@ -760,7 +944,7 @@ function openItem(kind, id) {
   const def = KINDS[kind]; if (!def) return;
   const it = id ? data[def.list].find(x => x.id === id) : null;
   if (id && !it) return;
-  const src = it || (def.defaults ? def.defaults() : {});
+  const src = it || (def.defaults ? def.defaults() : {}); buzz(6);
   openForm({
     title: (it ? 'Edit ' : 'New ') + def.name, editing: !!it,
     fields: def.fields.map(f => Object.assign({}, f, { v: f.from ? f.from(src[f.k]) : (src[f.k] ?? (f.t === 'days' ? [] : f.t === 'check' ? false : '')) })),
@@ -779,7 +963,13 @@ function openMedical() {
 }
 $('#sheetForm').addEventListener('submit', e => { e.preventDefault(); if (!sheet) return; const v = readForm(); if (!v) return; const s = sheet; closeForm(); s.save(v); });
 $('#sheet').addEventListener('pointerdown', e => { if (e.target.id === 'sheet') closeForm(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheet) closeForm(); });
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (sheet) closeForm(); else closeDial(); });
+// Pull the sheet down by its handle to close it.
+(() => { const g = $('#sheetGrab'), f = $('#sheetForm'); let y0 = null, dy = 0;
+  g.addEventListener('pointerdown', e => { y0 = e.clientY; dy = 0; try { g.setPointerCapture(e.pointerId); } catch (err) {} f.style.transition = 'none'; });
+  g.addEventListener('pointermove', e => { if (y0 === null) return; dy = Math.max(0, e.clientY - y0); f.style.transform = `translateY(${dy}px)`; });
+  const end = () => { if (y0 === null) return; y0 = null; f.style.transition = ''; f.style.transform = ''; if (dy > 80) closeForm(); };
+  g.addEventListener('pointerup', end); g.addEventListener('pointercancel', end); })();
 
 /* ---------- render ---------- */
 const editBtn = (kind, id, inner) => `<button class="main" data-edit="${kind}:${esc(id)}">${inner}</button>`;
@@ -791,8 +981,23 @@ function todoRow(t) {
   return `<div class="row"><input type="checkbox" data-check="todos:${esc(t.id)}"${t.done ? ' checked' : ''} aria-label="Mark done">` +
     editBtn('todo', t.id, `<div class="t ${t.done ? 'done' : ''}">${esc(t.text)}</div>`) + (t.star && !t.done ? '<span class="pill wait">Important</span>' : '') + '</div>';
 }
-function evRow(e, withDate) {
-  return `<div class="row"><div class="time">${fmtTime(e.time)}</div>` + editBtn('event', e.id, `<div class="t">${esc(e.title)}</div>${withDate || e.notes ? `<div class="s">${esc([withDate ? fmtDay(e.date) : '', e.notes].filter(Boolean).join(' · '))}</div>` : ''}`) + '</div>';
+function evRow(e, date) {
+  const sub = [date ? fmtDay(date) : '', e.repeat ? REPEAT[e.repeat] : '', e.notes].filter(Boolean).join(' · ');
+  return `<div class="row"><div class="time">${fmtTime(e.time)}</div>` + editBtn('event', e.id, `<div class="t">${esc(e.title)}</div>${sub ? `<div class="s">${esc(sub)}</div>` : ''}`) + '</div>';
+}
+const eventsOn = s => data.events.filter(e => occursOn(e, s)).sort(byTime);
+// The next occurrences from a day onward, nearest first, repeats included.
+function upcoming(from, days, limit) {
+  const out = [], d = new Date(from + 'T00:00');
+  for (let i = 0; i < days && out.length < limit; i++, d.setDate(d.getDate() + 1)) { const s = ymd(d); for (const e of eventsOn(s)) out.push({ e, date: s }); }
+  return out.slice(0, limit);
+}
+function relText(date, time, now) {
+  const dd = Math.round((new Date(date + 'T00:00') - new Date(ymd(now) + 'T00:00')) / 86400000);
+  if (dd === 1) return 'Tomorrow'; if (dd > 1) return `In ${dd} days`;
+  if (!time) return 'Today';
+  const m = Math.round((new Date(date + 'T' + time) - now) / 60000);
+  return m < 1 ? 'Now' : m < 60 ? `In ${m} min` : `In ${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}`;
 }
 const openTodos = () => data.todos.filter(t => !t.done).sort((a, b) => (!!b.star - !!a.star) || (a.u - b.u));
 
@@ -804,34 +1009,42 @@ function renderAll() {
 function renderToday() {
   const now = new Date(), t = ymd(now), ms = now.getTime(), h = now.getHours(), mins = h * 60 + now.getMinutes();
   $('#helloDate').textContent = now.toLocaleDateString([], { weekday: 'long' });
-  // The panel is the sky right now: the sun crosses it from 5 AM to 8 PM, the moon overnight.
-  const sky = h < 5 || h >= 20 ? 'night' : h < 8 ? 'dawn' : h < 17 ? 'day' : 'dusk';
-  const frac = sky === 'night' ? (((h + 4) % 24) * 60 + now.getMinutes()) / 540 : (mins - 300) / 900;
-  $('#hero').className = 'hero sky-' + sky;
-  $('#orb').style.left = (8 + frac * 84) + '%'; $('#orb').style.top = (48 - Math.sin(Math.PI * frac) * 36) + '%';
+  const sky = paintSky(now);
   $('#heroNum').textContent = now.getDate();
   $('#heroMon').textContent = now.toLocaleDateString([], { month: 'short', year: 'numeric' });
   const name = ((data.prefs.medical || {}).name || '').split(' ')[0];
   $('#helloHi').textContent = (h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening') + (name ? ', ' + name : '');
-  const evs = data.events.filter(e => e.date === t).sort(byTime);
+  const evs = eventsOn(t);
   const rems = data.reminders.filter(r => !r.done).sort((a, b) => a.due - b.due);
   const todos = openTodos(), doneTodos = data.todos.length - todos.length;
   const late = rems.filter(r => r.due < ms).length, queued = data.outbox.filter(o => o.status === 'queued').length;
   const hm = `${pad(h)}:${pad(now.getMinutes())}`;
-  const nextEv = evs.find(e => e.time && e.time >= hm), nextRem = rems.find(r => r.due >= ms);
-  $('#helloLine').textContent = late ? `${plural(late, 'reminder')} overdue.` : nextEv ? `Next: ${nextEv.title} at ${fmtTime(nextEv.time)}.` : nextRem ? `Next reminder: ${nextRem.text}, ${fmtDT(nextRem.due)}.` : 'Nothing else scheduled today.';
-  // The day as a ribbon: midnight to midnight, with a line for now.
+  const tmr = ymd(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
+  const dueToday = rems.filter(r => r.due >= ms && ymd(new Date(r.due)) === t).length;
+  $('#helloLine').textContent = late ? `${plural(late, 'reminder')} overdue.` : evs.length || dueToday ? [evs.length ? plural(evs.length, 'event') : '', dueToday ? plural(dueToday, 'reminder') : ''].filter(Boolean).join(' and ') + ' today.' : 'Nothing scheduled today.';
+  // Next up: the nearest thing ahead, today or later, instead of a row of zeros.
+  const later = evs.find(e => e.time && e.time >= hm), nextEv = later ? { e: later, date: t } : upcoming(tmr, 90, 1)[0], nextRem = rems.find(r => r.due >= ms);
+  const evMs = nextEv ? new Date(nextEv.date + 'T' + (nextEv.e.time || '00:00')).getTime() : Infinity;
+  const card = (kind, id, icon, title, when, rel) => `<button data-edit="${kind}:${esc(id)}"><span class="ic"><svg><use href="#${icon}"/></svg></span><span class="nx"><small>Next up · ${rel}</small><b>${esc(title)}</b><span>${esc(when)}</span></span><svg class="go" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>`;
+  $('#nextUp').innerHTML = nextEv && (!nextRem || evMs <= nextRem.due)
+    ? card('event', nextEv.e.id, 'i-cal', nextEv.e.title, (nextEv.date === t ? 'Today' : fmtDay(nextEv.date)) + ' · ' + fmtTime(nextEv.e.time), relText(nextEv.date, nextEv.e.time, now))
+    : nextRem ? card('reminder', nextRem.id, 'i-bell', nextRem.text, fmtDT(nextRem.due), relText(ymd(new Date(nextRem.due)), dtLocal(nextRem.due).slice(11), now)) : '';
+  // The day as a ribbon: midnight to midnight, brighter while the sun is up, with a line for now.
   const at = m => (m / 1440 * 100).toFixed(2) + '%', toMin = x => { const [a, b] = x.split(':').map(Number); return a * 60 + b; };
   const end = new Date(now); end.setHours(24, 0, 0, 0); const start = end.getTime() - 86400000;
+  const rp = Math.max(0, Math.min(100, (sky.rise - start) / 864000)), sp = Math.max(0, Math.min(100, (sky.set - start) / 864000)), dk = 'rgba(8,16,40,.34)', lt = 'rgba(255,255,255,.24)';
+  $('#ribbon').style.background = `linear-gradient(90deg,${dk} 0,${dk} ${(rp - 2).toFixed(1)}%,${lt} ${(rp + 2).toFixed(1)}%,${lt} ${(sp - 2).toFixed(1)}%,${dk} ${(sp + 2).toFixed(1)}%,${dk} 100%)`;
+  const mkEv = evs.filter(e => e.time), mkRem = rems.filter(r => r.due >= start && r.due < end.getTime()), mkAl = data.alarms.filter(a => a.enabled && (!a.days || !a.days.length || a.days.includes(now.getDay())));
   $('#ribbon').innerHTML = `<div class="past" style="width:${at(mins)}"></div>` +
-    evs.filter(e => e.time).map(e => `<span class="mk ev" style="left:${at(toMin(e.time))}" title="${esc(e.title)}"></span>`).join('') +
-    rems.filter(r => r.due >= start && r.due < end.getTime()).map(r => `<span class="mk rem" style="left:${at((r.due - start) / 60000)}" title="${esc(r.text)}"></span>`).join('') +
-    data.alarms.filter(a => a.enabled && (!a.days || !a.days.length || a.days.includes(now.getDay()))).map(a => `<span class="mk al" style="left:${at(toMin(a.time))}" title="${esc(a.label || 'Alarm')}"></span>`).join('') +
+    mkEv.map(e => `<span class="mk ev" style="left:${at(toMin(e.time))}" title="${esc(e.title)}"></span>`).join('') +
+    mkRem.map(r => `<span class="mk rem" style="left:${at((r.due - start) / 60000)}" title="${esc(r.text)}"></span>`).join('') +
+    mkAl.map(a => `<span class="mk al" style="left:${at(toMin(a.time))}" title="${esc(a.label || 'Alarm')}"></span>`).join('') +
     `<span class="nowl" style="left:${at(mins)}"></span>`;
-  $('#stats').innerHTML = [[evs.length, 'Events', 'calendar', ''], [rems.length, late ? late + ' overdue' : 'Reminders', 'plan', 'reminders'], [todos.length, 'To-dos', 'plan', 'todos'], [queued, 'To send', 'mail', '']]
-    .map(([n, l, go, seg]) => `<button data-go="${go}"${seg ? ` data-seg="${seg}"` : ''}><b>${n}</b><span>${l}</span></button>`).join('');
+  $('#legend').innerHTML = (mkEv.length ? '<span><i class="ev"></i>Events</span>' : '') + (mkRem.length ? '<span><i class="rem"></i>Reminders</span>' : '') + (mkAl.length ? '<span><i class="al"></i>Alarms</span>' : '');
+  $('#stats').innerHTML = [[evs.length, evs.length === 1 ? 'event today' : 'events today', 'calendar', ''], [rems.length, (rems.length === 1 ? 'reminder' : 'reminders') + (late ? `, ${late} overdue` : ''), 'plan', 'reminders'], [todos.length, todos.length === 1 ? 'to-do' : 'to-dos', 'plan', 'todos'], [queued, 'to send', 'mail', '']]
+    .filter(x => x[0]).map(([n, l, go, seg]) => `<button data-go="${go}"${seg ? ` data-seg="${seg}"` : ''}><b>${n}</b><span>${l}</span></button>`).join('');
   const ws = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-  $('#week').innerHTML = DAYS.map((dn, i) => { const d = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + i), s = ymd(d), n = data.events.filter(e => e.date === s).length;
+  $('#week').innerHTML = DAYS.map((dn, i) => { const d = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + i), s = ymd(d), n = eventsOn(s).length;
     return `<button class="${s === t ? 'now' : ''}" data-day="${s}" aria-label="${fmtDay(s)}, ${plural(n, 'event')}"><small>${dn}</small><b>${d.getDate()}</b><i>${'<u></u>'.repeat(Math.min(n, 3))}</i></button>`; }).join('');
   $('#cEv').textContent = evs.length || ''; $('#cRem').textContent = rems.length || '';
   $('#cTodo').textContent = data.todos.length ? `${doneTodos} of ${data.todos.length} done` : '';
@@ -840,13 +1053,16 @@ function renderToday() {
   $('#briefList').innerHTML = br.length
     ? br.map(b => `<div class="row"><div class="main"><div class="t">${esc(b.title || 'Briefing')}</div><div class="s">${b.created ? fmtDT(b.created) : ''}</div><div class="body">${esc(b.body)}</div></div><div class="ops"><button class="btn line sm" data-del="briefings:${esc(b.id)}">Dismiss</button></div></div>`).join('')
     : empty('Briefings written by your scheduled Claude tasks appear here.');
-  $('#todayEvents').innerHTML = evs.length ? evs.map(e => evRow(e)).join('') : empty('Nothing scheduled today.');
+  const coming = evs.length ? [] : upcoming(tmr, 90, 4);
+  $('#schedTitle').textContent = coming.length ? 'Coming up' : "Today's schedule";
+  $('#todayEvents').innerHTML = evs.length ? evs.map(e => evRow(e)).join('') : coming.length ? coming.map(o => evRow(o.e, o.date)).join('') : empty('Nothing scheduled. Tap + to add something.');
+  $('#remCard').style.display = rems.length ? '' : 'none'; $('#todoCard').style.display = data.todos.length ? '' : 'none';
   $('#todayRems').innerHTML = rems.length ? rems.slice(0, 6).map(r => remRow(r, ms)).join('') : empty('No open reminders.');
   $('#todayTodos').innerHTML = todos.length ? todos.slice(0, 6).map(todoRow).join('') : empty(data.todos.length ? 'Everything is done.' : 'Nothing on your list.');
   renderSearch();
 }
 const SEARCH = [
-  ['events', 'event', 'Event', e => e.title + ' ' + (e.notes || ''), e => e.title, e => fmtDay(e.date) + ' · ' + fmtTime(e.time)],
+  ['events', 'event', 'Event', e => e.title + ' ' + (e.notes || ''), e => e.title, e => fmtDay(e.date) + ' · ' + fmtTime(e.time) + (e.repeat ? ' · ' + REPEAT[e.repeat] : '')],
   ['reminders', 'reminder', 'Reminder', r => r.text, r => r.text, r => fmtDT(r.due)],
   ['todos', 'todo', 'To-do', t => t.text, t => t.text, t => t.done ? 'Done' : 'Open'],
   ['journal', 'journal', 'Journal', j => j.text + ' ' + j.date, j => (j.text || '').slice(0, 90), j => j.date],
@@ -873,16 +1089,16 @@ function renderCalendar() {
   let h = DAYS.map(d => `<div class="dow">${d[0]}</div>`).join('');
   for (let i = 0; i < 42; i++) {
     const d = new Date(first.getFullYear(), first.getMonth(), first.getDate() + i), s = ymd(d);
-    const evs = data.events.filter(e => e.date === s).sort(byTime);
+    const evs = eventsOn(s);
     h += `<button class="day ${d.getMonth() !== m ? 'out' : ''} ${s === today ? 'now' : ''} ${s === selDate ? 'sel' : ''}" data-day="${s}"><span class="n">${d.getDate()}</span>` +
       evs.slice(0, 2).map(e => `<span class="ev">${esc(e.title)}</span>`).join('') + (evs.length > 2 ? `<span class="muted more">+${evs.length - 2}</span>` : '') + '</button>';
   }
   $('#calGrid').innerHTML = h;
   $('#dayTitle').textContent = new Date(selDate + 'T00:00').toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
-  const evs = data.events.filter(e => e.date === selDate).sort(byTime);
+  const evs = eventsOn(selDate);
   $('#dayList').innerHTML = evs.length ? evs.map(e => evRow(e)).join('') : empty('Nothing scheduled this day.');
-  const up = data.events.filter(e => e.date > today).sort((a, b) => a.date.localeCompare(b.date) || byTime(a, b)).slice(0, 5);
-  $('#upList').innerHTML = up.length ? up.map(e => evRow(e, true)).join('') : empty('No upcoming events.');
+  const up = upcoming(ymd(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1)), 120, 5);
+  $('#upList').innerHTML = up.length ? up.map(o => evRow(o.e, o.date)).join('') : empty('No upcoming events.');
 }
 
 function renderPlan() {
@@ -985,6 +1201,8 @@ $('#hold').addEventListener('keyup', holdEnd);
 document.body.addEventListener('click', async e => {
   const el = e.target.closest('button,[data-go]'); if (!el) return;
   const d = el.dataset;
+  if (el.id === 'fab') return toggleDial();
+  closeDial();
   if (d.go) { if (d.seg) { local.seg = d.seg; saveLocal(); renderPlan(); } return show(d.go); }
   if (d.new === 'voice') { local.jseg = 'voice'; saveLocal(); show('journal'); renderVoice(); return rec ? null : recToggle(); }
   if (d.new) return openItem(d.new);
@@ -1008,6 +1226,11 @@ document.body.addEventListener('click', async e => {
     case 'planNew': return openItem({ todos: 'todo', reminders: 'reminder', alarms: 'alarm' }[local.seg]);
     case 'todoClear': { const now = Date.now(); data.todos.filter(t => t.done).forEach(t => { data.deleted[t.id] = now; }); data.todos = data.todos.filter(t => !t.done); return save(); }
     case 'medEdit': return openMedical();
+    case 'locBtn':
+      if (local.loc) { delete local.loc; saveLocal(); applyTheme(); return renderToday(); }
+      try { navigator.geolocation.getCurrentPosition(p => { local.loc = { lat: +p.coords.latitude.toFixed(1), lon: +p.coords.longitude.toFixed(1) }; saveLocal(); applyTheme(); renderToday(); toast('Sunrise and sunset now match where you are.'); },
+        () => toast('Location was blocked. Still using your time zone.'), { timeout: 10000 }); } catch (err) { toast('Location is not available here.'); }
+      return;
     case 'notifyBtn': try { const p = await Notification.requestPermission(); toast(p === 'granted' ? 'Notifications are on.' : 'Notifications are blocked in this browser.'); renderPlan(); } catch (err) { toast('Notifications are not available here.'); } return;
     case 'mQueue': {
       const d2 = local.draft; if (!d2.to || !d2.body.trim()) return toast('Add a recipient and a message.');
@@ -1032,13 +1255,16 @@ document.body.addEventListener('click', async e => {
 document.body.addEventListener('change', e => {
   const el = e.target;
   if (el.dataset.check) {
-    const [list, id] = el.dataset.check.split(':');
-    return change(list, id, it => {
-      if (list === 'reminders' && it.repeat && el.checked) { it.due = advance(it.due, it.repeat, Date.now()); toast('Done. Next one ' + fmtDT(it.due)); }
-      else it.done = el.checked;
-    });
+    // Let the tick animation play before the list re-sorts.
+    const [list, id] = el.dataset.check.split(':'), on = el.checked, row = el.closest('.row');
+    if (row && on) row.classList.add('ticking'); buzz(on ? 12 : 5);
+    return setTimeout(() => change(list, id, it => {
+      if (list === 'reminders' && it.repeat && on) { it.due = advance(it.due, it.repeat, Date.now()); toast('Done. Next one ' + fmtDT(it.due)); }
+      else it.done = on;
+    }), on && !reduceMotion ? 420 : 0);
   }
   if (el.id === 'theme') { local.theme = el.value; saveLocal(); return applyTheme(); }
+  if (el.id === 'skyFollow') { local.sky = el.checked; saveLocal(); return applyTheme(); }
   if (el.id === 'sosNote') return setPrefs({ emergencyNote: el.value });
   if (el.id === 'bkFile' && el.files[0]) {
     el.files[0].text().then(txt => {
@@ -1148,7 +1374,7 @@ show(location.hash.slice(1) || 'today', true);
 sync();
 initArtifactDb();
 setInterval(() => { checkReminders(); checkAlarms(); }, 5000);
-setInterval(() => { renderToday(); if (!document.hidden && backend() && !db) sync(); }, 60000);
+setInterval(() => { if (local.theme === 'sun' && document.documentElement.dataset.theme !== (skyState(new Date()).up ? 'light' : 'dark')) applyTheme(); renderToday(); if (!document.hidden && backend() && !db) sync(); }, 60000);
 if ('serviceWorker' in navigator && location.protocol === 'https:') { try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {} }
 </script>
 </body>

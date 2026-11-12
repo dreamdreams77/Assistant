@@ -44,7 +44,7 @@ Things a task can do:
 ```json
 {
   "version": 2,
-  "events":    [{ "id": "", "u": 0, "title": "", "date": "YYYY-MM-DD", "time": "HH:MM or empty", "notes": "" }],
+  "events":    [{ "id": "", "u": 0, "title": "", "date": "YYYY-MM-DD", "time": "HH:MM or empty", "repeat": "'' | daily | weekly | monthly | yearly", "notes": "" }],
   "reminders": [{ "id": "", "u": 0, "text": "", "due": 0, "done": false, "repeat": "'' | daily | weekly | monthly" }],
   "todos":     [{ "id": "", "u": 0, "text": "", "done": false, "star": false }],
   "alarms":    [{ "id": "", "u": 0, "time": "HH:MM", "label": "", "enabled": true, "days": [0, 6] }],
@@ -62,6 +62,7 @@ Rules for anything that writes this file:
 
 - All times (`u`, `due`, `created`, `sentAt`) are milliseconds since 1970 UTC.
 - Give every new item a unique `id`.
+- An event with `repeat` set shows on its `date` and on every matching day after it. Store it once; do not add one item per occurrence.
 - Alarm `days` uses 0 for Sunday through 6 for Saturday. An empty list means every day.
 - `prefs` is replaced as a whole, so copy the existing fields when changing one.
 - Set `u` to the current time whenever you add or change an item. The newest `u` wins a merge.
@@ -71,6 +72,10 @@ Rules for anything that writes this file:
 ### Voice notes
 
 Recordings are saved on the device and copied to the data repository as `voice/<id>.webm` (or `.m4a`). `up: 1` means the copy exists. Recordings made on Android may not play on an iPhone and the other way round.
+
+## The sky panel
+
+The panel on Today follows real sunrise and sunset: its colour, the sun or moon on the arc, the moon's phase and the stars. By default the times are estimated from the device's time zone. **Settings > Appearance > Use my location** makes them exact; the location is rounded and kept on that device only, never synced. The same card can tint the whole app with the sky and switch light and dark with the sun.
 
 ## Limits
 

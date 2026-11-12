@@ -639,12 +639,12 @@ input:not([type=checkbox]):focus,select:focus,textarea:focus{outline:0;border-co
   <div class="vhead"><div><h2>Emergency</h2></div></div>
   <div class="cols">
     <div class="card">
-      <div class="note red">This app cannot place a call or send a message by itself. Holding the button opens call and text shortcuts. If someone is in immediate danger, call 911 directly.</div>
+      <div class="note red">This app cannot place a call or send a message by itself. Holding the button opens call and text shortcuts. If someone is in immediate danger, call <span class="em-num">911</span> directly.</div>
       <button id="hold"><div id="holdFill"></div><span>Press and hold for 2 seconds</span></button>
       <label>Message to send<textarea id="sosNote"></textarea></label>
       <label>Where you are (optional)<input id="sosWhere" placeholder="Street address or landmark"></label>
       <div id="sosPanel" style="display:none;flex-direction:column;gap:12px">
-        <div class="actions"><a class="btn red" href="tel:911">Call 911</a><a class="btn line" href="tel:988">Call 988 crisis line</a></div>
+        <div class="actions"><a class="btn red" id="callEm" href="tel:911">Call 911</a><a class="btn line" id="callCrisis" href="tel:988">Call 988 crisis line</a></div>
         <label>Message with time and location<textarea id="sosMsg" style="min-height:130px"></textarea></label>
         <div class="actions"><button class="btn line" data-copy="sosMsg">Copy message</button><button class="btn line" id="sosClose">Close</button></div>
         <div class="list" id="sosContacts"></div>
@@ -764,7 +764,9 @@ function doseDay(time, today) { if (time >= '04:00') return today; const d = new
 const doseId = (med, day, time) => `dose-${med}-${day}-${time.replace(':', '')}`;
 const doseOrder = t => t < '04:00' ? '2' + t : '1' + t;
 const SICK_TYPES = [['vomit', 'Threw up'], ['extra', 'Extra dose'], ['double', 'Double dose'], ['unwell', 'Feeling unwell'], ['injection', 'Used emergency injection'], ['other', 'Other']];
-const DEFAULT_NOTE = 'I need help. Please contact me or call 911.';
+// Emergency numbers for the country the app is used in (shared copies change this line).
+const EMERG = { num: '911', crisis: '988', crisisName: '988 crisis line' };
+const DEFAULT_NOTE = 'I need help. Please contact me or call ' + EMERG.num + '.';
 function normalize(d) {
   d = d && typeof d === 'object' ? d : {};
   const out = { version: 2 };
@@ -1204,7 +1206,7 @@ function openItem(kind, id) {
       if (kind === 'reminder' && it) delete local.notified[id];
       if (kind === 'stock' && it && v.onHand !== it.onHand) v.cycle = Date.now();
       if (it) change(def.list, id, x => Object.assign(x, v)); else { if (def.onAdd) def.onAdd(v); add(def.list, Object.assign(def.hidden ? def.hidden() : {}, v)); }
-      if (kind === 'sick' && !it && v.type === 'injection') { toast('Injection logged. After using the emergency injection, call 911 or get to an emergency room.'); return; }
+      if (kind === 'sick' && !it && v.type === 'injection') { toast('Injection logged. After using the emergency injection, call ' + EMERG.num + ' or get to an emergency room.'); return; }
       toast(def.name[0].toUpperCase() + def.name.slice(1) + ' saved');
     },
     remove: it ? () => { if (def.onRemove) def.onRemove(id, it); remove(def.list, id); toast('Deleted'); } : null
@@ -1667,7 +1669,7 @@ function renderEmergency() {
 }
 function openSos() {
   $('#sosPanel').style.display = 'flex'; $('#sosMsg').value = sosText(); renderEmergency();
-  toast('Emergency panel open. If someone is in danger, call 911 now.');
+  toast('Emergency panel open. If someone is in danger, call ' + EMERG.num + ' now.');
   try { navigator.geolocation.getCurrentPosition(p => { gps = `https://maps.google.com/?q=${p.coords.latitude.toFixed(5)},${p.coords.longitude.toFixed(5)}`; $('#sosMsg').value = sosText(); renderEmergency(); }, () => {}, { timeout: 8000 }); } catch (e) {}
 }
 let holdAt = 0, raf = 0;
@@ -1878,6 +1880,9 @@ function voiceRow(v) {
 
 /* ---------- start ---------- */
 lockApp();
+$$('.em-num').forEach(x => { x.textContent = EMERG.num; });
+$('#callEm').href = 'tel:' + EMERG.num; $('#callEm').textContent = 'Call ' + EMERG.num;
+$('#callCrisis').href = 'tel:' + EMERG.crisis; $('#callCrisis').textContent = 'Call ' + EMERG.crisisName;
 applyTheme(); $('#theme').value = local.theme;
 if (inArtifact) $('#bkDown').style.display = 'none';
 $('#mTo').value = local.draft.to; $('#mSubj').value = local.draft.subject; $('#mBody').value = local.draft.body; draftChanged();

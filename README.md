@@ -34,7 +34,7 @@ A scheduled Claude task opens the private data repository, edits `assistant-data
 
 Things a task can do:
 
-- **Send queued email.** Emails you queue in the app sit in `outbox` with `status: "queued"`. A task sends each through Gmail and sets `status: "sent"` and `sentAt`.
+- **Send queued email.** Emails you queue in the app sit in `outbox` with `status: "queued"`. A task runs every hour from 7 AM to 10 PM, sends each through Gmail and sets `status: "sent"` and `sentAt` (or `"failed"` with `error`).
 - **List itself.** Items in `tasks` show on the Today screen under "Claude tasks", with their schedule and next run (`next`).
 - **Write briefings.** Items a task adds to `briefings` show on the Today screen under "From Claude".
 - **Add events, reminders and alarms**, for example copied from Google Calendar.

@@ -65,6 +65,8 @@ A second task writes a morning briefing to `briefings` each day.
   "meds":      [{ "id": "", "u": 0, "name": "", "dose": "", "times": ["10:00", "22:00"], "notes": "", "active": true }],
   "doses":     [{ "id": "", "u": 0, "med": "med-id", "date": "YYYY-MM-DD", "time": "HH:MM", "at": 0 }],
   "asks":      [{ "id": "", "u": 0, "text": "", "created": 0, "status": "queued | working | done | failed", "answer": "", "answered": 0 }],
+  "places":    [{ "id": "", "u": 0, "name": "Liam OT", "address": "" }],
+  "stock":     [{ "id": "", "u": 0, "name": "Hydrocortisone", "onHand": 60, "unit": "tablets", "expires": "YYYY-MM-DD or empty", "notes": "", "cycle": 0 }],
   "deleted":   { "item-id": 0 },
   "prefs":     { "emergencyNote": "", "medical": { "name": "", "blood": "", "allergies": "", "meds": "", "conditions": "", "doctor": "", "share": false }, "u": 0 }
 }
@@ -100,6 +102,14 @@ The Work tab lists shifts, this week's shift count and hours, weekly availabilit
 ## Medications
 
 Each medication has its daily `times`. Ticking a dose adds an item to `doses` for that day and time. A time before 4 AM counts as the end of the previous day, so a 12 AM dose is the last dose of that day. The calendar sync copies each dose time to Google Calendar as a daily event with an alert.
+
+## Rides
+
+**Get a ride** on Today opens Uber with your current location as pickup, either with no destination or with a saved place as the drop-off. Events and shifts have a `where` field: a saved place's name or an address. When set, a **Ride** button appears next to them. Uber does the booking and payment; the app only fills in the trip.
+
+## Supplies and refills
+
+A `stock` item counts what you have of a medication or supply. It is linked to medications with the same `name`, and each ticked dose takes away that medication's `perDose` (default 1). When fewer than 6 days are left, the app adds a reminder `refill-<stock id>-<cycle>`; 30 days before `expires` it adds `expiry-<stock id>-<date>`. Changing the count starts a new `cycle`. The calendar sync copies these reminders to Google Calendar like any other.
 
 ## Ask Claude
 
